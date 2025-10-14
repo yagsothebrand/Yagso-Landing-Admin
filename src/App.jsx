@@ -20,6 +20,7 @@ import { AdministrationPage } from "./pages/AdministrationPage";
 import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { EmailLogsPage } from "./pages/EmailLogsPage";
 import ComingSoon from "./pages/ComingSoon";
+import WaitlistForm from "./pages/landing/WaitListForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,7 +35,7 @@ function App() {
           index: true,
           element: (
             <Suspense fallback={<LoadingHelper />}>
-              <Index />
+              <WaitlistForm />
             </Suspense>
           ),
         },
