@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        from: "onboarding@resend.dev",
+        from: "Yagso <no-reply@yagso.com>",
         to: email,
         subject: "Welcome to Yagso — Your Exclusive Passcode",
         html: `
@@ -266,6 +266,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, data: response.data });
   } catch (error) {
     console.error(error.response?.data || error.message);
-    return res.status(500).json({ error: "Failed to send email", message: error.message });
+    return res
+      .status(500)
+      .json({ error: "Failed to send email", message: error.message });
   }
 }
