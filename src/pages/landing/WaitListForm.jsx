@@ -33,9 +33,10 @@ export default function HomePage() {
 
   const videos = [
     // { src: "/moo.mp4", alt: "Gold rings in eggshells" },
+    { src: "/bowl.mp4", alt: "Jeweled chess piece" },
     { src: "/media.mp4", alt: "Statement rings on hands" },
     { src: "/hand.mp4", alt: "Luxury lifestyle flatlay" },
-    // { src: "/pawn.jpg", alt: "Jeweled chess piece" },
+    { src: "/card.mp4", alt: "Jeweled chess piece" },
   ];
 
   const sparkles = Array.from({ length: 30 }, (_, i) => i);
@@ -260,27 +261,25 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
- <div className="fixed inset-0">
-  {videos.map((video, index) => (
-    <div
-      key={index}
-      ref={(el) => (videoRefs.current[index] = el)}
-      className="absolute inset-0 opacity-0 transition-opacity duration-1000"
-    >
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-cover"
-      >
-        <source src={video.src} type="video/mp4" />
-      </video>
-    </div>
-  ))}
-</div>
-
-
+      <div className="fixed inset-0">
+        {videos.map((video, index) => (
+          <div
+            key={index}
+            ref={(el) => (videoRefs.current[index] = el)}
+            className="absolute inset-0 opacity-0 transition-opacity duration-1000"
+          >
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src={video.src} type="video/mp4" />
+            </video>
+          </div>
+        ))}
+      </div>
 
       <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
 
@@ -354,7 +353,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.5 }}
                 >
-                  Exclusive Collection
+                  {/* Exclusive Collection */}
                 </motion.p>
                 <motion.p
                   className="text-xl md:text-2xl text-stone-300 font-light mb-16 leading-relaxed max-w-2xl mx-auto"
@@ -362,7 +361,8 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.7 }}
                 >
-                  Be among the first to discover our most coveted pieces
+                  {" "}
+                  {/* Be among the first to discover our most coveted pieces */}
                 </motion.p>
 
                 <motion.button
@@ -370,7 +370,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.9 }}
                   onClick={() => setShowForm(true)}
-                  className="px-10 py-5 bg-stone-100 hover:bg-white text-stone-900 text-lg rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
+                  className="px-5 py-5 bg-green-50 hover:bg-white text-stone-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
                 >
                   <span>Request Exclusive Access</span>
                   <Gem className="w-5 h-5" />
@@ -387,7 +387,7 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6 }}
-              className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-s"
+              className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm"
             >
               <motion.button
                 initial={{ scale: 0 }}
@@ -406,10 +406,10 @@ export default function HomePage() {
                   transition={{ delay: 0.2, duration: 0.8 }}
                   className="text-center mb-12"
                 >
-                  <h2 className="text-4xl md:text-5xl font-light text-white mb-6">
+                  <h2 className="text-4xl md:text-5xl font-light text-green-700 mb-6">
                     Join Our Elite Circle
                   </h2>
-                  <p className="text-lg text-stone-300 leading-relaxed">
+                  <p className="neon-text text-lg leading-relaxed text-green-800 text-center max-w-xl mx-auto">
                     Enter your email to receive your exclusive access code and
                     be notified of our most precious releases.
                   </p>
@@ -431,7 +431,7 @@ export default function HomePage() {
                       <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                         <Mail
                           className={`w-6 h-6 transition-colors duration-300 ${
-                            focusedInput ? "text-green-800" : "text-stone-400"
+                            focusedInput ? "text-green-700" : "text-stone-400"
                           }`}
                         />
                       </div>
@@ -443,7 +443,7 @@ export default function HomePage() {
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={() => setFocusedInput(true)}
                         onBlur={() => setFocusedInput(false)}
-                        className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-stone-700/30 rounded-full focus:border-green-700 focus:bg-white/20 focus:outline-none transition-all duration-300 text-white placeholder-stone-500 text-lg backdrop-blur-sm"
+                        className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-stone-700/30 rounded-full focus:border-green-700 focus:bg-white/20 focus:outline-none transition-all duration-300 text-green-500 placeholder-stone-500 text-lg backdrop-blur-sm"
                         required
                       />
 
@@ -516,7 +516,7 @@ export default function HomePage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.8 }}
-                  className="text-center mt-8 text-stone-400 text-sm"
+                  className="text-center  neon-text mt-8 text-green-400 text-sm"
                 >
                   <p>
                     By joining, you agree to receive exclusive updates about our

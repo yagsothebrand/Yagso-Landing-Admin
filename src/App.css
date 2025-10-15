@@ -16,6 +16,34 @@ body {
 
   background-color: #fafaf9;
 }
+.neon-text {
+  color: #fff; /* White text works best on any bg */
+  text-shadow:
+    0 0 3px rgba(2, 109, 2, 0.6),
+    0 0 8px rgba(0, 28, 0, 0.8),
+    0 0 15px rgb(29, 79, 29);
+  -webkit-text-stroke: 1px rgba(195, 255, 217, 0.3); /* Outline for visibility */
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 3px rgba(4, 58, 4, 0.6),
+      0 0 8px rgba(1, 72, 1, 0.8),
+      0 0 15px rgb(1, 56, 1);
+  }
+  50% {
+    text-shadow:
+      0 0 2px rgba(0, 255, 0, 0.4),
+      0 0 4px rgba(30, 47, 30, 0.7),
+      0 0 8px rgba(9, 98, 9, 0.9);
+  }
+}
+
+.neon-text {
+  animation: neonPulse 2.5s ease-in-out infinite;
+}
+
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
