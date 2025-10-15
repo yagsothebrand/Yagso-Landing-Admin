@@ -324,7 +324,7 @@ export default function HomePage() {
           className="text-center"
         >
           <motion.div
-            className="flex items-center justify-center mb-16"
+            className="flex items-center justify-center mb-72"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
