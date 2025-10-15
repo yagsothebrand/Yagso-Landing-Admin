@@ -168,93 +168,7 @@ export default function HomePage() {
     }
   };
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 relative overflow-hidden">
-        {sparkles.map((i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            initial={{
-              opacity: 0,
-              scale: 0,
-              x:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerWidth : 1200),
-              y:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerHeight : 800),
-            }}
-            animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 2,
-              delay: i * 0.1,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatDelay: 3,
-            }}
-          >
-            <Star className="w-3 h-3 text-green-800" />
-          </motion.div>
-        ))}
 
-        <div className="min-h-screen flex items-center justify-center p-8">
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, ease: "backOut" }}
-            className="text-center max-w-2xl"
-          >
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.3, duration: 1, ease: "backOut" }}
-              className="w-32 h-32 mx-auto mb-12 bg-gradient-to-br from-green-800 to-green-900 rounded-full flex items-center justify-center shadow-2xl"
-            >
-              <CheckCircle className="w-16 h-16 text-white" />
-            </motion.div>
-
-            <motion.h1
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-5xl md:text-6xl font-light bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
-            >
-              Welcome to Yagso
-            </motion.h1>
-
-            <motion.p
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.9, duration: 0.8 }}
-              className="text-lg text-stone-300 mb-12 leading-relaxed"
-            >
-              Your exclusive passcode has been sent.
-              <br />
-              Prepare to discover extraordinary luxury.
-            </motion.p>
-
-            <motion.button
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              onClick={() => {
-                setSuccess(false);
-                setEmail("");
-                setShowForm(false);
-              }}
-              className="px-10 py-4 bg-gradient-to-r from-green-700 to-green-900 text-white text-md font-light rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
-            >
-              Join With Another Email
-            </motion.button>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -280,42 +194,126 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+      {success ? (
+        <div className="min-h-screen  relative overflow-hidden">
+          {sparkles.map((i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              initial={{
+                opacity: 0,
+                scale: 0,
+                x:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerWidth : 1200),
+                y:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerHeight : 800),
+              }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1, 0],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 2,
+                delay: i * 0.1,
+                repeat: Number.POSITIVE_INFINITY,
+                repeatDelay: 3,
+              }}
+            >
+              <Star className="w-3 h-3 text-green-800" />
+            </motion.div>
+          ))}
 
-      <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+          <div className="min-h-screen flex items-center justify-center p-8">
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1, ease: "backOut" }}
+              className="text-center max-w-2xl"
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.3, duration: 1, ease: "backOut" }}
+                className="w-32 h-32 mx-auto mb-12 neon-text bg-gradient-to-br from-green-800 to-green-900 rounded-full flex items-center justify-center shadow-2xl"
+              >
+                <CheckCircle className="w-16 h-16 text-white" />
+              </motion.div>
 
-      {sparkles.slice(0, 15).map((i) => (
-        <motion.div
-          key={i}
-          className="absolute opacity-10 z-5"
-          initial={{
-            x:
-              Math.random() *
-              (typeof window !== "undefined" ? window.innerWidth : 1200),
-            y:
-              Math.random() *
-              (typeof window !== "undefined" ? window.innerHeight : 800),
-          }}
-          animate={{
-            x:
-              Math.random() *
-              (typeof window !== "undefined" ? window.innerWidth : 1200),
-            y:
-              Math.random() *
-              (typeof window !== "undefined" ? window.innerHeight : 800),
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: Math.random() * 20 + 20,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-            ease: "linear",
-          }}
-        >
-          <Gem className="w-6 h-6 text-green-800" />
-        </motion.div>
-      ))}
+              <motion.h1
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="text-5xl md:text-6xl font-light neon-text bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
+              >
+                Welcome to Yagso
+              </motion.h1>
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
+              <motion.p
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.8 }}
+                className="text-lg neon-text text-green-800 mb-12 leading-relaxed"
+              >
+                Your exclusive passcode has been sent.
+                <br />
+                Prepare to discover extraordinary luxury.
+              </motion.p>
+
+              <motion.button
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+                onClick={() => {
+                  setSuccess(false);
+                  setEmail("");
+                  setShowForm(false);
+                }}
+                className="px-10 py-4 bg-gradient-to-r from-green-700 to-green-900 text-white text-md font-light rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
+              >
+                Join With Another Email
+              </motion.button>
+            </motion.div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+
+          {sparkles.slice(0, 15).map((i) => (
+            <motion.div
+              key={i}
+              className="absolute opacity-10 z-5"
+              initial={{
+                x:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerWidth : 1200),
+                y:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerHeight : 800),
+              }}
+              animate={{
+                x:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerWidth : 1200),
+                y:
+                  Math.random() *
+                  (typeof window !== "undefined" ? window.innerHeight : 800),
+                rotate: [0, 360],
+              }}
+              transition={{
+                duration: Math.random() * 20 + 20,
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "reverse",
+                ease: "linear",
+              }}
+            >
+              <Gem className="w-6 h-6 text-green-800" />
+            </motion.div>
+          ))}
+            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
         <motion.div
           ref={heroRef}
           initial={{ opacity: 0, y: 30 }}
@@ -370,10 +368,10 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.9 }}
                   onClick={() => setShowForm(true)}
-                  className="px-5 py-5 bg-green-50 hover:bg-white text-stone-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
+                  className="px-5 py-5 neon-text bg-green-50 hover:bg-white text-stone-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
                 >
                   <span>Request Exclusive Access</span>
-                  <Gem className="w-5 h-5" />
+                  <Gem className="w-5 h-5 text-green-800" />
                 </motion.button>
               </motion.div>
             )}
@@ -530,6 +528,10 @@ export default function HomePage() {
           )}
         </AnimatePresence>
       </div>
+        </>
+      )}
+
+    
 
       <footer className="relative z-10 py-8 px-6">
         <div className="max-w-7xl mx-auto text-center">
