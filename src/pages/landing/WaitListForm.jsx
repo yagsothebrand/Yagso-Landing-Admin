@@ -368,7 +368,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.9 }}
                   onClick={() => setShowForm(true)}
-                  className="px-5 py-5 bg-green-50 hover:bg-white text-stone-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
+                  className="px-5 py-5 bg-green-50 hover:bg-white text-green-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
                 >
                   <span>Request Exclusive Access</span>
                   <Gem className="w-5 h-5 text-green-800" />
