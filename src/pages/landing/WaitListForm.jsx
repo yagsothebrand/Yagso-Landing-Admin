@@ -246,7 +246,7 @@ export default function HomePage() {
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="text-5xl md:text-6xl font-light neon-text bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
+                className="text-5xl md:text-6xl font-light bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
               >
                 Welcome to Yagso
               </motion.h1>
