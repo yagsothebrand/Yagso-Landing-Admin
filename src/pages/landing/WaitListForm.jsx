@@ -1,7 +1,9 @@
-import { useState } from "react";
+"use client";
 
+import { useState, useEffect, useRef } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
 import {
   Mail,
   CheckCircle,
@@ -16,24 +18,127 @@ function generatePasscode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-export default function WaitlistForm() {
+export default function HomePage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [focusedInput, setFocusedInput] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const containerRef = useRef(null);
+  const imageRefs = useRef([]);
+  const heroRef = useRef(null);
+
+  const images = [
+    { src: "/egg.jpg", alt: "Gold rings in eggshells" },
+    { src: "/hand.jpg", alt: "Statement rings on hands" },
+    { src: "/mood.jpg", alt: "Luxury lifestyle flatlay" },
+    { src: "/pawn.jpg", alt: "Jeweled chess piece" },
+  ];
+
+  const sparkles = Array.from({ length: 30 }, (_, i) => i);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  useEffect(() => {
+    imageRefs.current.forEach((img, index) => {
+      if (img) {
+        if (index === currentImageIndex) {
+          gsap.to(img, {
+            opacity: 1,
+            scale: 1.05,
+            duration: 2,
+            ease: "power2.inOut",
+          });
+        } else {
+          gsap.to(img, {
+            opacity: 0,
+            scale: 1,
+            duration: 2,
+            ease: "power2.inOut",
+          });
+        }
+      }
+    });
+  }, [currentImageIndex]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { clientX, clientY } = e;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const moveX = (clientX - centerX) / 80;
+      const moveY = (clientY - centerY) / 80;
+
+      imageRefs.current.forEach((img) => {
+        if (img) {
+          gsap.to(img, {
+            x: moveX,
+            y: moveY,
+            duration: 2,
+            ease: "power2.out",
+          });
+        }
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    if (showForm) {
+      gsap.to(imageRefs.current, {
+        scale: 1.15,
+        opacity: 0.15,
+        filter: "blur(8px)",
+        duration: 1.2,
+        ease: "power3.inOut",
+      });
+      gsap.to(heroRef.current, {
+        scale: 0.92,
+        y: -40,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+    } else {
+      gsap.to(imageRefs.current, {
+        scale: 1.05,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 1.2,
+        ease: "power3.inOut",
+      });
+      gsap.to(heroRef.current, {
+        scale: 1,
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out",
+      });
+    }
+  }, [showForm]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(""); // clear old error
-    setSuccess(false); // reset success
+    setError("");
+    setSuccess(false);
 
     try {
       const passcode = generatePasscode();
 
-      // 1. Send Email
+      // 1. Send Email with passcode
       const emailRes = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +157,6 @@ export default function WaitlistForm() {
         loginAttempt: 0,
       });
 
-      // ✅ Only mark success if both worked
       setSuccess(true);
     } catch (err) {
       console.error(err);
@@ -63,12 +167,9 @@ export default function WaitlistForm() {
     }
   };
 
-  const sparkles = Array.from({ length: 30 }, (_, i) => i);
-
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 relative overflow-hidden">
-        {/* Success Sparkles */}
+      <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 relative overflow-hidden">
         {sparkles.map((i) => (
           <motion.div
             key={i}
@@ -76,8 +177,12 @@ export default function WaitlistForm() {
             initial={{
               opacity: 0,
               scale: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerWidth : 1200),
+              y:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerHeight : 800),
             }}
             animate={{
               opacity: [0, 1, 0],
@@ -87,11 +192,11 @@ export default function WaitlistForm() {
             transition={{
               duration: 2,
               delay: i * 0.1,
-              repeat: Infinity,
+              repeat: Number.POSITIVE_INFINITY,
               repeatDelay: 3,
             }}
           >
-            <Star className="w-3 h-3 text-emerald-400" />
+            <Star className="w-3 h-3 text-green-800" />
           </motion.div>
         ))}
 
@@ -106,7 +211,7 @@ export default function WaitlistForm() {
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.3, duration: 1, ease: "backOut" }}
-              className="w-32 h-32 mx-auto mb-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl"
+              className="w-32 h-32 mx-auto mb-12 bg-gradient-to-br from-green-800 to-green-900 rounded-full flex items-center justify-center shadow-2xl"
             >
               <CheckCircle className="w-16 h-16 text-white" />
             </motion.div>
@@ -115,7 +220,7 @@ export default function WaitlistForm() {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-5xl md:text-6xl font-light bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent mb-8"
+              className="text-5xl md:text-6xl font-light bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
             >
               Welcome to Yagso
             </motion.h1>
@@ -124,7 +229,7 @@ export default function WaitlistForm() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="text-lg text-gray-600 mb-12 leading-relaxed"
+              className="text-lg text-stone-300 mb-12 leading-relaxed"
             >
               Your exclusive passcode has been sent.
               <br />
@@ -140,7 +245,7 @@ export default function WaitlistForm() {
                 setEmail("");
                 setShowForm(false);
               }}
-              className="px-10 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-md font-small rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
+              className="px-10 py-4 bg-gradient-to-r from-green-700 to-green-900 text-white text-md font-light rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
             >
               Join With Another Email
             </motion.button>
@@ -151,12 +256,33 @@ export default function WaitlistForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-green-50/20 to-emerald-50/30 relative overflow-hidden">
-      {/* Floating Gems */}
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-stone-950 overflow-hidden relative"
+    >
+      <div className="fixed inset-0">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            ref={(el) => (imageRefs.current[index] = el)}
+            className="absolute inset-0 opacity-0"
+            style={{ willChange: "opacity, transform" }}
+          >
+            <img
+              src={image.src || "/placeholder.svg"}
+              alt={image.alt}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+
       {sparkles.slice(0, 15).map((i) => (
         <motion.div
           key={i}
-          className="absolute opacity-10"
+          className="absolute opacity-10 z-5"
           initial={{
             x:
               Math.random() *
@@ -176,93 +302,79 @@ export default function WaitlistForm() {
           }}
           transition={{
             duration: Math.random() * 20 + 20,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             repeatType: "reverse",
             ease: "linear",
           }}
         >
-          <Gem className="w-6 h-6 text-emerald-400" />
+          <Gem className="w-6 h-6 text-green-800" />
         </motion.div>
       ))}
 
-      {/* Main Content */}
-      <div className="min-h-screen flex flex-col">
-        {/* Header Section */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
         <motion.div
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="flex-1 flex flex-col items-center justify-center text-center px-2 "
+          ref={heroRef}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="text-center"
         >
-          {/* Logo */}
           <motion.div
-            initial={{ scale: 0, rotate: -45 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.5, duration: 1, ease: "backOut" }}
-            className="mb-3"
+            className="flex items-center justify-center mb-16"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
           >
             <img
-              src="https://waitlist-bay-kappa.vercel.app/logo.png"
+              src="/logo.png"
               alt="Yagso"
-              className="h-32 md:h-48 object-contain filter drop-shadow-2xl"
+              width={500}
+              height={150}
+              className="w-auto h-28 md:h-40 drop-shadow-2xl"
+              priority
             />
           </motion.div>
 
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-light text-gray-800 mb-8 leading-tight"
-          >
-            Exclusive
-            <br />
-            <span className="bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
-              Collection
-            </span>
-          </motion.h1>
+          <AnimatePresence mode="wait">
+            {!showForm && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <motion.p
+                  className="text-4xl md:text-5xl text-stone-100 font-light mb-6 leading-relaxed max-w-3xl mx-auto tracking-wide"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  Exclusive Collection
+                </motion.p>
+                <motion.p
+                  className="text-xl md:text-2xl text-stone-300 font-light mb-16 leading-relaxed max-w-2xl mx-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.7 }}
+                >
+                  Be among the first to discover our most coveted pieces
+                </motion.p>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.1, duration: 1 }}
-            className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed"
-          >
-            Be among the first to discover our most coveted pieces.
-            <br />
-            Limited access. Unlimited luxury.
-          </motion.p>
-
-          {/* CTA Button */}
-          <motion.button
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1.4, duration: 0.8, ease: "backOut" }}
-            onClick={() => setShowForm(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-md font-small rounded-full shadow-2xl hover:shadow-emerald-200 transition-all duration-500 relative overflow-hidden group"
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              initial={{ x: "-100%" }}
-              animate={{ x: "300%" }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                repeatDelay: 2,
-                ease: "linear",
-              }}
-            />
-            <span className="relative z-10 flex items-center space-x-3">
-              <span>Request Exclusive Access</span>
-              <Gem className="w-3 h-3" />
-            </span>
-          </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.9 }}
+                  onClick={() => setShowForm(true)}
+                  className="px-10 py-5 bg-stone-100 hover:bg-white text-stone-900 text-lg rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
+                >
+                  <span>Request Exclusive Access</span>
+                  <Gem className="w-5 h-5" />
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
-        {/* Form Overlay - Full Screen */}
         <AnimatePresence>
           {showForm && (
             <motion.div
@@ -270,9 +382,8 @@ export default function WaitlistForm() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-emerald-900/95 to-emerald-800/90 backdrop-blur-xl"
+              className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-s"
             >
-              {/* Close button */}
               <motion.button
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -293,7 +404,7 @@ export default function WaitlistForm() {
                   <h2 className="text-4xl md:text-5xl font-light text-white mb-6">
                     Join Our Elite Circle
                   </h2>
-                  <p className="text-lg text-emerald-100 leading-relaxed">
+                  <p className="text-lg text-stone-300 leading-relaxed">
                     Enter your email to receive your exclusive access code and
                     be notified of our most precious releases.
                   </p>
@@ -315,9 +426,7 @@ export default function WaitlistForm() {
                       <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                         <Mail
                           className={`w-6 h-6 transition-colors duration-300 ${
-                            focusedInput
-                              ? "text-emerald-400"
-                              : "text-emerald-200"
+                            focusedInput ? "text-green-800" : "text-stone-400"
                           }`}
                         />
                       </div>
@@ -329,14 +438,14 @@ export default function WaitlistForm() {
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={() => setFocusedInput(true)}
                         onBlur={() => setFocusedInput(false)}
-                        className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-emerald-200/30 rounded-full focus:border-emerald-300 focus:bg-white/20 focus:outline-none transition-all duration-300 text-white placeholder-emerald-200 text-lg backdrop-blur-sm"
+                        className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-stone-700/30 rounded-full focus:border-green-700 focus:bg-white/20 focus:outline-none transition-all duration-300 text-white placeholder-stone-500 text-lg backdrop-blur-sm"
                         required
                       />
 
                       <motion.div
                         initial={{ width: "0%" }}
                         animate={{ width: focusedInput ? "100%" : "0%" }}
-                        className="absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-300 rounded-full"
+                        className="absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-green-800 to-green-900 rounded-full"
                       />
                     </motion.div>
                   </div>
@@ -346,7 +455,7 @@ export default function WaitlistForm() {
                     disabled={loading || !email}
                     whileHover={{ scale: loading ? 1 : 1.02 }}
                     whileTap={{ scale: loading ? 1 : 0.98 }}
-                    className="w-full py-5 bg-gradient-to-r from-white to-emerald-50 text-emerald-800 font-semibold rounded-full shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-emerald-200/50 text-lg relative overflow-hidden"
+                    className="w-full py-5 bg-gradient-to-r from-green-700 to-green-900 text-white font-semibold rounded-full shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-green-700/50 text-lg relative overflow-hidden"
                   >
                     <AnimatePresence mode="wait">
                       {loading ? (
@@ -371,7 +480,10 @@ export default function WaitlistForm() {
                           <span>Reserve My Exclusive Access</span>
                           <motion.div
                             animate={{ x: [0, 5, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
+                            transition={{
+                              duration: 2,
+                              repeat: Number.POSITIVE_INFINITY,
+                            }}
                           >
                             →
                           </motion.div>
@@ -399,7 +511,7 @@ export default function WaitlistForm() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.8 }}
-                  className="text-center mt-8 text-emerald-200 text-sm"
+                  className="text-center mt-8 text-stone-400 text-sm"
                 >
                   <p>
                     By joining, you agree to receive exclusive updates about our
@@ -414,24 +526,13 @@ export default function WaitlistForm() {
         </AnimatePresence>
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-10 right-10 opacity-20">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        >
-          <Gem className="w-16 h-16 text-emerald-400" />
-        </motion.div>
-      </div>
-
-      <div className="absolute bottom-10 left-10 opacity-30 z-10">
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        >
-          <Star className="w-12 h-12 text-emerald-400" />
-        </motion.div>
-      </div>
+      <footer className="relative z-10 py-8 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-stone-500 text-sm font-light">
+            © 2025 Yagso. Timeless luxury.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
