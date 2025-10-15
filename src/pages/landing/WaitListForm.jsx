@@ -28,28 +28,28 @@ export default function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const containerRef = useRef(null);
-  const imageRefs = useRef([]);
+  const videoRefs = useRef([]);
   const heroRef = useRef(null);
 
-  const images = [
-    { src: "/egg.jpg", alt: "Gold rings in eggshells" },
-    { src: "/hand.jpg", alt: "Statement rings on hands" },
-    { src: "/mood.jpg", alt: "Luxury lifestyle flatlay" },
-    { src: "/pawn.jpg", alt: "Jeweled chess piece" },
+  const videos = [
+    // { src: "/moo.mp4", alt: "Gold rings in eggshells" },
+    { src: "/media.mp4", alt: "Statement rings on hands" },
+    { src: "/hand.mp4", alt: "Luxury lifestyle flatlay" },
+    // { src: "/pawn.jpg", alt: "Jeweled chess piece" },
   ];
 
   const sparkles = Array.from({ length: 30 }, (_, i) => i);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      setCurrentImageIndex((prev) => (prev + 1) % videos.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [videos.length]);
 
   useEffect(() => {
-    imageRefs.current.forEach((img, index) => {
+    videoRefs.current.forEach((img, index) => {
       if (img) {
         if (index === currentImageIndex) {
           gsap.to(img, {
@@ -79,7 +79,7 @@ export default function HomePage() {
       const moveX = (clientX - centerX) / 80;
       const moveY = (clientY - centerY) / 80;
 
-      imageRefs.current.forEach((img) => {
+      videoRefs.current.forEach((img) => {
         if (img) {
           gsap.to(img, {
             x: moveX,
@@ -97,7 +97,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (showForm) {
-      gsap.to(imageRefs.current, {
+      gsap.to(videoRefs.current, {
         scale: 1.15,
         opacity: 0.15,
         filter: "blur(8px)",
@@ -112,7 +112,7 @@ export default function HomePage() {
         ease: "power2.out",
       });
     } else {
-      gsap.to(imageRefs.current, {
+      gsap.to(videoRefs.current, {
         scale: 1.05,
         opacity: 1,
         filter: "blur(0px)",
@@ -260,22 +260,27 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
-      <div className="fixed inset-0">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            ref={(el) => (imageRefs.current[index] = el)}
-            className="absolute inset-0 opacity-0"
-            style={{ willChange: "opacity, transform" }}
-          >
-            <img
-              src={image.src || "/placeholder.svg"}
-              alt={image.alt}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
+ <div className="fixed inset-0">
+  {videos.map((video, index) => (
+    <div
+      key={index}
+      ref={(el) => (videoRefs.current[index] = el)}
+      className="absolute inset-0 opacity-0 transition-opacity duration-1000"
+    >
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-full object-cover"
+      >
+        <source src={video.src} type="video/mp4" />
+      </video>
+    </div>
+  ))}
+</div>
+
+
 
       <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
 
@@ -328,9 +333,9 @@ export default function HomePage() {
             <img
               src="/logo.png"
               alt="Yagso"
-              width={500}
-              height={150}
-              className="w-auto h-28 md:h-40 drop-shadow-2xl"
+              width={1000}
+              height={550}
+              className="w-auto h-40 md:h-70 drop-shadow-2xl"
               priority
             />
           </motion.div>
