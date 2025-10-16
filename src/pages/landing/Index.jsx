@@ -20,10 +20,10 @@ export default function Page() {
   useEffect(() => {
     if (loading) return; // wait until Firebase fetch finishes
 
-    if (user) {
+    if (user || id || token) {
       console.log("✅ User authenticated — redirecting home");
       navigate("/", { replace: true });
-    } else if (!token) {
+    } else if (!token || !id ) {
       console.log("🚫 No token — redirecting to waitlist");
       navigate("/waitlist", { replace: true });
     } else {
