@@ -19,6 +19,13 @@ export default function Page() {
   useEffect(() => {
     if (id && id !== token) {
       // New token provided via URL
+      const prevToken = localStorage.getItem("token");
+      if (prevToken && prevToken !== id) {
+        console.log("🔁 New token detected — resetting access state");
+        localStorage.removeItem("accessGranted");
+        setAccessGranted(false);
+        setPasscode("");
+      }
       console.log("🔑 Received new token:", id);
       setToken(id);
     }
@@ -49,7 +56,7 @@ export default function Page() {
       setError("Incorrect passcode. Please try again.");
     }
   };
-  if (loading  && accessGranted != true) {
+  if (loading && accessGranted != true) {
     return <PreparingAccessLoader />;
   }
   if (!accessGranted && token) {
