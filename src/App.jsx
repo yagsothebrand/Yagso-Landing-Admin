@@ -21,12 +21,18 @@ import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { EmailLogsPage } from "./pages/EmailLogsPage";
 import ComingSoon from "./pages/ComingSoon";
 import WaitlistForm from "./pages/landing/WaitListForm";
+import Page from "./pages/landing/Index";
+import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Root />,
+      element: (
+        <LandingAuthProvider>
+          <Root />
+        </LandingAuthProvider>
+      ),
       children: [
         // ------------------------
         // ✅ Public routes
@@ -35,7 +41,15 @@ function App() {
           index: true,
           element: (
             <Suspense fallback={<LoadingHelper />}>
-              <WaitlistForm />
+              <Page />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/:id",
+          element: (
+            <Suspense fallback={<LoadingHelper />}>
+              <Page />
             </Suspense>
           ),
         },
@@ -44,6 +58,14 @@ function App() {
           element: (
             <Suspense fallback={<LoadingHelper />}>
               <Index />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/waitlist",
+          element: (
+            <Suspense fallback={<LoadingHelper />}>
+              <WaitlistForm />
             </Suspense>
           ),
         },

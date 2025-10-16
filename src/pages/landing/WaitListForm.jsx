@@ -139,18 +139,7 @@ export default function HomePage() {
     try {
       const passcode = generatePasscode();
 
-      // 1. Send Email with passcode
-      const emailRes = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, passcode }),
-      });
-
-      if (!emailRes.ok) {
-        throw new Error("Failed to send email");
-      }
-
-      // 2. Save to Firestore
+      // Inside handleSubmit
       const docRef = await addDoc(collection(db, "waitlist"), {
         email,
         passcode,
@@ -159,8 +148,23 @@ export default function HomePage() {
         lastLogin: serverTimestamp(),
       });
 
-      // ✅ Save token locally — acts as the user's identifier
-    //   localStorage.setItem("token", docRef.id);
+      // Save locally (optional)
+      localStorage.setItem("token", docRef.id);
+
+      // ✅ Build the unique link with ID
+      const magicLink = `https://yagso.com/${docRef.id}`;
+
+      // Send email with link + passcode
+      const emailRes = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, passcode, magicLink }),
+      });
+
+      if (!emailRes.ok) {
+        throw new Error("Failed to send email");
+      }
+
       setSuccess(true);
       console.log("✅ Added to waitlist with token:", docRef.id);
       return docRef.id;
