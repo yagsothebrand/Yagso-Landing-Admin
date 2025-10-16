@@ -12,7 +12,7 @@ export const sendInvoiceEmail = async (recipientEmail, invoice, senderInfo) => {
   try {
     console.log("[v0] Sending invoice email to:", recipientEmail);
 
-    await axios.post("https://yagso.com/api/send-email", {
+    await axios.post("/api/send-email", {
       recipientEmail,
       invoice,
       senderInfo,
@@ -49,7 +49,7 @@ export const sendAccountMail = async (userData) => {
 
     await Promise.all(
       recipients.map((recipientEmail) =>
-        axios.post("https://yagso.com/api/send-account-mail", {
+        axios.post("/api/send-account-mail", {
           recipientEmail,
           userData,
         })

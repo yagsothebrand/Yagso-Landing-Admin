@@ -27,7 +27,9 @@ app.post("/api/send-account-mail", async (req, res) => {
   const { recipientEmail, userData } = req.body;
 
   if (!recipientEmail || !userData) {
-    return res.status(400).json({ error: "Missing recipientEmail or userData" });
+    return res
+      .status(400)
+      .json({ error: "Missing recipientEmail or userData" });
   }
 
   try {
@@ -89,7 +91,10 @@ app.post("/api/send-account-mail", async (req, res) => {
     console.log(`📩 Account email sent to ${recipientEmail}`);
     return res.status(200).json({ success: true, data: response.data });
   } catch (error) {
-    console.error("❌ Failed to send account email:", error.response?.data || error.message);
+    console.error(
+      "❌ Failed to send account email:",
+      error.response?.data || error.message
+    );
     return res.status(500).json({
       error: "Failed to send account email",
       details: error.response?.data || error.message,
@@ -98,7 +103,7 @@ app.post("/api/send-account-mail", async (req, res) => {
 });
 
 // ✅ Start server
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
