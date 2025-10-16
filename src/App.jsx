@@ -7,13 +7,13 @@ import { LoadingHelper } from "./lib/LoadingHelper";
 import { ProtectedRoute } from "./components/auth/protected-route";
 
 // Public pages
-import Index from "./pages/Index";
+import Index from "./pages/admin/Index";
 import NotFound from "./pages/NotFound";
 
 // Protected pages
 import AdminDashboard from "./components/layout/AdminDashboard";
 import InvoicesPage from "./pages/InvoicesPage";
-import { InventoryPage } from "./pages/InventoryPage";
+
 import { BrandsPage } from "./pages/BrandsPage";
 import { CategoryPage } from "./pages/CategoryPage";
 import { AdministrationPage } from "./pages/AdministrationPage";
@@ -23,6 +23,7 @@ import ComingSoon from "./pages/ComingSoon";
 import WaitlistForm from "./pages/landing/WaitListForm";
 import Page from "./pages/landing/Index";
 import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
+import { ProductsPage } from "./pages/ProductsPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -54,7 +55,7 @@ function App() {
           ),
         },
         {
-          path: "/login",
+          path: "/admin",
           element: (
             <Suspense fallback={<LoadingHelper />}>
               <Index />
@@ -98,7 +99,7 @@ function App() {
           element: (
             <Suspense fallback={<LoadingHelper />}>
               <ProtectedRoute requiredRole="Sales Representative">
-                <InventoryPage />
+                <ProductsPage />
               </ProtectedRoute>
             </Suspense>
           ),

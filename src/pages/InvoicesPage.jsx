@@ -43,9 +43,9 @@ import {
   useInvoice,
 } from "@/components/invoice/InvoiceProvider";
 import {
-  InventoryProvider,
-  useInventory,
-} from "@/components/inventory/InventoryProvider";
+  ProductsProvider,
+  useProducts,
+} from "@/components/products/ProductsProvider";
 
 import { Pagination } from "@/components/Pagination";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
@@ -182,12 +182,12 @@ function InvoicesPageContent() {
   const [manualEmail, setManualEmail] = useState("");
 
   const {
-    inventory,
+    products,
     brands,
     categories,
     reduceStock,
-    loading: inventoryLoading,
-  } = useInventory();
+    loading: productsLoading,
+  } = useProducts();
 
   const resetFilters = () => {
     setSearchTerm("");

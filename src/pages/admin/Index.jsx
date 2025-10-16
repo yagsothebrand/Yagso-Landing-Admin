@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import {
   doc,
   setDoc,
@@ -10,7 +10,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import useAuths from "../hooks/useAuths";
+import useAuths from "../../hooks/useAuths";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

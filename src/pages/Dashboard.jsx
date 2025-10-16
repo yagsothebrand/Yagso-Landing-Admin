@@ -7,7 +7,7 @@ import { UserDashboard } from "./UserDashboard";
 import { DashboardHome } from "./DashboardHome";
 import { NotificationPopup } from "@/components/layout/NotificationsPopup";
 import { AdministrationPage } from "./AdministrationPage";
-import { InventoryPage } from "./InventoryPage";
+import { InventoryPage } from "./ProductsPage";
 import { BrandsPage } from "./BrandsPage";
 import { CategoryPage } from "./CategoryPage";
 import { AnalyticsDashboard } from "./AnalyticsDashboard";

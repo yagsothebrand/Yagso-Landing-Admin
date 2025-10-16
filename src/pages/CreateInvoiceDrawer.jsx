@@ -42,7 +42,7 @@ import {
   getTodayDate,
 } from "@/lib/invoice-utils";
 import { cn } from "@/lib/utils";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ActiveFilters } from "./ActiveFilters";
 
@@ -64,7 +64,7 @@ export function CreateInvoiceDrawer({
   const [errors, setErrors] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [showProductSearch, setShowProductSearch] = useState(false);
-  const { inventory, brands, categories } = useInventory();
+  const { products, brands, categories } = useProducts();
   const { user } = useAuth();
   const [extensionNumber, setExtensionNumber] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -175,7 +175,7 @@ export function CreateInvoiceDrawer({
     setBrandFilters([]);
   }, [editingInvoice, isOpen]);
 
-  const filteredInventory = inventory.filter((item) => {
+  const filteredProducts = products.filter((item) => {
     const matchesStatus =
       statusFilters.length === 0 || statusFilters.includes(item.status);
     const matchesCategory =
@@ -577,7 +577,7 @@ export function CreateInvoiceDrawer({
 
                       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto p-2">
                         {" "}
-                        {filteredInventory.map((product) => (
+                        {filteredProducts.map((product) => (
                           <motion.div
                             key={product.id}
                             whileHover={{ scale: 1.03, y: -4 }}
@@ -625,7 +625,7 @@ export function CreateInvoiceDrawer({
                         ))}
                       </div>
 
-                      {filteredInventory.length === 0 && (
+                      {filteredProducts.length === 0 && (
                         <div className="text-center py-12">
                           <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                           <p className="text-gray-500 font-medium">

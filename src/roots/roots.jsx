@@ -6,7 +6,7 @@ import { ErrorPage } from "@/pages/ErrorPage";
 import { NotificationProvider } from "@/components/notification/NotificationProvider";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { InvoiceProvider } from "@/components/invoice/InvoiceProvider";
-import { InventoryProvider } from "@/components/inventory/InventoryProvider";
+import { ProductsProvider } from "@/components/products/ProductsProvider";
 import SidebarWrapper from "@/components/layout/SidebarWrapper";
 import { Header } from "@/components/layout/Header";
 import { StockMonitor } from "@/components/stock-monitor";
@@ -20,13 +20,13 @@ const Root = () => {
       <NotificationProvider>
         <AuthProvider>
           <InvoiceProvider>
-            <InventoryProvider>
+            <ProductsProvider>
               <Toaster />
-         
+
               <ErrorBoundary FallbackComponent={ErrorPage}>
                 <Outlet />
               </ErrorBoundary>
-            </InventoryProvider>
+            </ProductsProvider>
           </InvoiceProvider>
         </AuthProvider>
       </NotificationProvider>

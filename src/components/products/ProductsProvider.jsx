@@ -13,33 +13,32 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
-const InventoryContext = createContext();
+const ProductsContext = createContext();
 
-export const InventoryProvider = ({ children }) => {
+export const ProductsProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [inventory, setInventory] = useState([]); // 🔥 for admin list
+  const [products, setProducts] = useState([]); // 🔥 for admin list
   const [brands, setBrands] = useState([]); // 🔥 for admin list
- const [tableLoading, setTableLoading] = useState(false)
+  const [tableLoading, setTableLoading] = useState(false);
 
   const [categories, setCategories] = useState([]); // 🔥 for admin list
 
   const db = getFirestore();
 
-  // ✅ Fetch all inventory items
-  const getInventory = async () => {
-    setTableLoading(true)
+  // ✅ Fetch all products items
+  const getProducts = async () => {
+    setTableLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "inventory"));
-      const inventoryList = querySnapshot.docs.map((doc) => ({
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const productsList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(inventoryList);
-      setInventory(inventoryList);
-   
+      console.log(productsList);
+      setProducts(productsList);
     } catch (error) {
-      console.error("Error fetching inventory:", error);
-      setTableLoading(false)
+      console.error("Error fetching products:", error);
+      setTableLoading(false);
     }
   };
 
@@ -55,7 +54,7 @@ export const InventoryProvider = ({ children }) => {
       setBrands(brandList);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching inventory:", error);
+      console.error("Error fetching products:", error);
       setLoading(false);
     }
   };
@@ -94,7 +93,7 @@ export const InventoryProvider = ({ children }) => {
       setCategories(categoriesList);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching inventory:", error);
+      console.error("Error fetching products:", error);
       setLoading(false);
     }
   };
@@ -105,7 +104,7 @@ export const InventoryProvider = ({ children }) => {
       const itemWithTimestamp = {
         ...newItem,
         id: docRef.id,
-         authorizedByName: user?.firstName + " " + user?.lastName,
+        authorizedByName: user?.firstName + " " + user?.lastName,
         authorizedBy: user?.email,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -121,11 +120,11 @@ export const InventoryProvider = ({ children }) => {
       return { success: false, error: error.message };
     }
   };
-  // ✅ Add new inventory item
-  const addInventoryItem = async (newItem) => {
+  // ✅ Add new products item
+  const addProductsItem = async (newItem) => {
     try {
       setLoading(true);
-      const docRef = doc(collection(db, "inventory"));
+      const docRef = doc(collection(db, "products"));
       const itemWithTimestamp = {
         ...newItem,
         id: docRef.id,
@@ -134,47 +133,47 @@ export const InventoryProvider = ({ children }) => {
       };
 
       await setDoc(docRef, itemWithTimestamp);
-      await getInventory(); // refresh list
+      await getProducts(); // refresh list
       setLoading(false);
       return { success: true, id: docRef.id };
     } catch (error) {
-      console.error("Error adding inventory item:", error);
+      console.error("Error adding products item:", error);
       setLoading(false);
       return { success: false, error: error.message };
     }
   };
 
-  // ✅ Update inventory item
-  const updateInventoryItem = async (itemId, updatedData) => {
+  // ✅ Update products item
+  const updateProductsItem = async (itemId, updatedData) => {
     try {
       setLoading(true);
-      const itemRef = doc(db, "inventory", itemId);
+      const itemRef = doc(db, "products", itemId);
       const updateData = {
         ...updatedData,
         updatedAt: serverTimestamp(),
       };
 
       await updateDoc(itemRef, updateData);
-      await getInventory(); // refresh list
+      await getProducts(); // refresh list
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Error updating inventory item:", error);
+      console.error("Error updating products item:", error);
       setLoading(false);
       return { success: false, error: error.message };
     }
   };
 
-  // ✅ Delete inventory item
-  const deleteInventoryItem = async (itemId) => {
+  // ✅ Delete products item
+  const deleteProductsItem = async (itemId) => {
     try {
       setLoading(true);
-      await deleteDoc(doc(db, "inventory", itemId));
-      await getInventory(); // refresh list
+      await deleteDoc(doc(db, "products", itemId));
+      await getProducts(); // refresh list
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Error deleting inventory item:", error);
+      console.error("Error deleting products item:", error);
       setLoading(false);
       return { success: false, error: error.message };
     }
@@ -206,10 +205,10 @@ export const InventoryProvider = ({ children }) => {
       return { success: false, error: error.message };
     }
   };
-  // ✅ Get single inventory item
-  const getInventoryItem = async (itemId) => {
+  // ✅ Get single products item
+  const getProductsItem = async (itemId) => {
     try {
-      const docRef = doc(db, "inventory", itemId);
+      const docRef = doc(db, "products", itemId);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -221,20 +220,20 @@ export const InventoryProvider = ({ children }) => {
         return { success: false, error: "Item not found" };
       }
     } catch (error) {
-      console.error("Error fetching inventory item:", error);
+      console.error("Error fetching products item:", error);
       return { success: false, error: error.message };
     }
   };
 
-  // ✅ Bulk update inventory items
-  const bulkUpdateInventory = async (items) => {
+  // ✅ Bulk update products items
+  const bulkUpdateProducts = async (items) => {
     try {
       setLoading(true);
       const { writeBatch } = await import("firebase/firestore");
       const batch = writeBatch(db);
 
       items.forEach((item) => {
-        const itemRef = doc(db, "inventory", item.id);
+        const itemRef = doc(db, "products", item.id);
         batch.update(itemRef, {
           ...item,
           updatedAt: serverTimestamp(),
@@ -242,11 +241,11 @@ export const InventoryProvider = ({ children }) => {
       });
 
       await batch.commit();
-      await getInventory(); // refresh list
+      await getProducts(); // refresh list
       setLoading(false);
       return { success: true };
     } catch (error) {
-      console.error("Error bulk updating inventory:", error);
+      console.error("Error bulk updating products:", error);
       setLoading(false);
       return { success: false, error: error.message };
     }
@@ -262,9 +261,9 @@ export const InventoryProvider = ({ children }) => {
     return "in-stock";
   };
 
-  // ✅ Get inventory statistics
-  const getInventoryStats = () => {
-    if (!inventory || !Array.isArray(inventory)) {
+  // ✅ Get products statistics
+  const getProductsStats = () => {
+    if (!products || !Array.isArray(products)) {
       return {
         total: 0,
         inStock: 0,
@@ -274,13 +273,13 @@ export const InventoryProvider = ({ children }) => {
     }
 
     const stats = {
-      total: inventory.length,
+      total: products.length,
       inStock: 0,
       lowStock: 0,
       outOfStock: 0,
     };
 
-    inventory.forEach((item) => {
+    products.forEach((item) => {
       const status = calculateItemStatus(item.stock, item.minStock);
       switch (status) {
         case "in-stock":
@@ -299,37 +298,37 @@ export const InventoryProvider = ({ children }) => {
   };
   const reduceStock = async (products) => {
     try {
-      const updatedInventory = [...inventory];
+      const updatedProducts = [...products];
 
       for (const item of products) {
-        const idx = updatedInventory.findIndex((i) => i.id === item.id);
+        const idx = updatedProducts.findIndex((i) => i.id === item.id);
         if (idx !== -1) {
-          const currentStock = updatedInventory[idx].stock || 0;
-          const minStock = updatedInventory[idx].minStock || 0; // default 0 if missing
+          const currentStock = updatedProducts[idx].stock || 0;
+          const minStock = updatedProducts[idx].minStock || 0; // default 0 if missing
           const newStock = Math.max(currentStock - (item.quantity || 0), 0);
 
-          updatedInventory[idx].stock = newStock;
+          updatedProducts[idx].stock = newStock;
 
           // 🔹 Determine status using minStock
           if (newStock === 0) {
-            updatedInventory[idx].status = "out-of-stock";
+            updatedProducts[idx].status = "out-of-stock";
           } else if (newStock <= minStock) {
-            updatedInventory[idx].status = "low-stock";
+            updatedProducts[idx].status = "low-stock";
           } else {
-            updatedInventory[idx].status = "in-stock";
+            updatedProducts[idx].status = "in-stock";
           }
 
           // 🔥 update Firebase
-          const productRef = doc(db, "inventory", item.id);
+          const productRef = doc(db, "products", item.id);
           await updateDoc(productRef, {
             stock: newStock,
-            status: updatedInventory[idx].status,
+            status: updatedProducts[idx].status,
           });
         }
       }
 
       // update local state
-      setInventory(updatedInventory);
+      setProducts(updatedProducts);
     } catch (error) {
       console.error("Error reducing stock:", error);
     }
@@ -337,19 +336,19 @@ export const InventoryProvider = ({ children }) => {
 
   // ✅ Get low stock items (for notifications)
   const getLowStockItems = () => {
-    if (!inventory || !Array.isArray(inventory)) return [];
+    if (!products || !Array.isArray(products)) return [];
 
-    return inventory.filter((item) => {
+    return products.filter((item) => {
       const status = calculateItemStatus(item.stock, item.minStock);
       return status === "low-stock" || status === "out-of-stock";
     });
   };
 
-  // ✅ Search inventory items
-  const searchInventory = (query, category = "all", status = "all") => {
-    if (!inventory || !Array.isArray(inventory)) return [];
+  // ✅ Search products items
+  const searchProducts = (query, category = "all", status = "all") => {
+    if (!products || !Array.isArray(products)) return [];
 
-    return inventory.filter((item) => {
+    return products.filter((item) => {
       const matchesQuery =
         !query ||
         item.name?.toLowerCase().includes(query.toLowerCase()) ||
@@ -368,50 +367,50 @@ export const InventoryProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getInventory();
+    getProducts();
     getBrands();
     getCategories();
   }, []);
 
   return (
-    <InventoryContext.Provider
+    <ProductsContext.Provider
       value={{
-        inventory,
+        products,
         loading,
         addBrandsItem,
         addCategoriesItem,
         brands,
         getBrands,
-        getInventory,
-        addInventoryItem,
-        updateInventoryItem,
-        deleteInventoryItem,
-        getInventoryItem,
-        bulkUpdateInventory,
+        getProducts,
+        addProductsItem,
+        updateProductsItem,
+        deleteProductsItem,
+        getProductsItem,
+        bulkUpdateProducts,
         calculateItemStatus,
-        getInventoryStats,
+        getProductsStats,
         reduceStock,
         deleteCategory,
         deleteBrand,
         getCategories,
         categories,
         getLowStockItems,
-        searchInventory,
+        searchProducts,
       }}
     >
       {children}
-    </InventoryContext.Provider>
+    </ProductsContext.Provider>
   );
 };
 
-export const useInventory = () => {
-  const context = useContext(InventoryContext);
+export const useProducts = () => {
+  const context = useContext(ProductsContext);
   if (!context) {
-    throw new Error("useInventory must be used within an Inventory Provider");
+    throw new Error("useProducts must be used within an Products Provider");
   }
   return context;
 };
 
-InventoryProvider.propTypes = {
+ProductsProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

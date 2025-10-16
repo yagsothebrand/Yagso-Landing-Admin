@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { useInventory } from "./inventory/InventoryProvider";
+import {  useProducts } from "./products/ProductsProvider";
 import { useNotifications } from "./notification/NotificationProvider";
 
 export function StockMonitor() {
-  const { inventory } = useInventory();
+  const { products } = useProducts();
   const { checkInventoryStock } = useNotifications();
 
   // useEffect(() => {

@@ -11,11 +11,11 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 export function AddCategoryDrawer({ isOpen, onClose }) {
-  const { addCategoriesItem } = useInventory();
+  const { addCategoriesItem } = useProducts();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",

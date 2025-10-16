@@ -21,7 +21,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ImageViewerModal } from "./ImageViewerModal";
 import { AddBrandDrawer } from "./AddBrandDrawer";
@@ -32,7 +32,7 @@ import { TrendingUp, Image, Users } from "lucide-react";
 // Calculate statistics from your brands array
 
 export function BrandsPage() {
-  const { brands, loading, deleteBrand } = useInventory();
+  const { brands, loading, deleteBrand } = useProducts();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
@@ -100,7 +100,7 @@ export function BrandsPage() {
                 <BreadcrumbSeparator />
 
                 <BreadcrumbItem className="font-semibold">
-                  Inventory
+                  Products
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="font-semibold">

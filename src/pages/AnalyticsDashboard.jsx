@@ -28,13 +28,13 @@ import {
   Users,
   ShoppingCart,
 } from "lucide-react";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useInvoices } from "@/components/invoice/InvoiceProvider";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 
 export function AnalyticsDashboard() {
-  const { inventory } = useInventory();
+  const { inventory } = useProducts();
   const { invoices } = useInvoices();
 
   // Calculate monthly sales data for the last 6 months
@@ -257,7 +257,7 @@ export function AnalyticsDashboard() {
                       month
                     </p>
                   </div>
-                  <p className="w-8 h-8 text-green-500" > ₦</p>
+                  <p className="w-8 h-8 text-green-500"> ₦</p>
                 </div>
               </CardContent>
             </Card>

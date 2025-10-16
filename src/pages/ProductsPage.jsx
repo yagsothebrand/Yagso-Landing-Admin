@@ -41,8 +41,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { AddInventoryModal } from "./AddInventoryModal";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { AddProductsModal } from "./AddProductsModal";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Layout from "@/components/layout/Layout";
@@ -198,7 +198,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                 >
                   <Package className="w-8 h-8 text-blue-600" />
                 </motion.div>
-                Inventory Details
+                Products Details
               </DrawerTitle>
               <DrawerClose asChild>
                 <Button variant="ghost" size="sm">
@@ -209,7 +209,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
           </DrawerHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Inventory  Images Gallery */}
+            {/* Products  Images Gallery */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -263,7 +263,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
                 <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  Inventory ID
+                  Products ID
                 </label>
                 <p className="text-sm font-semibold text-gray-900 font-mono">
                   {product.sku}
@@ -272,7 +272,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
 
               <div>
                 <label className="text-xs font-medium text-gray-600">
-                  Inventory Name
+                  Products Name
                 </label>
                 <p className="text-2xl font-bold text-gray-900">
                   {product.name}
@@ -432,7 +432,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                 >
                   <Edit className="w-8 h-8 text-blue-600" />
                 </motion.div>
-                Edit Inventory
+                Edit Products
               </DrawerTitle>
               <DrawerClose asChild>
                 <Button variant="ghost" size="sm">
@@ -450,7 +450,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-2">
-                    Inventory Name *
+                    Products Name *
                   </label>
                   <Input
                     value={formData.name || ""}
@@ -583,7 +583,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Enter Inventory description..."
+                placeholder="Enter Products description..."
               />
             </div>
             <div>
@@ -934,8 +934,8 @@ const ActiveFilters = ({
   );
 };
 
-// Main Inventory Page Component
-export function InventoryPage() {
+// Main Products Page Component
+export function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
@@ -961,14 +961,14 @@ export function InventoryPage() {
   const {
     inventory,
     loading,
-    getInventory,
-    updateInventoryItem,
-    deleteInventoryItem,
-    getInventoryStats,
+    getProducts,
+    updateProductsItem,
+    deleteProductsItem,
+    getProductsStats,
     calculateItemStatus,
     categories,
     brands, // Added brands to context
-  } = useInventory();
+  } = useProducts();
   console.log(inventory);
   const [products, setProducts] = useState([]);
 
@@ -1058,11 +1058,11 @@ export function InventoryPage() {
   const handleEditProduct = async (updatedProduct) => {
     try {
       const { id, ...updateData } = updatedProduct;
-      const result = await updateInventoryItem(id, updateData);
+      const result = await updateProductsItem(id, updateData);
 
       if (result.success) {
-        console.log("Inventory updated successfully");
-        getInventory(); // Refresh inventory after update
+        console.log("Products updated successfully");
+        getProducts(); // Refresh inventory after update
       } else {
         console.error("Failed to update product:", result.error);
         alert("Failed to update product. Please try again.");
@@ -1080,11 +1080,11 @@ export function InventoryPage() {
       )
     ) {
       try {
-        const result = await deleteInventoryItem(productId);
+        const result = await deleteProductsItem(productId);
 
         if (result.success) {
-          console.log("Inventory deleted successfully");
-          getInventory(); // Refresh inventory after delete
+          console.log("Products deleted successfully");
+          getProducts(); // Refresh inventory after delete
         } else {
           console.error("Failed to delete product:", result.error);
           alert("Failed to delete product. Please try again.");
@@ -1106,7 +1106,7 @@ export function InventoryPage() {
     setIsEditDrawerOpen(true);
   };
 
-  const stats = getInventoryStats();
+  const stats = getProductsStats();
   const {
     total: totalProducts,
     inStock: inStockCount,
@@ -1151,7 +1151,7 @@ export function InventoryPage() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="font-semibold">
-                  Inventory Management
+                  Products Management
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -1173,7 +1173,7 @@ export function InventoryPage() {
                     onClick={() => setIsAddModalOpen(true)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Inventory
+                    Add Products
                   </Button>
                 </motion.div>
               </div>
@@ -1319,7 +1319,7 @@ export function InventoryPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => getInventory()}
+                    onClick={() => getProducts()}
                     className="border-gray-200"
                   >
                     <RefreshCw className="w-4 h-4" />
@@ -1454,7 +1454,6 @@ export function InventoryPage() {
                             {product.description}
                           </p>
                         )}
-                        
 
                         {/* Action Buttons */}
                         <div className="flex items-center gap-1 sm:gap-1.5 pt-2">
@@ -1525,10 +1524,10 @@ export function InventoryPage() {
         </div>
 
         {/* Modals/Drawers */}
-        <AddInventoryModal
+        <AddProductsModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
-          onSave={() => getInventory()}
+          onSave={() => getProducts()}
         />
         <ViewProductDrawer
           product={selectedProduct}

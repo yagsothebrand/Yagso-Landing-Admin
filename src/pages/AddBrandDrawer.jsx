@@ -11,11 +11,11 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 export function AddBrandDrawer({ isOpen, onClose }) {
-  const { addBrandsItem } = useInventory();
+  const { addBrandsItem } = useProducts();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -150,7 +150,9 @@ export function AddBrandDrawer({ isOpen, onClose }) {
                             <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-white/95 backdrop-blur-sm rounded-full px-2 py-1 sm:px-3 sm:py-1.5 shadow-lg">
                               <span className="text-xs font-semibold text-green-700 flex items-center gap-1 sm:gap-1.5">
                                 <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                                <span className="hidden xs:inline">Logo uploaded</span>
+                                <span className="hidden xs:inline">
+                                  Logo uploaded
+                                </span>
                                 <span className="xs:hidden">Uploaded</span>
                               </span>
                             </div>
@@ -243,7 +245,6 @@ export function AddBrandDrawer({ isOpen, onClose }) {
               </div>
 
               {/* Fixed Footer for Mobile */}
-           
             </motion.div>
           )}
         </AnimatePresence>

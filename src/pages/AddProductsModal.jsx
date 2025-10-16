@@ -47,10 +47,10 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 
-export function AddInventoryModal({ isOpen, onClose, onSave }) {
-  const { brands, categories, addInventoryItem } = useInventory();
+export function AddProductsModal({ isOpen, onClose, onSave }) {
+  const { brands, categories, addProductsItem } = useProducts();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -77,7 +77,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
   const generateNextSku = async () => {
     try {
       const q = query(
-        collection(db, "inventory"),
+        collection(db, "products"),
         orderBy("createdAt", "desc"),
         limit(1)
       );
@@ -114,10 +114,10 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadToCloudinary = async (file, inventoryName, category) => {
+  const uploadToCloudinary = async (file, productsName, category) => {
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("name", inventoryName);
+    formDataUpload.append("name", productsName);
     formDataUpload.append("category", category);
 
     try {
@@ -162,7 +162,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
           ? `${user.firstName + " "} ${user.lastName}`
           : user?.email || "Unknown User";
 
-      const inventory = {
+      const products = {
         ...formData,
         stock: Number.parseInt(formData.stock),
         price: Number.parseFloat(formData.price),
@@ -181,7 +181,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
         createdAt: new Date().toISOString(),
       };
 
-      await addInventoryItem(inventory);
+      await addProductsItem(products);
       onClose();
       setFormData({
         name: "",
@@ -222,7 +222,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
               >
                 <Plus className="w-8 h-8 text-blue-600" />
               </motion.div>
-              Add New Inventory
+              Add New Products
             </DialogTitle>
           </DialogHeader>
 
@@ -253,7 +253,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name">Inventory Name *</Label>
+                  <Label htmlFor="name">Products Name *</Label>
                   <Input
                     id="name"
                     className="bg-white border-purple-200 focus:border-purple-500"
@@ -262,7 +262,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
                       setFormData((prev) => ({ ...prev, name: e.target.value }))
                     }
                     required
-                    placeholder="Enter inventory name"
+                    placeholder="Enter products name"
                   />
                 </div>
                 <div>
@@ -272,7 +272,10 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
                     className="bg-white border-purple-200 focus:border-purple-500"
                     value={formData.partNumber}
                     onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, partNumber: e.target.value }))
+                      setFormData((prev) => ({
+                        ...prev,
+                        partNumber: e.target.value,
+                      }))
                     }
                     required
                     placeholder="Enter part Number"
@@ -501,14 +504,14 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
                   }))
                 }
                 rows={3}
-                placeholder="Enter inventory description..."
+                placeholder="Enter products description..."
               />
             </div>
 
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <ImageIcon className="w-5 h-5 text-blue-600" />
-                inventory Images
+                products Images
               </h3>
               <div className="mt-2">
                 <div className="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
@@ -594,7 +597,7 @@ export function AddInventoryModal({ isOpen, onClose, onSave }) {
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
                 disabled={uploading}
               >
-                {uploading ? "Adding Inventory..." : "Add Inventory"}
+                {uploading ? "Adding Products..." : "Add Products"}
               </Button>
             </div>
           </form>

@@ -31,7 +31,7 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useInventory } from "@/components/products/ProductsProvider";
 
 export function AddProductModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useInventory } from "@/components/products/ProductsProvider";
 
 export function AddBrandModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({

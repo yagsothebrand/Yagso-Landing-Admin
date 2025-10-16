@@ -34,17 +34,17 @@ import {
   Box,
   Activity,
 } from "lucide-react";
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useInvoices } from "@/components/invoice/InvoiceProvider";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 export function DashboardHome() {
-  const { inventory, categories, brands, getInventoryStats } = useInventory();
+  const { products, categories, brands, getProductsStats } = useProducts();
 
   const { invoices, getInvoiceStats } = useInvoices();
 
-  const inventoryStats = getInventoryStats();
+  const productsStats = getProductsStats();
   const invoiceStats = getInvoiceStats();
 
   const revenueData = useMemo(() => {
@@ -77,7 +77,7 @@ export function DashboardHome() {
 
   const categoryDistribution = useMemo(() => {
     const distribution = {};
-    inventory.forEach((item) => {
+    products.forEach((item) => {
       const cat = item.category || "Uncategorized";
       distribution[cat] = (distribution[cat] || 0) + 1;
     });
@@ -96,19 +96,19 @@ export function DashboardHome() {
       value,
       color: colors[index % colors.length],
     }));
-  }, [inventory]);
+  }, [products]);
 
   const stockDistribution = useMemo(() => {
     return [
-      { name: "In Stock", value: inventoryStats.inStock, color: "#10b981" },
-      { name: "Low Stock", value: inventoryStats.lowStock, color: "#f59e0b" },
+      { name: "In Stock", value: productsStats.inStock, color: "#10b981" },
+      { name: "Low Stock", value: productsStats.lowStock, color: "#f59e0b" },
       {
         name: "Out of Stock",
-        value: inventoryStats.outOfStock,
+        value: productsStats.outOfStock,
         color: "#ef4444",
       },
     ];
-  }, [inventoryStats]);
+  }, [productsStats]);
 
   const recentInvoices = useMemo(() => {
     return invoices
@@ -126,11 +126,11 @@ export function DashboardHome() {
   const recentActivity = useMemo(() => {
     const activities = [];
 
-    // Add inventory activities
-    inventory.slice(-5).forEach((item) => {
+    // Add products activities
+    products.slice(-5).forEach((item) => {
       activities.push({
         user: item.authorizedByName || "Unknown",
-        action: "added inventory item",
+        action: "added products item",
         item: item.name,
         time: item.createdAt || new Date(),
       });
@@ -150,11 +150,11 @@ export function DashboardHome() {
     return activities
       .sort((a, b) => new Date(b.time) - new Date(a.time))
       .slice(0, 8);
-  }, [inventory, invoices]);
+  }, [products, invoices]);
 
   const revenueChange = 20.1;
   const ordersChange = 12.5;
-  const lowStockChange = inventoryStats.lowStock > 0 ? 3 : 0;
+  const lowStockChange = productsStats.lowStock > 0 ? 3 : 0;
 
   return (
     <div className="space-y-6 p-3">
@@ -213,15 +213,15 @@ export function DashboardHome() {
           <Card className="hover:shadow-lg transition-shadow  bg-gradient-to-br from-yellow-100 to-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total Inventory
+                Total Products
               </CardTitle>
               <Package className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{inventoryStats.total}</div>
+              <div className="text-2xl font-bold">{productsStats.total}</div>
               <p className="text-sm text-muted-foreground flex items-center mt-1">
                 <Box className="h-3 w-3 mr-1 text-blue-500" />
-                {inventoryStats.inStock} in stock
+                {productsStats.inStock} in stock
               </p>
             </CardContent>
           </Card>
@@ -241,11 +241,11 @@ export function DashboardHome() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">
-                {inventoryStats.lowStock}
+                {productsStats.lowStock}
               </div>
               <p className="text-sm text-muted-foreground flex items-center mt-1">
                 <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
-                {inventoryStats.outOfStock} out of stock
+                {productsStats.outOfStock} out of stock
               </p>
             </CardContent>
           </Card>
@@ -363,7 +363,7 @@ export function DashboardHome() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3 md:pb-6">
               <CardTitle className="text-sm md:text-sm">
-                Inventory by Category
+                Products by Category
               </CardTitle>
               <CardDescription className="text-sm md:text-sm">
                 Distribution of items across categories
@@ -402,7 +402,7 @@ export function DashboardHome() {
             <CardHeader className="pb-3 md:pb-6">
               <CardTitle className="text-sm md:text-sm">Stock Status</CardTitle>
               <CardDescription className="text-sm md:text-sm">
-                Current inventory stock levels
+                Current products stock levels
               </CardDescription>
             </CardHeader>
             <CardContent className="px-2 md:px-6">

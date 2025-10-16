@@ -14,14 +14,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { useInventory } from "@/components/inventory/InventoryProvider";
+import { useProducts } from "@/components/products/ProductsProvider";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ImageViewerModal } from "./ImageViewerModal";
 import { AddCategoryDrawer } from "./AddCategoryDrawer";
 import Layout from "@/components/layout/Layout";
 
 export function CategoryPage() {
-  const { categories, loading, deleteCategory } = useInventory();
+  const { categories, loading, deleteCategory } = useProducts();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
@@ -89,7 +89,7 @@ export function CategoryPage() {
                 <BreadcrumbSeparator />
 
                 <BreadcrumbItem className="font-semibold">
-                  Inventory
+                  Products
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="font-semibold">
