@@ -151,14 +151,19 @@ export default function HomePage() {
       }
 
       // 2. Save to Firestore
-      await addDoc(collection(db, "waitlist"), {
+      const docRef = await addDoc(collection(db, "waitlist"), {
         email,
         passcode,
-        createdAt: new Date(),
+        createdAt: serverTimestamp(),
         loginAttempt: 0,
+        lastLogin: serverTimestamp(),
       });
 
+      // ✅ Save token locally — acts as the user's identifier
+    //   localStorage.setItem("token", docRef.id);
       setSuccess(true);
+      console.log("✅ Added to waitlist with token:", docRef.id);
+      return docRef.id;
     } catch (err) {
       console.error(err);
       setError(err.message || "Something went wrong. Please try again.");
@@ -167,8 +172,6 @@ export default function HomePage() {
       setEmail("");
     }
   };
-
-
 
   return (
     <div
@@ -313,225 +316,227 @@ export default function HomePage() {
               <Gem className="w-6 h-6 text-green-800" />
             </motion.div>
           ))}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
-        <motion.div
-          ref={heroRef}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="text-center"
-        >
-          <motion.div
-            className="flex items-center justify-center mb-72"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            <img
-              src="/logo.png"
-              alt="Yagso"
-              width={1000}
-              height={550}
-              className="w-auto h-40 md:h-70 drop-shadow-2xl"
-              priority
-            />
-          </motion.div>
-
-          <AnimatePresence mode="wait">
-            {!showForm && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <motion.p
-                  className="text-4xl md:text-5xl text-stone-100 font-light mb-6 leading-relaxed max-w-3xl mx-auto tracking-wide"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                >
-                  {/* Exclusive Collection */}
-                </motion.p>
-                <motion.p
-                  className="text-xl md:text-2xl text-stone-300 font-light mb-16 leading-relaxed max-w-2xl mx-auto"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.7 }}
-                >
-                  {" "}
-                  {/* Be among the first to discover our most coveted pieces */}
-                </motion.p>
-
-                <motion.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.9 }}
-                  onClick={() => setShowForm(true)}
-                  className="px-5 py-5 bg-green-50 hover:bg-white text-green-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
-                >
-                  <span>Request Exclusive Access</span>
-                  <Gem className="w-5 h-5 text-green-800" />
-                </motion.button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        <AnimatePresence>
-          {showForm && (
+          <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm"
+              ref={heroRef}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-center"
             >
-              <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3 }}
-                onClick={() => setShowForm(false)}
-                className="absolute top-8 right-8 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-2xl font-light transition-all duration-300"
+              <motion.div
+                className="flex items-center justify-center mb-72"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.3 }}
               >
-                ×
-              </motion.button>
+                <img
+                  src="/logo.png"
+                  alt="Yagso"
+                  width={1000}
+                  height={550}
+                  className="w-auto h-40 md:h-70 drop-shadow-2xl"
+                  priority
+                />
+              </motion.div>
 
-              <div className="max-w-lg w-full mx-auto px-8">
-                <motion.div
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                  className="text-center mb-12"
-                >
-                  <h2 className="text-4xl md:text-5xl font-light text-green-700 mb-6">
-                    Join Our Elite Circle
-                  </h2>
-                  <p className="neon-text text-lg leading-relaxed text-green-800 text-center max-w-xl mx-auto">
-                    Enter your email to receive your exclusive access code and
-                    be notified of our most precious releases.
-                  </p>
-                </motion.div>
-
-                <motion.form
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.8 }}
-                  onSubmit={handleSubmit}
-                  className="space-y-8"
-                >
-                  <div className="relative">
-                    <motion.div
-                      animate={focusedInput ? { scale: 1.02 } : { scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="relative"
-                    >
-                      <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                        <Mail
-                          className={`w-6 h-6 transition-colors duration-300 ${
-                            focusedInput ? "text-green-700" : "text-stone-400"
-                          }`}
-                        />
-                      </div>
-
-                      <input
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setFocusedInput(true)}
-                        onBlur={() => setFocusedInput(false)}
-                        className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-stone-700/30 rounded-full focus:border-green-700 focus:bg-white/20 focus:outline-none transition-all duration-300 text-green-500 placeholder-stone-500 text-lg backdrop-blur-sm"
-                        required
-                      />
-
-                      <motion.div
-                        initial={{ width: "0%" }}
-                        animate={{ width: focusedInput ? "100%" : "0%" }}
-                        className="absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-green-800 to-green-900 rounded-full"
-                      />
-                    </motion.div>
-                  </div>
-
-                  <motion.button
-                    type="submit"
-                    disabled={loading || !email}
-                    whileHover={{ scale: loading ? 1 : 1.02 }}
-                    whileTap={{ scale: loading ? 1 : 0.98 }}
-                    className="w-full py-5 bg-gradient-to-r from-green-700 to-green-900 text-white font-semibold rounded-full shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-green-700/50 text-lg relative overflow-hidden"
+              <AnimatePresence mode="wait">
+                {!showForm && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
                   >
-                    <AnimatePresence mode="wait">
-                      {loading ? (
-                        <motion.div
-                          key="loading"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="flex items-center justify-center space-x-3"
-                        >
-                          <Loader2 className="w-6 h-6 animate-spin" />
-                          <span>Securing Your Access...</span>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="submit"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="flex items-center justify-center space-x-3"
-                        >
-                          <span>Reserve My Exclusive Access</span>
-                          <motion.div
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                            }}
-                          >
-                            →
-                          </motion.div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.button>
+                    <motion.p
+                      className="text-4xl md:text-5xl text-stone-100 font-light mb-6 leading-relaxed max-w-3xl mx-auto tracking-wide"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                    >
+                      {/* Exclusive Collection */}
+                    </motion.p>
+                    <motion.p
+                      className="text-xl md:text-2xl text-stone-300 font-light mb-16 leading-relaxed max-w-2xl mx-auto"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1, delay: 0.7 }}
+                    >
+                      {" "}
+                      {/* Be among the first to discover our most coveted pieces */}
+                    </motion.p>
 
-                  <AnimatePresence>
-                    {error && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="flex items-center justify-center space-x-2 text-red-300 bg-red-900/30 p-4 rounded-2xl backdrop-blur-sm"
-                      >
-                        <AlertCircle className="w-5 h-5" />
-                        <span>{error}</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.form>
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1, delay: 0.9 }}
+                      onClick={() => setShowForm(true)}
+                      className="px-5 py-5 bg-green-50 hover:bg-white text-green-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
+                    >
+                      <span>Request Exclusive Access</span>
+                      <Gem className="w-5 h-5 text-green-800" />
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
+            <AnimatePresence>
+              {showForm && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                  className="text-center  neon-text mt-8 text-green-400 text-sm"
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm"
                 >
-                  <p>
-                    By joining, you agree to receive exclusive updates about our
-                    luxury collections.
-                    <br />
-                    Your privacy is as precious as our jewelry.
-                  </p>
+                  <motion.button
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    onClick={() => setShowForm(false)}
+                    className="absolute top-8 right-8 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-2xl font-light transition-all duration-300"
+                  >
+                    ×
+                  </motion.button>
+
+                  <div className="max-w-lg w-full mx-auto px-8">
+                    <motion.div
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2, duration: 0.8 }}
+                      className="text-center mb-12"
+                    >
+                      <h2 className="text-4xl md:text-5xl font-light text-green-700 mb-6">
+                        Join Our Elite Circle
+                      </h2>
+                      <p className="neon-text text-lg leading-relaxed text-green-800 text-center max-w-xl mx-auto">
+                        Enter your email to receive your exclusive access code
+                        and be notified of our most precious releases.
+                      </p>
+                    </motion.div>
+
+                    <motion.form
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.4, duration: 0.8 }}
+                      onSubmit={handleSubmit}
+                      className="space-y-8"
+                    >
+                      <div className="relative">
+                        <motion.div
+                          animate={
+                            focusedInput ? { scale: 1.02 } : { scale: 1 }
+                          }
+                          transition={{ duration: 0.3 }}
+                          className="relative"
+                        >
+                          <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                            <Mail
+                              className={`w-6 h-6 transition-colors duration-300 ${
+                                focusedInput
+                                  ? "text-green-700"
+                                  : "text-stone-400"
+                              }`}
+                            />
+                          </div>
+
+                          <input
+                            type="email"
+                            placeholder="your@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onFocus={() => setFocusedInput(true)}
+                            onBlur={() => setFocusedInput(false)}
+                            className="w-full pl-16 pr-6 py-5 bg-white/10 border-2 border-stone-700/30 rounded-full focus:border-green-700 focus:bg-white/20 focus:outline-none transition-all duration-300 text-green-500 placeholder-stone-500 text-lg backdrop-blur-sm"
+                            required
+                          />
+
+                          <motion.div
+                            initial={{ width: "0%" }}
+                            animate={{ width: focusedInput ? "100%" : "0%" }}
+                            className="absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-green-800 to-green-900 rounded-full"
+                          />
+                        </motion.div>
+                      </div>
+
+                      <motion.button
+                        type="submit"
+                        disabled={loading || !email}
+                        whileHover={{ scale: loading ? 1 : 1.02 }}
+                        whileTap={{ scale: loading ? 1 : 0.98 }}
+                        className="w-full py-5 bg-gradient-to-r from-green-700 to-green-900 text-white font-semibold rounded-full shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-green-700/50 text-lg relative overflow-hidden"
+                      >
+                        <AnimatePresence mode="wait">
+                          {loading ? (
+                            <motion.div
+                              key="loading"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center justify-center space-x-3"
+                            >
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                              <span>Securing Your Access...</span>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key="submit"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center justify-center space-x-3"
+                            >
+                              <span>Reserve My Exclusive Access</span>
+                              <motion.div
+                                animate={{ x: [0, 5, 0] }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                }}
+                              >
+                                →
+                              </motion.div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.button>
+
+                      <AnimatePresence>
+                        {error && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="flex items-center justify-center space-x-2 text-red-300 bg-red-900/30 p-4 rounded-2xl backdrop-blur-sm"
+                          >
+                            <AlertCircle className="w-5 h-5" />
+                            <span>{error}</span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.form>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8, duration: 0.8 }}
+                      className="text-center  neon-text mt-8 text-green-400 text-sm"
+                    >
+                      <p>
+                        By joining, you agree to receive exclusive updates about
+                        our luxury collections.
+                        <br />
+                        Your privacy is as precious as our jewelry.
+                      </p>
+                    </motion.div>
+                  </div>
                 </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              )}
+            </AnimatePresence>
+          </div>
         </>
       )}
-
-    
 
       <footer className="relative z-10 py-8 px-6">
         <div className="max-w-7xl mx-auto text-center">
