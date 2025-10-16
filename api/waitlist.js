@@ -5,8 +5,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
-  const { email, passcode } = req.body;
+  const { email, passcode, magicLink } = req.body;
+  const safeLink = magicLink || "https://yagso.com";
 
   try {
     const response = await axios.post(
@@ -159,9 +159,11 @@ export default async function handler(req, res) {
                     <!-- Call to Action -->
                     <tr>
                         <td align="center" style="padding: 20px 0;">
-                            <a href="https://waitlist-bay-kappa.vercel.app/" class="cta-button" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: #ffffff; text-decoration: none; border-radius: 20px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 8px 32px rgba(6, 95, 70, 0.3);">
-                                Enter Yagso Collection
-                            </a>
+                          <a href="${safeLink}" class="cta-button" 
+style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: #ffffff; text-decoration: none; border-radius: 20px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 8px 32px rgba(6, 95, 70, 0.3);">
+  Enter Yagso Collection
+</a>
+
                             <p style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: #9ca3af; margin: 20px 0 0 0;">
                                 Click above to access your exclusive jewelry collection
                             </p>
