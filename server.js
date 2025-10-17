@@ -30,8 +30,8 @@ app.post("/api/send-email", async (req, res) => {
   const { recipientEmail, invoice, senderInfo } = req.body;
 
   if (!recipientEmail || !invoice) {
-    return res.status(400).json({ 
-      error: "Missing required fields: recipientEmail and invoice are required" 
+    return res.status(400).json({
+      error: "Missing required fields: recipientEmail and invoice are required",
     });
   }
 
@@ -41,7 +41,9 @@ app.post("/api/send-email", async (req, res) => {
       {
         from: "onboarding@resend.dev",
         to: recipientEmail,
-        subject: `Invoice ${invoice.id} from ${senderInfo?.companyName || "Osondu Autos"}`,
+        subject: `Invoice ${invoice.id} from ${
+          senderInfo?.companyName || "Osondu Autos"
+        }`,
         html: `
       <!DOCTYPE html>
       <html>
@@ -330,11 +332,15 @@ app.post("/api/send-email", async (req, res) => {
           </div>
           
           <div class="email-body">
-            <div class="greeting">Dear ${invoice.customerId || "Valued Customer"},</div>
+            <div class="greeting">Dear ${
+              invoice.customerId || "Valued Customer"
+            },</div>
             
             <p class="intro-text">
               Thank you for your business! Please find the details of your invoice below. 
-              This invoice was issued on <strong>${formatDate(invoice.createdAt || new Date())}</strong>.
+              This invoice was issued on <strong>${formatDate(
+                invoice.createdAt || new Date()
+              )}</strong>.
             </p>
             
             <div class="info-grid">
@@ -344,7 +350,9 @@ app.post("/api/send-email", async (req, res) => {
               </div>
               <div class="info-item">
                 <span class="info-label">Issue Date</span>
-                <span class="info-value">${formatDate(invoice.createdAt || new Date())}</span>
+                <span class="info-value">${formatDate(
+                  invoice.createdAt || new Date()
+                )}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Payment Status</span>
@@ -352,15 +360,21 @@ app.post("/api/send-email", async (req, res) => {
                   ${(invoice.status || "unpaid").toUpperCase()}
                 </span>
               </div>
-              ${invoice.customerEmail ? `
+              ${
+                invoice.customerEmail
+                  ? `
               <div class="info-item">
                 <span class="info-label">Customer Email</span>
                 <span class="info-value">${invoice.customerEmail}</span>
               </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
             
-            ${invoice.products?.length > 0 ? `
+            ${
+              invoice.products?.length > 0
+                ? `
               <h2 class="section-title">Invoice Items</h2>
               <table class="products-table">
                 <thead>
@@ -372,26 +386,42 @@ app.post("/api/send-email", async (req, res) => {
                   </tr>
                 </thead>
                 <tbody>
-                  ${invoice.products.map(product => `
+                  ${invoice.products
+                    .map(
+                      (product) => `
                     <tr>
                       <td>
                         <div class="product-name">${product.name}</div>
-                        ${product.description ? `<div class="product-desc">${product.description}</div>` : ''}
+                        ${
+                          product.description
+                            ? `<div class="product-desc">${product.description}</div>`
+                            : ""
+                        }
                       </td>
                       <td class="text-center">${product.quantity}</td>
-                      <td class="text-right">${formatCurrency(product.price)}</td>
-                      <td class="text-right"><strong>${formatCurrency(product.price * product.quantity)}</strong></td>
+                      <td class="text-right">${formatCurrency(
+                        product.price
+                      )}</td>
+                      <td class="text-right"><strong>${formatCurrency(
+                        product.price * product.quantity
+                      )}</strong></td>
                     </tr>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
                 </tbody>
               </table>
-            ` : invoice.description ? `
+            `
+                : invoice.description
+                ? `
               <h2 class="section-title">Service Description</h2>
               <div class="service-box">
                 <div class="service-title">Service Details</div>
                 <div class="service-desc">${invoice.description}</div>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
             
             <div class="amount-box">
               <div class="amount-label">
@@ -399,25 +429,38 @@ app.post("/api/send-email", async (req, res) => {
               </div>
               <div class="amount-value">
                 ${formatCurrency(
-                  invoice.status === "paid" 
-                    ? (invoice.amount || invoice.amountDue || 0)
-                    : (invoice.amountDue || invoice.amount || 0)
+                  invoice.status === "paid"
+                    ? invoice.amount || invoice.amountDue || 0
+                    : invoice.amountDue || invoice.amount || 0
                 )}
               </div>
             </div>
             
             <div class="footer-note">
-              <p><strong>Thank you for choosing ${senderInfo?.companyName || "Osondu Autos"}!</strong></p>
+              <p><strong>Thank you for choosing ${
+                senderInfo?.companyName || "Osondu Autos"
+              }!</strong></p>
               <p>If you have any questions about this invoice, please don't hesitate to contact us.</p>
-              ${invoice.status === "unpaid" ? '<p>Payment is kindly requested within 30 days of the invoice date.</p>' : ''}
+              ${
+                invoice.status === "unpaid"
+                  ? "<p>Payment is kindly requested within 30 days of the invoice date.</p>"
+                  : ""
+              }
             </div>
           </div>
           
           <div class="company-footer">
-            <div class="company-name">${senderInfo?.companyName || "Osondu Autos"}</div>
+            <div class="company-name">${
+              senderInfo?.companyName || "Osondu Autos"
+            }</div>
             <div class="company-details">
-              ${senderInfo?.address || "Block 2 Shop 33 Aspamda Main Gate Tradefair, Ojo."}<br>
-              Phone: ${senderInfo?.phone || "08108042048"} | Email: ${senderInfo?.email || "info@osonduautos.com"}
+              ${
+                senderInfo?.address ||
+                "Block 2 Shop 33 Aspamda Main Gate Tradefair, Ojo."
+              }<br>
+              Phone: ${senderInfo?.phone || "08108042048"} | Email: ${
+          senderInfo?.email || "info@osonduautos.com"
+        }
             </div>
           </div>
         </div>
@@ -427,7 +470,8 @@ app.post("/api/send-email", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer re_9qpdZpdK_G2Mkz79beYf1yRkxDZDkuWNU`,
+          Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+
           "Content-Type": "application/json",
         },
       }
@@ -436,10 +480,13 @@ app.post("/api/send-email", async (req, res) => {
     console.log("✅ Email sent successfully:", response.data);
     return res.status(200).json({ success: true, data: response.data });
   } catch (error) {
-    console.error("❌ Error sending email:", error.response?.data || error.message);
-    return res.status(500).json({ 
+    console.error(
+      "❌ Error sending email:",
+      error.response?.data || error.message
+    );
+    return res.status(500).json({
       error: "Failed to send email",
-      details: error.response?.data || error.message 
+      details: error.response?.data || error.message,
     });
   }
 });

@@ -259,7 +259,8 @@ style="display: inline-block; padding: 15px 40px; background: linear-gradient(13
       },
       {
         headers: {
-          Authorization: `Bearer re_e6WEgfQT_PPyDpYPthCqxK72BTgFxKCg6`,
+          Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+      
           "Content-Type": "application/json",
         },
       }

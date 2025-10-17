@@ -324,7 +324,8 @@ app.post("/api/send-email", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer re_9qpdZpdK_G2Mkz79beYf1yRkxDZDkuWNU`,
+              Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+      
           "Content-Type": "application/json",
         },
       }

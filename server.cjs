@@ -257,7 +257,8 @@ export default async function handler(req, res) {
       },
       {
         headers: {
-          Authorization: `Bearer re_e6WEgfQT_PPyDpYPthCqxK72BTgFxKCg6`,
+           Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+      
           "Content-Type": "application/json",
         },
       }
