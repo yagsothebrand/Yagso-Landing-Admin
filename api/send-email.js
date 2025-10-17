@@ -52,7 +52,7 @@ app.post("/api/send-email", async (req, res) => {
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        from: "Yagso <payment@yagso.com>",
+        from: "Yagso <info@yagso.com>",
         to: recipientEmail,
         subject: `Invoice ${invoice.id} from ${
           senderInfo?.companyName || "Yagso"
