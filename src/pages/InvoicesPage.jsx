@@ -844,7 +844,7 @@ function InvoicesPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-3">
+    <div className="min-h-screen  p-3">
       <div className="max-w-7xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -885,7 +885,7 @@ function InvoicesPageContent() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                  className="bg-green-900 hover:bg-green-800 text-white shadow-lg"
                   onClick={() => setIsCreateDrawerOpen(true)}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -981,7 +981,7 @@ function InvoicesPageContent() {
               placeholder="Search invoices, customers, or products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full rounded-xl border-gray-300 focus:border-blue-500"
+              className="pl-10 w-full rounded-xl border-gray-300 focus:border-green-800"
             />
           </div>
 
@@ -989,19 +989,19 @@ function InvoicesPageContent() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-4 flex-wrap">
             {/* Date Range */}
             <motion.div
-              className="flex flex-col sm:flex-row items-center gap-3 border-2 border-blue-500 rounded-2xl px-4 py-3 bg-white shadow-sm hover:shadow-md transition-all duration-200 flex-1"
+              className="flex flex-col sm:flex-row items-center gap-3 border-2 border-green-800 rounded-2xl px-4 py-3 bg-white shadow-sm hover:shadow-md transition-all duration-200 flex-1"
               whileHover={{ scale: 1.02 }}
             >
               {/* Start Date */}
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <Filter className="w-5 h-5 text-blue-500 shrink-0" />
+                <Filter className="w-5 h-5 text-green-800 shrink-0" />
                 <Input
                   type="date"
                   value={dateRange.start}
                   onChange={(e) =>
                     setDateRange((prev) => ({ ...prev, start: e.target.value }))
                   }
-                  className="w-full sm:w-44 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  className="w-full sm:w-44 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 focus:border-green-800 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 />
               </div>
 
@@ -1017,7 +1017,7 @@ function InvoicesPageContent() {
                 onChange={(e) =>
                   setDateRange((prev) => ({ ...prev, end: e.target.value }))
                 }
-                className="w-full sm:w-44 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                className="w-full sm:w-44 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 focus:border-green-800 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />
             </motion.div>
 
@@ -1032,7 +1032,7 @@ function InvoicesPageContent() {
                   className={cn(
                     "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
                     statusFilter === status
-                      ? "bg-blue-500 text-white shadow-md"
+                      ? "bg-green-800 text-white shadow-md"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   )}
                 >
@@ -1046,15 +1046,15 @@ function InvoicesPageContent() {
               allUsers &&
               allUsers.length > 0 && (
                 <motion.div
-                  className="flex items-center gap-2 border-2 border-blue-500 rounded-2xl px-4 py-3 bg-white shadow-sm hover:shadow-md transition-all duration-200"
+                  className="flex items-center gap-2 border-2 border-green-800 rounded-2xl px-4 py-3 bg-white shadow-sm hover:shadow-md transition-all duration-200"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <User className="w-5 h-5 text-blue-500 shrink-0" />
+                  <User className="w-5 h-5 text-green-800 shrink-0" />
 
                   <select
                     value={authorizedByFilter}
                     onChange={(e) => setAuthorizedByFilter(e.target.value)}
-                    className="w-full sm:w-56 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                    className="w-full sm:w-56 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 focus:border-green-800 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   >
                     <option value="all">All Users</option>
                     {allUsers.map((u) => (
@@ -1178,7 +1178,7 @@ function InvoicesPageContent() {
                         invoice.status === "overdue" &&
                           "border-red-500 text-red-700 bg-red-50",
                         invoice.status === "draft" &&
-                          "border-blue-500 text-blue-700 bg-blue-50",
+                          "border-blue-500 text-green-800 bg-blue-50",
                         invoice.status === "unpaid" &&
                           "border-indigo-500 text-indigo-700 bg-indigo-50"
                       )}
@@ -1203,7 +1203,7 @@ function InvoicesPageContent() {
                   <div className="mt-4 space-y-1">
                     <p className="text-sm text-gray-700">
                       Amount:{" "}
-                      <span className="font-semibold text-blue-700 border border-blue-300 bg-blue-50 px-2 py-0.5 rounded">
+                      <span className="font-semibold text-blue-800 border border-blue-300 bg-blue-50 px-2 py-0.5 rounded">
                         {formatCurrency(invoice.amount)}
                       </span>
                     </p>
