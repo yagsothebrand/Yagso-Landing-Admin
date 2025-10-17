@@ -325,7 +325,7 @@ app.post("/api/send-email", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          Authorization: `Bearer re_e6WEgfQT_PPyDpYPthCqxK72BTgFxKCg6`,
 
           "Content-Type": "application/json",
         },
