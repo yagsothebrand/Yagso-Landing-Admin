@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Upload, User, Camera, Save, Edit2, Loader2 } from "lucide-react";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
 
 const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -72,13 +73,10 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
     formDataUpload.append("category", category);
 
     try {
-      const response = await fetch(
-        "/api/upload",
-        {
-          method: "POST",
-          body: formDataUpload,
-        }
-      );
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataUpload,
+      });
 
       const data = await response.json();
       if (data.success) {
@@ -205,7 +203,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
         await onUpdate(user.authId);
       }
 
-      alert("Profile updated successfully!");
+      toast({ title: "Profile updated successfully!" });
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
