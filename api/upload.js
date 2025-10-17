@@ -33,13 +33,26 @@ const upload = multer({ storage });
 
 // Upload endpoint
 app.post("/api/upload", upload.single("file"), (req, res) => {
-  if (!req.file) return res.status(400).send("No file uploaded.");
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded." });
+    }
 
-  res.json({
-    success: true,
-    imageUrl: req.file.path, // Cloudinary gives a hosted URL
-  });
+    res.json({
+      success: true,
+      imageUrl: req.file.path,
+    });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ success: false, message: "Server error during upload." });
+  }
 });
+
+app.use((err, req, res, next) => {
+  console.error("Global error:", err);
+  res.status(500).json({ success: false, message: "Something went wrong on the server." });
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
