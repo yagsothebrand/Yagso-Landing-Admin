@@ -109,7 +109,7 @@ export default function SidebarWrapper({
   const renderSidebar = () => (
     <aside
       className={cn(
-        "bg-white border-r border-gray-200 flex flex-col h-full transition-all duration-300",
+        " border-r border-gray-200 flex flex-col h-full transition-all duration-300",
         collapsed ? "w-20" : "w-64"
       )}
     >
@@ -117,8 +117,8 @@ export default function SidebarWrapper({
       <div className="p-4 border-b border-gray-200 flex justify-between items-center relative">
         {!collapsed && (
           <motion.img
-            src="/images/osondu-logo.png"
-            alt="Osondu Logo"
+            src="/logo.png"
+            alt="Yagso Logo"
             width={150}
             height={120}
             className="rounded-md"
@@ -167,7 +167,7 @@ export default function SidebarWrapper({
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-sm",
                 isActive
-                  ? "bg-blue-50 text-blue-600 font-medium"
+                  ? "bg-green-50 text-green-800 font-medium"
                   : "text-gray-700 hover:bg-gray-100"
               )}
             >
@@ -185,7 +185,7 @@ export default function SidebarWrapper({
             onClick={onProfileClick}
             className="w-full flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors"
           >
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
+            <div className="w-10 h-10 bg-green-800 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
               {user.profileImage ? (
                 <img
                   src={user.profileImage}

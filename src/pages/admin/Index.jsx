@@ -1,4 +1,7 @@
+"use client";
+
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth, db } from "../../firebase";
@@ -9,22 +12,33 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import useAuths from "../../hooks/useAuths";
-
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Phone,
+  AlertCircle,
+  Sparkles,
+  Lock,
+  ShoppingBag,
+  Globe,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, Phone, Car, AlertCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion, AnimatePresence } from "framer-motion";
-import { sendAccountMail } from "@/lib/email-service";
+import useAuths from "@/hooks/useAuths";
+import { useNavigate } from "react-router-dom";
 
-export default function InvoiceLoginForm() {
+export default function YagsoLoginForm() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
+
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
     firstName: "",
     lastName: "",
@@ -35,90 +49,62 @@ export default function InvoiceLoginForm() {
     password: "",
     confirmPassword: "",
   });
-
   const { loading, error, success, setLoading, setError, setSuccess } =
     useAuths();
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
-
   const [userData, setUserData] = useState(null);
-
-  const [validationErrors, setValidationErrors] = useState({});
 
   const validateLoginForm = () => {
     const errors = {};
-
     if (!loginData.email.trim()) {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(loginData.email)) {
       errors.email = "Email is invalid";
     }
-
     if (!loginData.password.trim()) {
       errors.password = "Password is required";
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const validateSignupForm = () => {
     const errors = {};
-
-    if (!signupData.firstName.trim()) {
+    if (!signupData.firstName.trim())
       errors.firstName = "First name is required";
-    }
-
-    if (!signupData.lastName.trim()) {
-      errors.lastName = "Last name is required";
-    }
-
+    if (!signupData.lastName.trim()) errors.lastName = "Last name is required";
     if (!signupData.email.trim()) {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
       errors.email = "Email is invalid";
     }
-
-    if (!signupData.phone.trim()) {
-      errors.phone = "Phone number is required";
-    }
-
-    if (!signupData.role.trim()) {
-      errors.role = "Role is required";
-    }
-
+    if (!signupData.phone.trim()) errors.phone = "Phone number is required";
+    if (!signupData.role.trim()) errors.role = "Role is required";
     if (!signupData.password.trim()) {
       errors.password = "Password is required";
     } else if (signupData.password.length < 6) {
       errors.password = "Password must be at least 6 characters";
     }
-
     if (!signupData.confirmPassword.trim()) {
       errors.confirmPassword = "Please confirm your password";
     } else if (signupData.password !== signupData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSignupData({ ...signupData, [name]: value });
-    // Clear validation error when user starts typing
-    if (validationErrors[name]) {
-      setValidationErrors({ ...validationErrors, [name]: "" });
-    }
   };
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
-    // Clear validation error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors({ ...validationErrors, [name]: "" });
+    }
+  };
+
+  const handleSignupChange = (e) => {
+    const { name, value } = e.target;
+    setSignupData({ ...signupData, [name]: value });
     if (validationErrors[name]) {
       setValidationErrors({ ...validationErrors, [name]: "" });
     }
@@ -126,15 +112,10 @@ export default function InvoiceLoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    if (!validateLoginForm()) {
-      return;
-    }
-
+    if (!validateLoginForm()) return;
     setLoading(true);
     setError("");
     setSuccess("");
-
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -173,24 +154,18 @@ export default function InvoiceLoginForm() {
         setLoading(false);
       }
     } catch (err) {
-      console.error(err.message);
       setError(err.message || "Something went wrong");
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    if (!validateSignupForm()) {
-      return;
-    }
-
+    if (!validateSignupForm()) return;
     setLoading(true);
     setError("");
     setSuccess("");
-    // await sendAccountMail(signupData);
-    setLoading(false);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -218,6 +193,7 @@ export default function InvoiceLoginForm() {
       await sendAccountMail(signupData);
 
       setSuccess("Account created successfully! You can now log in.");
+
       setSignupData({
         firstName: "",
         lastName: "",
@@ -228,75 +204,18 @@ export default function InvoiceLoginForm() {
         password: "",
         confirmPassword: "",
       });
-
       setTimeout(() => {
         setActiveTab("login");
         setSuccess("");
       }, 2000);
     } catch (err) {
-      console.error(err);
-      setError(err.message);
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  const roles = [
-    "CEO",
-    "General Manager",
-    "Sales Representative",
-    // "Accountant",
-    // "Invoice Clerk",
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const leftPanelVariants = {
-    hidden: { x: -100, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const rightPanelVariants = {
-    hidden: { x: 100, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const tabVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-    exit: {
-      opacity: 0,
-      y: -20,
-      transition: { duration: 0.3 },
-    },
-  };
+  const roles = ["CEO", "General Manager", "Sales Representative"];
 
   const ErrorMessage = ({ message }) => {
     if (!message) return null;
@@ -313,98 +232,229 @@ export default function InvoiceLoginForm() {
     );
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.8, staggerChildren: 0.2 },
+    },
+  };
+
+  const leftPanelVariants = {
+    hidden: { x: -100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const rightPanelVariants = {
+    hidden: { x: 100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const tabVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+  };
+
+  const features = [
+    {
+      icon: Sparkles,
+      title: "Premium Inventory",
+      desc: "Manage your jewelry collection with elegance",
+    },
+    {
+      icon: ShoppingBag,
+      title: "Multi-Currency Sales",
+      desc: "Accept payments in multiple currencies via Paystack",
+    },
+    {
+      icon: Globe,
+      title: "Global Reach",
+      desc: "Connect with customers worldwide",
+    },
+    {
+      icon: Lock,
+      title: "Secure Dashboard",
+      desc: "Enterprise-grade security for your data",
+    },
+  ];
+
   return (
     <motion.div
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen bg-gray-50 font-inter"
-      style={{ fontFamily: "'Inter', 'Segoe UI', 'Roboto', sans-serif" }}
+      className="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-green-50"
     >
       <div className="flex min-h-screen">
-        {/* Left Panel - Image/Branding */}
+        {/* Left Panel */}
         <motion.div
           variants={leftPanelVariants}
-          className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900 relative overflow-hidden"
+          className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-white-800 via-green-800 to-slate-700 relative overflow-hidden"
         >
-          {/* Automotive Parts Background */}
-          <div className="absolute inset-0 opacity-30">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3Cpattern id='auto-parts' patternUnits='userSpaceOnUse' width='100' height='100'%3E%3Ccircle cx='20' cy='20' r='8' fill='%23ffffff' opacity='0.1'/%3E%3Crect x='40' y='10' width='15' height='20' fill='%23ffffff' opacity='0.08'/%3E%3Ccircle cx='70' cy='30' r='12' fill='%23ffffff' opacity='0.06'/%3E%3Cpath d='M10,60 L30,70 L30,80 L10,90 Z' fill='%23ffffff' opacity='0.07'/%3E%3Ccircle cx='80' cy='80' r='6' fill='%23ffffff' opacity='0.09'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23auto-parts)'/%3E%3C/svg%3E")`,
-              }}
-            />
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-20 left-20 w-72 h-72 bg-amber-300 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-300 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-amber-200 rounded-full blur-3xl opacity-50" />
           </div>
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-white" />
-
-          <div className="relative z-10 flex flex-col justify-center items-center text-center px-12 text-white">
+          <div className="relative z-10 flex flex-col justify-center items-center text-center px-12">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="mb-8"
+              className=""
             >
-              {/* Company Logo */}
               <img
-                src="/images/osondu-bg.png"
-                className="w20 h-30 text-center items-center"
+                src="/logo.png"
+                alt="Yagso"
+                className="w-48 h-auto drop-shadow-lg"
               />
             </motion.div>
 
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="bg-gradient-to-br from-gray-700 via-gray-600 to-slate-700 rounded-2xl p-6 border border-slate-300/20 text-white"
-            >
-              <h3 className="text-xl font-semibold mb-3">
-                Inventory Management System
-              </h3>
-              <p>
-                Simplify and optimize your automotive parts operations with our
-                all-in-one platform for seamless invoicing, billing, and
-                inventory management.
-              </p>
+            <motion.div className="space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+              >
+                <p className="text-amber-200 text-lg font-semibold">
+                  Admin Dashboard
+                </p>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="text-base text-green-100 leading-relaxed max-w-md"
+              >
+                Manage your premium jewelry collection, track inventory, process
+                orders, and grow your business with confidence.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                className="grid grid-cols-2 gap-4 pt-8"
+              >
+                {features.map((feature, i) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.7 + i * 0.1, duration: 0.5 }}
+                      className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:border-amber-300/50 transition-all duration-300"
+                    >
+                      <Icon className="w-6 h-6 text-amber-300 mb-2 mx-auto" />
+                      <p className="font-semibold text-white text-sm">
+                        {feature.title}
+                      </p>
+                      <p className="text-xs text-green-100 mt-1">
+                        {feature.desc}
+                      </p>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.6 }}
+                className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10 mt-3"
+              >
+                <h3 className="text-white font-bold mb-3 text-sm">
+                  Platform Features
+                </h3>
+                <ul className="space-y-2 text-xs text-green-100">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-amber-300 rounded-full" />
+                    Product catalog with advanced filtering
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-amber-300 rounded-full" />
+                    Secure multi-currency checkout
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-amber-300 rounded-full" />
+                    Order management & tracking
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-amber-300 rounded-full" />
+                    WhatsApp integration for support
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-amber-300 rounded-full" />
+                    Email notifications & analytics
+                  </li>
+                </ul>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* Right Panel - Form */}
+        {/* Right Panel */}
         <motion.div
           variants={rightPanelVariants}
-          className="w-full lg:w-1/2 flex items-center justify-center px-6 py-8 bg-gradient-to-br from-gray-900/80 via-slate-900/60 to-gray-900/90"
+          className="w-full lg:w-1/2 flex items-center justify-center px-6 py-8 relative overflow-hidden"
         >
-          <motion.div className="w-full max-w-md">
-            {/* Mobile Logo */}
+          <video
+            autoPlay
+            muted
+            loop
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/moo.mp4" type="video/mp4" />
+          </video>
+
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/40 to-black/50" />
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="w-full max-w-md relative z-10"
+          >
             <div className="lg:hidden text-center mb-8">
-              <div className="w-20 h-20 mx-auto mb-8 rounded-xl  flex flex-col items-center justify-center p-2">
+              <div className="w-20 h-20 mx-auto mb-4">
                 <img
-                  src="/images/osondu-logo.png"
-                  className="w-25 h-30 text-center items-center"
+                  src="/logo.png"
+                  alt="Yagso"
+                  className="w-full h-full object-contain drop-shadow-lg"
                 />
               </div>
-              {/* <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                OSONDU NIGERIA
-              </h1>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                ENTERPRISES
-              </h2> */}
-              <p className="text-black-600">Inventory Management System</p>
-
-              {/* Mobile Brand Logos */}
+              <p className="text-white font-bold text-lg">Yagso Admin</p>
+              <p className="text-amber-200 text-sm">
+                Jewelry Management Platform
+              </p>
             </div>
 
-            <Card className="shadow-xl border-0 bg-white">
-              <CardHeader className="text-center pb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Welcome Back
-                </h3>
-                <p className="text-gray-600">
-                  Access your invoice management dashboard
-                </p>
+            <Card className="shadow-2xl border-0 bg-white">
+              <CardHeader className="text-center pb-6 border-b border-green-100">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                >
+                  <h3 className="text-3xl font-bold text-green-900 mb-2">
+                    {activeTab === "login" ? "Welcome Back" : "Join Us"}
+                  </h3>
+                  <p className="text-green-800 text-sm">
+                    Access your jewelry inventory dashboard
+                  </p>
+                </motion.div>
               </CardHeader>
 
               <CardContent className="px-6 pb-6">
@@ -413,16 +463,16 @@ export default function InvoiceLoginForm() {
                   onValueChange={setActiveTab}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-100">
+                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-gradient-to-r from-green-50 to-amber-50 p-1">
                     <TabsTrigger
                       value="login"
-                      className="font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-500 data-[state=active]:to-slate-600 data-[state=active]:text-white"
+                      className="font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-800 data-[state=active]:text-white data-[state=active]:shadow-md"
                     >
                       Sign In
                     </TabsTrigger>
                     <TabsTrigger
                       value="signup"
-                      className="font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-500 data-[state=active]:to-slate-600 data-[state=active]:text-white"
+                      className="font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-800 data-[state=active]:text-white data-[state=active]:shadow-md"
                     >
                       Create Account
                     </TabsTrigger>
@@ -442,13 +492,12 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="login-email"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Email Address
                           </Label>
                           <div className="relative">
-                            <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none" />
-
+                            <Mail className="absolute left-3 top-3 h-5 w-5 text-green-700 pointer-events-none" />
                             <Input
                               id="login-email"
                               name="email"
@@ -458,9 +507,9 @@ export default function InvoiceLoginForm() {
                               className={`pl-10 h-12 border-2 transition-all duration-200 ${
                                 validationErrors.email
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
-                              placeholder="Enter your email address"
+                              placeholder="Enter your email"
                             />
                           </div>
                           <ErrorMessage message={validationErrors.email} />
@@ -469,7 +518,7 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="login-password"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Password
                           </Label>
@@ -483,7 +532,7 @@ export default function InvoiceLoginForm() {
                               className={`pr-10 h-12 border-2 transition-all duration-200 ${
                                 validationErrors.password
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="Enter your password"
                             />
@@ -492,7 +541,7 @@ export default function InvoiceLoginForm() {
                               whileTap={{ scale: 0.9 }}
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                              className="absolute right-3 top-3 text-green-700 hover:text-green-900"
                             >
                               {showPassword ? (
                                 <EyeOff className="h-5 w-5" />
@@ -518,7 +567,7 @@ export default function InvoiceLoginForm() {
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm"
+                            className="bg-green-50 border border-green-300 text-green-800 px-4 py-3 rounded-lg text-sm"
                           >
                             {success}
                           </motion.div>
@@ -530,7 +579,7 @@ export default function InvoiceLoginForm() {
                         >
                           <Button
                             type="submit"
-                            className="w-full h-12 font-semibold bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white shadow-lg transition-all duration-200"
+                            className="w-full h-12 font-semibold bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white shadow-lg transition-all duration-200"
                             disabled={loading}
                           >
                             {loading ? (
@@ -539,7 +588,7 @@ export default function InvoiceLoginForm() {
                                   animate={{ rotate: 360 }}
                                   transition={{
                                     duration: 1,
-                                    repeat: Infinity,
+                                    repeat: 1000,
                                     ease: "linear",
                                   }}
                                   className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
@@ -554,32 +603,32 @@ export default function InvoiceLoginForm() {
                       </motion.form>
                     </TabsContent>
 
-                    <TabsContent value="signup">
+                    <TabsContent value="signup" className="space-y-4">
                       <motion.form
                         key="signup-form"
                         variants={tabVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSignup}
                         className="space-y-4 max-h-96 overflow-y-auto pr-2"
                       >
                         <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-2">
                             <Label
                               htmlFor="firstName"
-                              className="text-sm font-semibold text-gray-700"
+                              className="text-sm font-semibold text-green-900"
                             >
                               First Name
                             </Label>
                             <Input
                               name="firstName"
                               value={signupData.firstName}
-                              onChange={handleChange}
+                              onChange={handleSignupChange}
                               className={`h-11 border-2 transition-all duration-200 ${
                                 validationErrors.firstName
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="First name"
                             />
@@ -590,18 +639,18 @@ export default function InvoiceLoginForm() {
                           <div className="space-y-2">
                             <Label
                               htmlFor="lastName"
-                              className="text-sm font-semibold text-gray-700"
+                              className="text-sm font-semibold text-green-900"
                             >
                               Last Name
                             </Label>
                             <Input
                               name="lastName"
                               value={signupData.lastName}
-                              onChange={handleChange}
+                              onChange={handleSignupChange}
                               className={`h-11 border-2 transition-all duration-200 ${
                                 validationErrors.lastName
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="Last name"
                             />
@@ -612,22 +661,21 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="signup-email"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Email Address
                           </Label>
                           <div className="relative">
-                            <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none" />
-
+                            <Mail className="absolute left-3 top-3 h-5 w-5 text-green-700 pointer-events-none" />
                             <Input
                               name="email"
                               type="email"
                               value={signupData.email}
-                              onChange={handleChange}
+                              onChange={handleSignupChange}
                               className={`pl-10 h-11 border-2 transition-all duration-200 ${
                                 validationErrors.email
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="Enter your email"
                             />
@@ -638,21 +686,21 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="phone"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Phone Number
                           </Label>
                           <div className="relative">
-                            <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                            <Phone className="absolute left-3 top-3 h-4 w-4 text-green-700" />
                             <Input
                               name="phone"
                               type="tel"
                               value={signupData.phone}
-                              onChange={handleChange}
+                              onChange={handleSignupChange}
                               className={`pl-10 h-11 border-2 transition-all duration-200 ${
                                 validationErrors.phone
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="Phone number"
                             />
@@ -663,18 +711,18 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="role"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Role
                           </Label>
                           <select
                             name="role"
                             value={signupData.role}
-                            onChange={handleChange}
+                            onChange={handleSignupChange}
                             className={`w-full h-11 px-3 border-2 rounded-md text-sm transition-all duration-200 bg-white ${
                               validationErrors.role
                                 ? "border-red-300 focus:border-red-500"
-                                : "border-gray-200 focus:border-blue-500"
+                                : "border-green-300 focus:border-green-600"
                             }`}
                           >
                             <option value="">Select your role</option>
@@ -690,7 +738,7 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="signup-password"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Password
                           </Label>
@@ -699,11 +747,11 @@ export default function InvoiceLoginForm() {
                               name="password"
                               type={showPassword ? "text" : "password"}
                               value={signupData.password}
-                              onChange={handleChange}
+                              onChange={handleSignupChange}
                               className={`pr-10 h-11 border-2 transition-all duration-200 ${
                                 validationErrors.password
                                   ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-slate-500"
+                                  : "border-green-300 focus:border-green-600"
                               }`}
                               placeholder="Create password"
                             />
@@ -712,7 +760,7 @@ export default function InvoiceLoginForm() {
                               whileTap={{ scale: 0.9 }}
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                              className="absolute right-3 top-3 text-green-700 hover:text-green-900"
                             >
                               {showPassword ? (
                                 <EyeOff className="h-4 w-4" />
@@ -727,7 +775,7 @@ export default function InvoiceLoginForm() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="confirmPassword"
-                            className="text-sm font-semibold text-gray-700"
+                            className="text-sm font-semibold text-green-900"
                           >
                             Confirm Password
                           </Label>
@@ -735,11 +783,11 @@ export default function InvoiceLoginForm() {
                             name="confirmPassword"
                             type={showPassword ? "text" : "password"}
                             value={signupData.confirmPassword}
-                            onChange={handleChange}
+                            onChange={handleSignupChange}
                             className={`h-11 border-2 transition-all duration-200 ${
                               validationErrors.confirmPassword
                                 ? "border-red-300 focus:border-red-500"
-                                : "border-gray-200 focus:border-blue-500"
+                                : "border-green-300 focus:border-green-600"
                             }`}
                             placeholder="Confirm password"
                           />
@@ -762,7 +810,7 @@ export default function InvoiceLoginForm() {
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm"
+                            className="bg-green-50 border border-green-300 text-green-800 px-4 py-3 rounded-lg text-sm"
                           >
                             {success}
                           </motion.div>
@@ -774,7 +822,7 @@ export default function InvoiceLoginForm() {
                         >
                           <Button
                             type="submit"
-                            className="w-full h-12 font-semibold bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white shadow-lg transition-all duration-200"
+                            className="w-full h-12 font-semibold bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white shadow-lg transition-all duration-200"
                             disabled={loading}
                           >
                             {loading ? (
@@ -783,7 +831,7 @@ export default function InvoiceLoginForm() {
                                   animate={{ rotate: 360 }}
                                   transition={{
                                     duration: 1,
-                                    repeat: Infinity,
+                                    repeat: 1000,
                                     ease: "linear",
                                   }}
                                   className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
@@ -802,34 +850,7 @@ export default function InvoiceLoginForm() {
               </CardContent>
             </Card>
           </motion.div>
-
-          {/* Footer */}
         </motion.div>
-
-        <style jsx>{`
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-          }
-        `}</style>
-        {/* <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="text-center text-white/60 text-sm mt-6"
-          >
-            © 2025 Osondu Autos Nigeria. All rights reserved.
-          </motion.p> */}
       </div>
     </motion.div>
   );

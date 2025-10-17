@@ -73,7 +73,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
 
     try {
       const response = await fetch(
-        "https://osondu-server.onrender.com/api/upload",
+        "/api/upload",
         {
           method: "POST",
           body: formDataUpload,
@@ -242,7 +242,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-br from-blue-600 via-gray-800 to-white-800 p-5 text-white relative overflow-hidden"
+              className="bg-gradient-to-br from-green-900 via-green-800 to-white-800 p-5 text-white relative overflow-hidden"
             >
               {/* Decorative circles */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
@@ -350,7 +350,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                   className="space-y-4"
                 >
                   <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-100">
-                    <div className="w-1 h-5 bg-blue-600 rounded-full" />
+                    <div className="w-1 h-5 bg-green-900 rounded-full" />
                     <h3 className="text-base font-semibold text-gray-900">
                       Basic Information
                     </h3>
@@ -451,7 +451,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                   className="space-y-4"
                 >
                   <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-100">
-                    <div className="w-1 h-5 bg-blue-600 rounded-full" />
+                    <div className="w-1 h-5 bg-green-900 rounded-full" />
                     <h3 className="text-base font-semibold text-gray-900">
                       Work Information
                     </h3>
@@ -510,7 +510,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                   className="space-y-4"
                 >
                   <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-100">
-                    <div className="w-1 h-5 bg-blue-600 rounded-full" />
+                    <div className="w-1 h-5 bg-green-900 rounded-full" />
                     <h3 className="text-base font-semibold text-gray-900">
                       Next of Kin <span className="text-red-500">*</span>
                     </h3>
@@ -571,13 +571,13 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                 >
                   <div className="flex items-center justify-between pb-2 border-b-2 border-gray-100">
                     <div className="flex items-center gap-2">
-                      <div className="w-1 h-5 bg-blue-600 rounded-full" />
+                      <div className="w-1 h-5 bg-green-900 rounded-full" />
                       <h3 className="text-base font-semibold text-gray-900">
                         ID Cards <span className="text-red-500">*</span>
                       </h3>
                     </div>
                     {isEditing && (
-                      <label className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs cursor-pointer hover:bg-gray-700 transition-colors flex items-center gap-1.5 shadow-sm">
+                      <label className="px-3 py-1.5 bg-green-900 text-white rounded-lg text-xs cursor-pointer hover:bg-gray-700 transition-colors flex items-center gap-1.5 shadow-sm">
                         {uploadingIdCards ? (
                           <>
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -629,7 +629,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                               href={card.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-blue-600 text-white px-2.5 py-1.5 rounded text-xs hover:bg-gray-700 transition-colors font-medium"
+                              className="bg-green-900 text-white px-2.5 py-1.5 rounded text-xs hover:bg-gray-700 transition-colors font-medium"
                             >
                               View
                             </a>

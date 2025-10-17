@@ -85,7 +85,7 @@ const ImageViewerModal = ({
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.9 }}
-        className="relative max-w-5xl w-full bg-white rounded-xl overflow-hidden"
+        className="relative max-w-5xl w-full  rounded-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b">
@@ -133,7 +133,7 @@ const ImageViewerModal = ({
                 className={cn(
                   "w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all",
                   idx === currentIndex
-                    ? "border-blue-500 scale-105"
+                    ? "border-green-800 scale-105"
                     : "border-gray-200 hover:border-blue-300"
                 )}
                 onClick={() => setCurrentIndex(idx)}
@@ -196,7 +196,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                     ease: "linear",
                   }}
                 >
-                  <Package className="w-8 h-8 text-blue-600" />
+                  <Package className="w-8 h-8 text-green-800" />
                 </motion.div>
                 Products Details
               </DrawerTitle>
@@ -260,7 +260,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               transition={{ delay: 0.2 }}
               className="space-y-4"
             >
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
+              <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-blue-200">
                 <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
                   Products ID
@@ -282,7 +282,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white p-3 rounded-lg border border-gray-200">
                   <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
-                    <Tag className="w-4 h-4 text-blue-600" />
+                    <Tag className="w-4 h-4 text-green-800" />
                     Category
                   </label>
                   <p className="text-sm capitalize text-gray-900 font-semibold">
@@ -318,11 +318,11 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                     {product.stock}
                   </p>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <div className="bg-green-80 p-4 rounded-lg border border-blue-200">
                   <label className="text-xs font-medium text-gray-600">
                     Min Stock
                   </label>
-                  <p className="text-3xl font-bold text-blue-700">
+                  <p className="text-3xl font-bold text-green-900">
                     {product.minStock || 5}
                   </p>
                 </div>
@@ -356,7 +356,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               )}
 
               {product.authorizedByName && (
-                <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-lg border border-indigo-200">
+                <div className="bg-gradient-to-r from-indigo-50 to-green-80 p-4 rounded-lg border border-indigo-200">
                   <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-600" />
                     Added By
@@ -430,7 +430,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                     repeatDelay: 2,
                   }}
                 >
-                  <Edit className="w-8 h-8 text-blue-600" />
+                  <Edit className="w-8 h-8 text-green-800" />
                 </motion.div>
                 Edit Products
               </DrawerTitle>
@@ -443,7 +443,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
           </DrawerHeader>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-6 rounded-xl border border-blue-200">
               <h3 className="text-sm font-semibold text-gray-900 mb-4">
                 Basic Information
               </h3>
@@ -458,7 +458,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     required
-                    className="border-blue-200 focus:border-blue-500"
+                    className="border-blue-200 focus:border-green-800"
                   />
                 </div>
 
@@ -473,7 +473,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                     }
                     disabled
                     required
-                    className="border-blue-200 focus:border-blue-500"
+                    className="border-blue-200 focus:border-green-800"
                   />
                 </div>
 
@@ -487,7 +487,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                       setFormData({ ...formData, category: e.target.value })
                     }
                     required
-                    className="border-blue-200 focus:border-blue-500"
+                    className="border-blue-200 focus:border-green-800"
                   />
                 </div>
 
@@ -501,7 +501,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                       setFormData({ ...formData, brand: e.target.value })
                     }
                     required
-                    className="border-blue-200 focus:border-blue-500"
+                    className="border-blue-200 focus:border-green-800"
                   />
                 </div>
               </div>
@@ -596,7 +596,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                   setFormData({ ...formData, partNumber: e.target.value })
                 }
                 required
-                className="border-blue-200 focus:border-blue-500"
+                className="border-blue-200 focus:border-green-800"
               />
             </div>
 
@@ -612,7 +612,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-green-800 hover:bg-green-900 text-white"
               >
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
@@ -677,7 +677,7 @@ const FilterDrawer = ({
           <DrawerHeader className="px-0 pb-6">
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <Filter className="w-6 h-6 text-blue-600" />
+                <Filter className="w-6 h-6 text-green-800" />
                 Filter Product
               </DrawerTitle>
               <DrawerClose asChild>
@@ -690,9 +690,9 @@ const FilterDrawer = ({
 
           <div className="space-y-6">
             {/* Status Filters */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
+            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-blue-200">
               <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-blue-600" />
+                <AlertTriangle className="w-5 h-5 text-green-800" />
                 Stock Status
               </h3>
               <div className="space-y-2">
@@ -830,12 +830,12 @@ const FilterDrawer = ({
                 onApplyFilters();
                 onClose();
               }}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              className="flex-1 bg-green-800 hover:bg-green-900 text-white"
               // disabled={!hasActiveFilters}
             >
               Apply Filters
               {hasActiveFilters && (
-                <Badge className="ml-2 bg-white text-blue-600">
+                <Badge className="ml-2 bg-white text-green-800">
                   {tempStatusFilters.length +
                     tempCategoryFilters.length +
                     tempBrandFilters.length}
@@ -869,12 +869,12 @@ const ActiveFilters = ({
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200"
+      className="flex flex-wrap items-center gap-2 p-4 bg-green-80 rounded-lg border border-blue-200"
     >
       <span className="text-xs font-medium text-gray-700">Active Filters:</span>
 
       {searchTerm && (
-        <Badge className="bg-blue-100 text-blue-700 border-blue-300 flex items-center gap-1">
+        <Badge className="bg-blue-100 text-green-900 border-blue-300 flex items-center gap-1">
           Search: {searchTerm}
           <X
             className="w-3 h-3 cursor-pointer"
@@ -1116,7 +1116,7 @@ export function ProductsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-80 flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{
@@ -1125,7 +1125,7 @@ export function ProductsPage() {
             ease: "linear",
           }}
         >
-          <Package className="w-16 h-16 text-blue-600" />
+          <Package className="w-16 h-16 text-green-800" />
         </motion.div>
       </div>
     );
@@ -1136,7 +1136,7 @@ export function ProductsPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-3">
+      <div className="min-h-screen  p-3">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <motion.div
@@ -1169,7 +1169,7 @@ export function ProductsPage() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                    className="bg-green-800 hover:bg-green-900 text-white shadow-lg"
                     onClick={() => setIsAddModalOpen(true)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -1188,19 +1188,19 @@ export function ProductsPage() {
               transition={{ delay: 0.1 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="border-blue-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-blue-50 to-white">
+              <Card className="border-blue-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-green-50 to-white">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">
                         Total Products
                       </p>
-                      <p className="text-xl font-bold text-blue-600">
+                      <p className="text-xl font-bold text-blue-800">
                         {totalProducts}
                       </p>
                     </div>
                     <div className="bg-blue-100 p-3 rounded-full">
-                      <Package className="w-6 h-6 text-blue-600" />
+                      <Package className="w-6 h-6 text-blue-800" />
                     </div>
                   </div>
                 </CardContent>
@@ -1284,15 +1284,15 @@ export function ProductsPage() {
             transition={{ delay: 0.5 }}
             className="space-y-4"
           >
-            <div className="bg-white p-4">
+            <div className="p-4">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="relative flex-1 w-full group max-w-xl">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors duration-200 w-5 h-5" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-green-800 transition-colors duration-200 w-5 h-5" />
                   <Input
                     placeholder="Search by name, SKU, brand, category..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 ease-in-out shadow-sm hover:bg-white hover:shadow-md"
+                    className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 bg-gray-50 focus:border-green-800 focus:ring-2 focus:ring-blue-200 transition-all duration-300 ease-in-out shadow-sm hover:bg-white hover:shadow-md"
                   />
                 </div>
 
@@ -1304,12 +1304,12 @@ export function ProductsPage() {
                     <Button
                       variant="outline"
                       onClick={() => setIsFilterDrawerOpen(true)}
-                      className="border-blue-600 text-blue-700 hover:bg-blue-50 bg-transparent relative"
+                      className="border-green-800 text-green-900 hover:bg-green-80 bg-transparent relative"
                     >
                       <Filter className="w-4 h-4 mr-2" />
                       Filters
                       {activeFilterCount > 0 && (
-                        <Badge className="ml-2 bg-blue-600 text-white">
+                        <Badge className="ml-2 bg-green-800 text-white">
                           {activeFilterCount}
                         </Badge>
                       )}
@@ -1411,14 +1411,14 @@ export function ProductsPage() {
                               {product.category}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
-                            <Building2 className="w-3 h-3 text-blue-600 flex-shrink-0" />
-                            <span className="text-blue-700 truncate max-w-[80px] sm:max-w-none">
+                          <div className="flex items-center gap-1 bg-green-80 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+                            <Building2 className="w-3 h-3 text-green-800 flex-shrink-0" />
+                            <span className="text-green-900 truncate max-w-[80px] sm:max-w-none">
                               {product.brand}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
-                            <FileDigitIcon className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                          <div className="flex items-center gap-1 bg-green-80 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+                            <FileDigitIcon className="w-3 h-3 text-green-800 flex-shrink-0" />
                             <span className="text-black-700 truncate max-w-[80px] sm:max-w-none font-bold">
                               {product.partNumber || "N/A"}
                             </span>
@@ -1465,7 +1465,7 @@ export function ProductsPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => handleViewProduct(product)}
-                              className="w-full hover:bg-blue-50 text-blue-600 border-blue-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+                              className="w-full hover:bg-green-80 text-green-800 border-blue-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                             >
                               <Eye className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
                               <span className="hidden xs:inline">View</span>
