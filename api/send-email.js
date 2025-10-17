@@ -10,7 +10,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5174",
-      "https://www.osonduautos.com",
+      "https://www.yagso.com",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -49,10 +49,10 @@ app.post("/api/send-email", async (req, res) => {
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        from: "Osondu Autos <no-reply@osonduautos.com>",
+        from: "Yagso <payment@yagso.com>",
         to: recipientEmail,
         subject: `Invoice ${invoice.id} from ${
-          senderInfo?.companyName || "Osondu Autos"
+          senderInfo?.companyName || "Yagso"
         }`,
         html: `
 <!DOCTYPE html>
@@ -238,10 +238,10 @@ app.post("/api/send-email", async (req, res) => {
   <div class="email-wrapper">
     <div class="email-header">
       <div class="email-header-content">
-        <img src="https://osonduautos.com/images/osondu-bg.png" alt="Company Logo" />
+        <img src="https://yagso.com/logo.png" alt="Company Logo" />
       
         <h3>${invoice.id}</h3>
-        <p>${senderInfo?.companyName || "Osondu Autos"}</p>
+        <p>${senderInfo?.companyName || "Yagso"}</p>
       </div>
     </div>
     
@@ -304,12 +304,12 @@ app.post("/api/send-email", async (req, res) => {
       
       <div class="footer-note">
         <p><strong>Thank you for choosing ${
-          senderInfo?.companyName || "Osondu Autos"
+          senderInfo?.companyName || "Yagso"
         }!</strong></p>
            
 
      Block 2 Shop 33 Aspamda Main Gate Tradefair, Ojo.<br>
-        Phone: tel:+2348108042048 | Email: info@osonduautos.com
+        Phone: tel:+2348108042048 | Email: info@yagso.com
       </div>
     </div>
       </div>

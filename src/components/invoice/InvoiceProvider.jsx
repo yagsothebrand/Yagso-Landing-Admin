@@ -25,15 +25,6 @@ export function InvoiceProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const db = getFirestore();
-  const [invoiceSettings, setInvoiceSettings] = useState({
-    companyName: "Osondu Autos",
-    companyAddress: "123 Business Street, City, State 12345",
-    companyPhone: "(555) 123-4567",
-    companyEmail: "info@osonduautos.com",
-    taxRate: 0,
-    currency: "NGN",
-    currencySymbol: "₦",
-  });
 
   const getInvoices = async (userId = null) => {
     try {
@@ -67,7 +58,7 @@ export function InvoiceProvider({ children }) {
       setInvoices(invoiceList);
       console.log(invoiceList);
     } catch (error) {
-       toast({
+      toast({
         title: error.message,
         description: "Something went wrong",
       });
@@ -87,14 +78,14 @@ export function InvoiceProvider({ children }) {
         updatedAt: serverTimestamp(),
       });
       await getInvoices(user.role === "CEO" ? null : user.id);
-       toast({
+      toast({
         title: "Invoice Added Successfully",
         // description: "Invoice Added Successfully",
       });
       return { success: true, id: docRef.id };
     } catch (error) {
       console.error("Error adding invoice:", error);
-       toast({
+      toast({
         title: error.message,
         description: "Something went wrong",
       });
@@ -148,24 +139,23 @@ export function InvoiceProvider({ children }) {
     try {
       console.log("[v0] Sending invoice email to:", recipientEmail);
 
-      const response = await axios.post(
-        "https://osonduautos.com/api/send-email",
-        {
-          recipientEmail,
-          invoice,
-          senderInfo,
-        }
-      );
+      const response = await axios.post("/api/send-email", {
+        recipientEmail,
+        invoice,
+        senderInfo,
+      });
       if (response.data.success) {
         await addDoc(collection(db, "sentEmails"), {
           to: recipientEmail,
           invoiceId: invoice.id,
           subject: `Invoice ${
-            invoice.status === "paid" ? "Payment Confirmation" : "Details"
+            invoice.status === "paid"
+              ? "Payment Confirmation"
+              : "Invoice Details"
           }`,
           status: "sent",
           sentAt: serverTimestamp(),
-          sender: "info@osonduautos.com",
+          sender: "contact@yagso.com",
           authorizedByName: invoice.authorizedByName || "Unknown Customer",
         });
 
@@ -268,7 +258,7 @@ export function InvoiceProvider({ children }) {
 
       return results;
     } catch (error) {
-       toast({
+      toast({
         title: error.message,
         description: "Something went wrong",
       });
@@ -314,8 +304,6 @@ export function InvoiceProvider({ children }) {
         searchInvoices,
         sendInvoiceEmail,
         getInvoiceStats,
-        invoiceSettings,
-        setInvoiceSettings,
       }}
     >
       {children}

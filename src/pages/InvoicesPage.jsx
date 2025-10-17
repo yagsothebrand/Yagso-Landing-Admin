@@ -766,10 +766,10 @@ function InvoicesPageContent() {
     // }
 
     const senderInfo = {
-      companyName: "Osondu Autos",
+      companyName: "Yagso",
       address: "Block 2 Shop 33 Aspamda Main Gate Tradefair, Ojo.",
       phone: "08108042048",
-      email: "osondunigeriaenterprises@gmail.com",
+      email: "contact@yagso.com",
     };
 
     try {
@@ -798,10 +798,10 @@ function InvoicesPageContent() {
     }
 
     const senderInfo = {
-      companyName: "Osondu Autos",
+      companyName: "Yagso",
       address: "Block 2 Shop 33 Aspamda Main Gate Tradefair, Ojo.",
       phone: "08108042048",
-      email: "osondunigeriaenterprises@gmail.com",
+      email: "contact@yagso.com",
     };
 
     try {
