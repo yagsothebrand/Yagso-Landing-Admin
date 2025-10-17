@@ -24,6 +24,7 @@ import WaitlistForm from "./pages/landing/WaitListForm";
 import Page from "./pages/landing/Index";
 import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
 import { ProductsPage } from "./pages/ProductsPage";
+import { WaitListEmails } from "./pages/WaitListEmails";
 
 function App() {
   const router = createBrowserRouter([
@@ -95,7 +96,7 @@ function App() {
           ),
         },
         {
-          path: "/dashboard/inventory",
+          path: "/dashboard/products",
           element: (
             <Suspense fallback={<LoadingHelper />}>
               <ProtectedRoute requiredRole="Sales Representative">
@@ -150,6 +151,16 @@ function App() {
             <Suspense fallback={<LoadingHelper />}>
               <ProtectedRoute requiredRole="General Manager">
                 <EmailLogsPage />
+              </ProtectedRoute>
+            </Suspense>
+          ),
+        },
+        {
+          path: "/dashboard/waitlist",
+          element: (
+            <Suspense fallback={<LoadingHelper />}>
+              <ProtectedRoute requiredRole="General Manager">
+                <WaitListEmails />
               </ProtectedRoute>
             </Suspense>
           ),

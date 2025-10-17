@@ -58,10 +58,10 @@ export default function SidebarWrapper({
       requiredRole: "Sales Representative",
     },
     {
-      id: "inventory",
-      label: "Inventory",
+      id: "products",
+      label: "Products",
       icon: Package,
-      path: "/dashboard/inventory",
+      path: "/dashboard/products",
       requiredRole: "Sales Representative",
     },
     {
@@ -92,11 +92,18 @@ export default function SidebarWrapper({
       path: "/dashboard/analytics",
       requiredRole: "General Manager",
     },
-     {
+    {
       id: "email",
       label: "Email Logs",
       icon: MailCheckIcon,
       path: "/dashboard/email",
+      requiredRole: "General Manager",
+    },
+    {
+      id: "waitlist",
+      label: "WaitList Logs",
+      icon: MailCheckIcon,
+      path: "/dashboard/waitlist",
       requiredRole: "General Manager",
     },
   ];

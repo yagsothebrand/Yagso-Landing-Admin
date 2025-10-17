@@ -114,93 +114,102 @@ export function AddProductsModal({ isOpen, onClose, onSave }) {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadToCloudinary = async (file, productsName, category) => {
-    const formDataUpload = new FormData();
-    formDataUpload.append("file", file);
-    formDataUpload.append("name", productsName);
-    formDataUpload.append("category", category);
+const uploadToCloudinary = async (file, productsName, category) => {
+  const formDataUpload = new FormData();
+  formDataUpload.append("file", file);
+  formDataUpload.append("name", productsName);
+  formDataUpload.append("category", category);
 
-    try {
-      const response = await fetch(
-        "https://osondu-server.onrender.com/api/upload",
-        {
-          method: "POST",
-          body: formDataUpload,
-        }
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formDataUpload,
+    });
+
+    if (!response.ok) throw new Error("Upload request failed");
+
+    const data = await response.json();
+    if (data.success) {
+      return data.imageUrl;
+    } else {
+      throw new Error("Cloudinary upload failed");
+    }
+  } catch (error) {
+    console.error("Upload failed", error);
+    return null;
+  }
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setUploading(true);
+
+  try {
+    const uploadedImageUrls = [];
+
+    for (let i = 0; i < images.length; i++) {
+      const file = images[i];
+      const imageUrl = await uploadToCloudinary(
+        file,
+        formData.name,
+        formData.category
       );
 
-      const data = await response.json();
-      if (data.success) {
-        return data.imageUrl;
-      }
-      return null;
-    } catch (error) {
-      console.error("Upload failed", error);
-      return null;
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setUploading(true);
-
-    try {
-      const uploadedImageUrls = [];
-
-      for (let i = 0; i < images.length; i++) {
-        const file = images[i];
-        const imageUrl = await uploadToCloudinary(
-          file,
-          formData.name,
-          formData.category
-        );
-        if (imageUrl) uploadedImageUrls.push(imageUrl);
+      if (!imageUrl) {
+        // ❌ Stop everything if one upload fails
+        toast({title: "Image upload failed. Product was not saved."});
+        setUploading(false);
+        return;
       }
 
-      const authorizedByName =
-        user?.firstName && user?.lastName
-          ? `${user.firstName + " "} ${user.lastName}`
-          : user?.email || "Unknown User";
-
-      const products = {
-        ...formData,
-        stock: Number.parseInt(formData.stock),
-        price: Number.parseFloat(formData.price),
-        minStock: Number.parseInt(formData.minStock),
-        images: uploadedImageUrls,
-        sku: generatedSku,
-        partNumber: formData.partNumber,
-        authorizedByName,
-        status:
-          Number.parseInt(formData.stock) === 0
-            ? "out-of-stock"
-            : Number.parseInt(formData.stock) <=
-              Number.parseInt(formData.minStock)
-            ? "low-stock"
-            : "in-stock",
-        createdAt: new Date().toISOString(),
-      };
-
-      await addProductsItem(products);
-      onClose();
-      setFormData({
-        name: "",
-        category: "",
-        brand: "",
-        stock: "1",
-        price: "",
-        partNumber: "",
-        minStock: "5",
-        description: "",
-      });
-      setImages([]);
-      setImagePreviews([]);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setUploading(false);
+      uploadedImageUrls.push(imageUrl);
     }
-  };
+
+    // ✅ Proceed only if all uploads were successful
+    const authorizedByName =
+      user?.firstName && user?.lastName
+        ? `${user.firstName} ${user.lastName}`
+        : user?.email || "Unknown User";
+
+    const products = {
+      ...formData,
+      stock: Number.parseInt(formData.stock),
+      price: Number.parseFloat(formData.price),
+      minStock: Number.parseInt(formData.minStock),
+      images: uploadedImageUrls,
+      sku: generatedSku,
+      authorizedByName,
+      status:
+        Number.parseInt(formData.stock) <= 0
+          ? "out-of-stock"
+          : Number.parseInt(formData.stock) <= Number.parseInt(formData.minStock)
+          ? "low-stock"
+          : "in-stock",
+      createdAt: new Date().toISOString(),
+    };
+
+    await addProductsItem(products);
+
+    // 🧹 Reset form after successful save
+    onClose();
+    setFormData({
+      name: "",
+      category: "",
+      brand: "",
+      stock: "1",
+      price: "",
+      minStock: "5",
+      description: "",
+    });
+    setImages([]);
+    setImagePreviews([]);
+  } catch (error) {
+    console.error("Error submitting product:", error);
+  } finally {
+    setUploading(false);
+  }
+};
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -265,22 +274,7 @@ export function AddProductsModal({ isOpen, onClose, onSave }) {
                     placeholder="Enter products name"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="partNumber">Part Number *</Label>
-                  <Input
-                    id="partNumber"
-                    className="bg-white border-purple-200 focus:border-purple-500"
-                    value={formData.partNumber}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        partNumber: e.target.value,
-                      }))
-                    }
-                    required
-                    placeholder="Enter part Number"
-                  />
-                </div>
+
                 <div>
                   <Label>Brand *</Label>
                   <Button

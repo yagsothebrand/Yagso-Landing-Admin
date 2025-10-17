@@ -159,7 +159,7 @@ export function AdministrationPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-3 sm:p-3"
+        className="min-h-screen  p-3 sm:p-3"
       >
         <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
           <motion.div
@@ -196,7 +196,7 @@ export function AdministrationPage() {
               transition={{ delay: 0.1 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="relative overflow-hidden hover:shadow-lg transition-all border-gray-200">
+              <Card className="relative overflow-hidden hover:shadow-lg transition-all  bg-gradient-to-br from-blue-50 to-white border-gray-200">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -304,7 +304,7 @@ export function AdministrationPage() {
                 >
                   <Card className="overflow-hidden hover:shadow-lg transition-all border-gray-200">
                     {/* Profile Image - Large and Prominent */}
-                    <div className="p-6 pb-4 bg-gradient-to-br from-blue-50 to-purple-50">
+                    <div className="p-6 pb-4 bg-green-50">
                       <div className="flex flex-col items-center">
                         {u.profileImage ? (
                           <img
@@ -313,7 +313,7 @@ export function AdministrationPage() {
                             className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-xl mb-4"
                           />
                         ) : (
-                          <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 border-4 border-white shadow-xl flex items-center justify-center  text-5xl font-bold mb-4">
+                          <div className="w-40 h-40 rounded-full bg-green-800 border-4 border-white shadow-xl flex items-center justify-center  text-5xl font-bold mb-4">
                             {u.firstName?.[0]}
                             {u.lastName?.[0]}
                           </div>
@@ -335,11 +335,11 @@ export function AdministrationPage() {
                       </div>
                     </div>
 
-                    <CardContent className="pt-4 pb-4 px-4">
+                    <CardContent className="pt-4 pb-4 px-4 bg-white">
                       {/* User Info */}
-                      <div className="space-y-3 mb-4">
+                      <div className="space-y-3 mb-4 ">
                         {/* Extension ID */}
-                        <div className="bg-gray-50 rounded-lg p-3">
+                        <div className=" rounded-lg p-3">
                           <p className="text-xs text-gray-600 mb-1.5 font-semibold">
                             Extension ID
                           </p>

@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [loader, setLoader] = useState(false);
   const [emailLogs, setEmailLogs] = useState([]);
+  const [waitlistLogs, setWaitlistLogs] = useState([]);
   const toast = useToast();
   const [loadingGetUserInformation, setLoadingGetUserInformation] =
     useState(true);
@@ -153,6 +154,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const getWaitlistLogs = async () => {
+    setLoading(true);
+    try {
+      const querySnapshot = await getDocs(collection(db, "waitlist"));
+      const usersList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(usersList);
+      setWaitlistLogs(usersList);
+      setLoading(false);
+    } catch (error) {
+      toast({ title: "Error fetching all waitlist:", error });
+      setLoading(false);
+    }
+  };
   // if (loadingGetUserInformation && !user && !allUsers) {
   //   return <div> Loading </div>;
   // }
@@ -179,6 +196,7 @@ export const AuthProvider = ({ children }) => {
         await getUserInfo(firebaseUser.uid);
         await getAllUsers();
         await getEmailLogs();
+        await getWaitlistLogs();
       } else {
         setUser(null);
       }
@@ -212,6 +230,8 @@ export const AuthProvider = ({ children }) => {
         deleteUpdateUserProfile,
         getUserInfo,
         setLoading,
+        getWaitlistLogs,
+        waitlistLogs,
         loading,
         logout,
         loader,

@@ -198,7 +198,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                 >
                   <Package className="w-8 h-8 text-green-800" />
                 </motion.div>
-                Products Details
+                Jewelry Details
               </DrawerTitle>
               <DrawerClose asChild>
                 <Button variant="ghost" size="sm">
@@ -209,7 +209,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
           </DrawerHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Products  Images Gallery */}
+            {/* Productss  Images Gallery */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -263,7 +263,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-blue-200">
                 <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  Products ID
+                  Productss ID
                 </label>
                 <p className="text-sm font-semibold text-gray-900 font-mono">
                   {product.sku}
@@ -272,7 +272,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
 
               <div>
                 <label className="text-xs font-medium text-gray-600">
-                  Products Name
+                  Productss Name
                 </label>
                 <p className="text-2xl font-bold text-gray-900">
                   {product.name}
@@ -296,15 +296,6 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                   </label>
                   <p className="text-sm text-gray-900 font-semibold">
                     {product.brand}
-                  </p>
-                </div>
-                <div className="bg-white p-3 rounded-lg border border-gray-200">
-                  <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
-                    <FileDigitIcon className="w-4 h-4 text-orange-600" />
-                    Part Number
-                  </label>
-                  <p className="text-sm text-gray-900 font-semibold">
-                    {product.partNumber}
                   </p>
                 </div>
               </div>
@@ -389,7 +380,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
         minStock: product.minStock || 5,
         price: product.price || 0,
         description: product.description || "",
-        partNumber: product.partNumber || "",
+
         sku: product.sku || "",
       });
     }
@@ -432,7 +423,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                 >
                   <Edit className="w-8 h-8 text-green-800" />
                 </motion.div>
-                Edit Products
+                Edit Productss
               </DrawerTitle>
               <DrawerClose asChild>
                 <Button variant="ghost" size="sm">
@@ -450,7 +441,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-2">
-                    Products Name *
+                    Productss Name *
                   </label>
                   <Input
                     value={formData.name || ""}
@@ -583,20 +574,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Enter Products description..."
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-2">
-                Part Number *
-              </label>
-              <Input
-                value={formData.partNumber || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, partNumber: e.target.value })
-                }
-                required
-                className="border-blue-200 focus:border-green-800"
+                placeholder="Enter Productss description..."
               />
             </div>
 
@@ -934,7 +912,7 @@ const ActiveFilters = ({
   );
 };
 
-// Main Products Page Component
+// Main Productss Page Component
 export function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -959,7 +937,7 @@ export function ProductsPage() {
   const [tempBrandFilters, setTempBrandFilters] = useState([]);
 
   const {
-    inventory,
+    products,
     loading,
     getProducts,
     updateProductsItem,
@@ -969,21 +947,21 @@ export function ProductsPage() {
     categories,
     brands, // Added brands to context
   } = useProducts();
-  console.log(inventory);
-  const [products, setProducts] = useState([]);
+  console.log(products);
+  const [productss, setProductss] = useState([]);
 
-  // Update products when inventory changes
+  // Update productss when productss changes
   useEffect(() => {
-    if (inventory && Array.isArray(inventory)) {
-      const updatedProducts = inventory.map((product) => ({
+    if (products && Array.isArray(products)) {
+      const updatedProducts = products.map((product) => ({
         ...product,
         status: calculateItemStatus(product.stock, product.minStock),
       }));
-      setProducts(updatedProducts);
+      setProductss(updatedProducts);
     }
-  }, [inventory, calculateItemStatus]);
+  }, [products, calculateItemStatus]);
 
-  const filteredProducts = products.filter((p) => {
+  const filteredProducts = productss.filter((p) => {
     const matchesSearch =
       searchTerm === "" ||
       p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -991,7 +969,6 @@ export function ProductsPage() {
       p.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.partNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.authorizedByName?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
@@ -1061,7 +1038,7 @@ export function ProductsPage() {
       const result = await updateProductsItem(id, updateData);
 
       if (result.success) {
-        console.log("Products updated successfully");
+        console.log("Productss updated successfully");
         getProducts(); // Refresh inventory after update
       } else {
         console.error("Failed to update product:", result.error);
@@ -1151,7 +1128,7 @@ export function ProductsPage() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="font-semibold">
-                  Products Management
+                  Jewelry Management
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -1159,7 +1136,7 @@ export function ProductsPage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <p className="text-gray-600 mt-1  text-pretty">
-                  Manage your spare parts inventory
+                  Manage your jewelries
                 </p>
               </div>
 
@@ -1173,7 +1150,7 @@ export function ProductsPage() {
                     onClick={() => setIsAddModalOpen(true)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Products
+                    Add Jewelries
                   </Button>
                 </motion.div>
               </div>
@@ -1193,7 +1170,7 @@ export function ProductsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">
-                        Total Products
+                        Total Jewelries
                       </p>
                       <p className="text-xl font-bold text-blue-800">
                         {totalProducts}
@@ -1417,12 +1394,6 @@ export function ProductsPage() {
                               {product.brand}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 bg-green-80 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
-                            <FileDigitIcon className="w-3 h-3 text-green-800 flex-shrink-0" />
-                            <span className="text-black-700 truncate max-w-[80px] sm:max-w-none font-bold">
-                              {product.partNumber || "N/A"}
-                            </span>
-                          </div>
                         </div>
 
                         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
@@ -1516,8 +1487,8 @@ export function ProductsPage() {
               <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 text-lg">
                 {searchTerm || activeFilterCount > 0
-                  ? "No products found matching your criteria."
-                  : "No products available. Add your first product!"}
+                  ? "No product found matching your criteria."
+                  : "No product available. Add your first product!"}
               </p>
             </motion.div>
           )}
