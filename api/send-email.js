@@ -3,6 +3,9 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
@@ -246,9 +249,7 @@ app.post("/api/send-email", async (req, res) => {
     </div>
     
     <div class="email-body">
-      <div class="greeting">Dear ${
-        recipientEmail || "Valued Customer"
-      },</div>
+      <div class="greeting">Dear ${recipientEmail || "Valued Customer"},</div>
       <p class="intro-text">
         Thank you for your business! Below are the details of your invoice.
       </p>
@@ -324,8 +325,8 @@ app.post("/api/send-email", async (req, res) => {
       },
       {
         headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
-      
+          Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+
           "Content-Type": "application/json",
         },
       }

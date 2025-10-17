@@ -915,7 +915,7 @@ function InvoicesPageContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-gray-600">Paid</p>
@@ -927,7 +927,7 @@ function InvoicesPageContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-gray-600">Overdue</p>
@@ -1090,7 +1090,7 @@ function InvoicesPageContent() {
               variant="outline"
               size="sm"
               onClick={resetFilters}
-              className="rounded-full lg:ml-auto"
+              className="rounded-full bg-white lg:ml-auto"
             >
               Clear Filters
             </Button>
