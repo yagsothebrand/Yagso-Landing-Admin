@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
 
@@ -82,7 +79,7 @@ app.post("/api/send-account-mail", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`, // 🔒 use env var instead of hardcoded key
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
           "Content-Type": "application/json",
         },
       }

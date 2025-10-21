@@ -155,7 +155,7 @@ export function InvoiceProvider({ children }) {
           }`,
           status: "sent",
           sentAt: serverTimestamp(),
-          sender: "contact@yagso.com",
+          sender: "info@yagso.com",
           authorizedByName: invoice.authorizedByName || "Unknown Customer",
         });
 
