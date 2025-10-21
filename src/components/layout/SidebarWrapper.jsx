@@ -257,7 +257,7 @@ export default function SidebarWrapper({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[98] lg:hidden w-64"
+              className="fixed inset-y-0 left-0  bg-white z-[98] lg:hidden w-64"
             >
               {renderSidebar()}
             </motion.div>
