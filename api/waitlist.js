@@ -1,9 +1,5 @@
 // api/send-email.js
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
-
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -263,8 +259,7 @@ style="display: inline-block; padding: 15px 40px; background: linear-gradient(13
       },
       {
         headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
-      
+          Authorization: `Bearer re_e6WEgfQT_PPyDpYPthCqxK72BTgFxKCg6`,
           "Content-Type": "application/json",
         },
       }
