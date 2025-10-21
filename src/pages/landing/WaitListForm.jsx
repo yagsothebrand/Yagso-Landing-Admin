@@ -149,7 +149,7 @@ export default function HomePage() {
       });
 
       // Save locally (optional)
-      localStorage.setItem("token", docRef.id);
+      // localStorage.setItem("token", docRef.id);
 
       // ✅ Build the unique link with ID
       const magicLink = `https://yagso.com/${docRef.id}`;
