@@ -64,13 +64,7 @@ export default function SidebarWrapper({
       path: "/dashboard/products",
       requiredRole: "Sales Representative",
     },
-    {
-      id: "brands",
-      label: "Brands",
-      icon: Tag,
-      path: "/dashboard/brands",
-      requiredRole: "Sales Representative",
-    },
+
     {
       id: "categories",
       label: "Categories",

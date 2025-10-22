@@ -41,11 +41,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { AddProductsModal } from "./AddProductsModal";
 import { useProducts } from "@/components/products/ProductsProvider";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Layout from "@/components/layout/Layout";
+import AddJewelry from "./AddJewelry";
 
 const ImageViewerModal = ({
   isOpen,
@@ -1091,22 +1091,22 @@ export function ProductsPage() {
     outOfStock: outOfStockCount,
   } = stats;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-80 flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-        >
-          <Package className="w-16 h-16 text-green-800" />
-        </motion.div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-80 flex items-center justify-center">
+  //       <motion.div
+  //         animate={{ rotate: 360 }}
+  //         transition={{
+  //           duration: 1,
+  //           repeat: Number.POSITIVE_INFINITY,
+  //           ease: "linear",
+  //         }}
+  //       >
+  //         <Package className="w-16 h-16 text-green-800" />
+  //       </motion.div>
+  //     </div>
+  //   );
+  // }
 
   const activeFilterCount =
     statusFilters.length + categoryFilters.length + brandFilters.length;
@@ -1495,7 +1495,7 @@ export function ProductsPage() {
         </div>
 
         {/* Modals/Drawers */}
-        <AddProductsModal
+        <AddJewelry
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onSave={() => getProducts()}

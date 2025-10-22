@@ -13,8 +13,6 @@ import NotFound from "./pages/NotFound";
 // Protected pages
 import AdminDashboard from "./components/layout/AdminDashboard";
 import InvoicesPage from "./pages/InvoicesPage";
-
-import { BrandsPage } from "./pages/BrandsPage";
 import { CategoryPage } from "./pages/CategoryPage";
 import { AdministrationPage } from "./pages/AdministrationPage";
 import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
@@ -105,16 +103,7 @@ function App() {
             </Suspense>
           ),
         },
-        {
-          path: "/dashboard/brands",
-          element: (
-            <Suspense fallback={<LoadingHelper />}>
-              <ProtectedRoute requiredRole="Sales Representative">
-                <BrandsPage />
-              </ProtectedRoute>
-            </Suspense>
-          ),
-        },
+       
         {
           path: "/dashboard/categories",
           element: (
