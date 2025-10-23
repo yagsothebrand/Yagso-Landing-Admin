@@ -46,7 +46,52 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Layout from "@/components/layout/Layout";
 import AddJewelry from "./AddJewelry";
+import { Modal } from "./InvoicesPage";
 
+export function DeleteInvoiceModal({ open, setOpen, onConfirm, invoice }) {
+  return (
+    <>
+      {/* <Button
+        variant="destructive"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-2"
+      >
+        Delete
+      </Button> */}
+
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Delete Invoice"
+        actions={
+          <>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                onConfirm(invoice);
+                // setOpen(false);
+              }}
+            >
+              Delete
+            </Button>
+          </>
+        }
+      >
+        <p className="text-gray-700 leading-relaxed">
+          Are you sure you want to delete jewelry{" "}
+          <span className="font-semibold">{invoice?.id}</span>?
+          <br />
+          <span className="font-medium text-red-600">
+            This action cannot be undone.
+          </span>
+        </p>
+      </Modal>
+    </>
+  );
+}
 const ImageViewerModal = ({
   isOpen,
   onClose,
@@ -133,7 +178,7 @@ const ImageViewerModal = ({
                 className={cn(
                   "w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all",
                   idx === currentIndex
-                    ? "border-green-800 scale-105"
+                    ? "border-[#004f3f] scale-105"
                     : "border-gray-200 hover:border-blue-300"
                 )}
                 onClick={() => setCurrentIndex(idx)}
@@ -196,7 +241,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                     ease: "linear",
                   }}
                 >
-                  <Package className="w-8 h-8 text-green-800" />
+                  <Package className="w-8 h-8 text-[#004f3f]" />
                 </motion.div>
                 Jewelry Details
               </DrawerTitle>
@@ -260,10 +305,10 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               transition={{ delay: 0.2 }}
               className="space-y-4"
             >
-              <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-blue-200">
+              <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-[#e2cd9e]/30">
                 <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  Productss ID
+                  Products ID
                 </label>
                 <p className="text-sm font-semibold text-gray-900 font-mono">
                   {product.sku}
@@ -282,7 +327,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white p-3 rounded-lg border border-gray-200">
                   <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
-                    <Tag className="w-4 h-4 text-green-800" />
+                    <Tag className="w-4 h-4 text-[#004f3f]" />
                     Category
                   </label>
                   <p className="text-sm capitalize text-gray-900 font-semibold">
@@ -309,7 +354,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
                     {product.stock}
                   </p>
                 </div>
-                <div className="bg-green-80 p-4 rounded-lg border border-blue-200">
+                <div className="bg-green-80 p-4 rounded-lg border border-[#e2cd9e]/30">
                   <label className="text-xs font-medium text-gray-600">
                     Min Stock
                   </label>
@@ -336,7 +381,7 @@ const ViewProductDrawer = ({ product, isOpen, onClose }) => {
               </div>
 
               {product.description && (
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="bg-[#f5f1e8] p-4 rounded-lg border border-gray-200">
                   <label className="text-xs font-medium text-gray-600 block mb-2">
                     Description
                   </label>
@@ -380,7 +425,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
         minStock: product.minStock || 5,
         price: product.price || 0,
         description: product.description || "",
-
+        type: product.type || "",
         sku: product.sku || "",
       });
     }
@@ -421,7 +466,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                     repeatDelay: 2,
                   }}
                 >
-                  <Edit className="w-8 h-8 text-green-800" />
+                  <Edit className="w-8 h-8 text-[#004f3f]" />
                 </motion.div>
                 Edit Productss
               </DrawerTitle>
@@ -434,7 +479,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
           </DrawerHeader>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-6 rounded-xl border border-blue-200">
+            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-6 rounded-xl border border-[#e2cd9e]/30">
               <h3 className="text-sm font-semibold text-gray-900 mb-4">
                 Basic Information
               </h3>
@@ -449,7 +494,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     required
-                    className="border-blue-200 focus:border-green-800"
+                    className="border-[#e2cd9e]/30 focus:border-[#004f3f]"
                   />
                 </div>
 
@@ -464,35 +509,23 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                     }
                     disabled
                     required
-                    className="border-blue-200 focus:border-green-800"
+                    className="border-[#e2cd9e]/30 focus:border-[#004f3f]"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-2">
-                    Category *
-                  </label>
-                  <Input
-                    value={formData.category || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    required
-                    className="border-blue-200 focus:border-green-800"
-                  />
-                </div>
+               
 
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-2">
-                    Brand *
+                    Type *
                   </label>
                   <Input
-                    value={formData.brand || ""}
+                    value={formData.type || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, brand: e.target.value })
+                      setFormData({ ...formData, type: e.target.value })
                     }
                     required
-                    className="border-blue-200 focus:border-green-800"
+                    className="border-[#e2cd9e]/30 focus:border-[#004f3f]"
                   />
                 </div>
               </div>
@@ -590,7 +623,7 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-green-800 hover:bg-green-900 text-white"
+                className="bg-[#004f3f] hover:bg-green-900 text-white"
               >
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
@@ -655,7 +688,7 @@ const FilterDrawer = ({
           <DrawerHeader className="px-0 pb-6">
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <Filter className="w-6 h-6 text-green-800" />
+                <Filter className="w-6 h-6 text-[#004f3f]" />
                 Filter Product
               </DrawerTitle>
               <DrawerClose asChild>
@@ -668,9 +701,9 @@ const FilterDrawer = ({
 
           <div className="space-y-6">
             {/* Status Filters */}
-            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-blue-200">
+            <div className="bg-gradient-to-r from-green-80 to-indigo-50 p-4 rounded-xl border border-[#e2cd9e]/30">
               <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-green-800" />
+                <AlertTriangle className="w-5 h-5 text-[#004f3f]" />
                 Stock Status
               </h3>
               <div className="space-y-2">
@@ -705,90 +738,6 @@ const FilterDrawer = ({
                 ))}
               </div>
             </div>
-
-            {/* Category Filters */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-200">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <Tag className="w-5 h-5 text-purple-600" />
-                Categories
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                {categories.map((category) => (
-                  <label
-                    key={category.id}
-                    className={cn(
-                      "flex flex-col items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2",
-                      tempCategoryFilters.includes(category.name.toLowerCase())
-                        ? "border-purple-500 bg-purple-50"
-                        : "border-gray-200 bg-white hover:border-gray-300"
-                    )}
-                  >
-                    {category.image && (
-                      <img
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        className="w-12 h-12 object-cover rounded-lg"
-                      />
-                    )}
-                    <input
-                      type="checkbox"
-                      checked={tempCategoryFilters.includes(
-                        category.name.toLowerCase()
-                      )}
-                      onChange={() =>
-                        toggleFilter(category.name.toLowerCase(), "category")
-                      }
-                      className="hidden"
-                    />
-                    <span className="text-xs font-medium text-gray-900 text-center">
-                      {category.name}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Brand Filters */}
-            <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-xl border border-green-200">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-green-600" />
-                Brands
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                {brands.map((brand) => (
-                  <label
-                    key={brand.id}
-                    className={cn(
-                      "flex flex-col items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2",
-                      tempBrandFilters.includes(brand.name.toLowerCase())
-                        ? "border-green-500 bg-green-50"
-                        : "border-gray-200 bg-white hover:border-gray-300"
-                    )}
-                  >
-                    {brand.image && (
-                      <img
-                        src={brand.image || "/placeholder.svg"}
-                        alt={brand.name}
-                        className="w-12 h-12 object-contain rounded"
-                      />
-                    )}
-                    <input
-                      type="checkbox"
-                      checked={tempBrandFilters.includes(
-                        brand.name.toLowerCase()
-                      )}
-                      onChange={() =>
-                        toggleFilter(brand.name.toLowerCase(), "brand")
-                      }
-                      className="hidden"
-                    />
-                    <span className="text-xs font-medium text-gray-900 text-center">
-                      {brand.name}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="flex gap-3 pt-6 border-t mt-6">
@@ -808,12 +757,12 @@ const FilterDrawer = ({
                 onApplyFilters();
                 onClose();
               }}
-              className="flex-1 bg-green-800 hover:bg-green-900 text-white"
+              className="flex-1 bg-[#004f3f] hover:bg-green-900 text-white"
               // disabled={!hasActiveFilters}
             >
               Apply Filters
               {hasActiveFilters && (
-                <Badge className="ml-2 bg-white text-green-800">
+                <Badge className="ml-2 bg-white text-[#004f3f]">
                   {tempStatusFilters.length +
                     tempCategoryFilters.length +
                     tempBrandFilters.length}
@@ -847,12 +796,12 @@ const ActiveFilters = ({
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap items-center gap-2 p-4 bg-green-80 rounded-lg border border-blue-200"
+      className="flex flex-wrap items-center gap-2 p-4 bg-green-80 rounded-lg border border-[#e2cd9e]/30"
     >
       <span className="text-xs font-medium text-gray-700">Active Filters:</span>
 
       {searchTerm && (
-        <Badge className="bg-blue-100 text-green-900 border-blue-300 flex items-center gap-1">
+        <Badge className="bg-green-100 text-green-900 border-green-300 flex items-center gap-1">
           Search: {searchTerm}
           <X
             className="w-3 h-3 cursor-pointer"
@@ -935,7 +884,7 @@ export function ProductsPage() {
   const [tempStatusFilters, setTempStatusFilters] = useState([]);
   const [tempCategoryFilters, setTempCategoryFilters] = useState([]);
   const [tempBrandFilters, setTempBrandFilters] = useState([]);
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const {
     products,
     loading,
@@ -966,8 +915,8 @@ export function ProductsPage() {
       searchTerm === "" ||
       p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.authorizedByName?.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -1051,25 +1000,20 @@ export function ProductsPage() {
   };
 
   const handleDeleteProduct = async (productId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this product? This action cannot be undone."
-      )
-    ) {
-      try {
-        const result = await deleteProductsItem(productId);
-
-        if (result.success) {
-          console.log("Products deleted successfully");
-          getProducts(); // Refresh inventory after delete
-        } else {
-          console.error("Failed to delete product:", result.error);
-          alert("Failed to delete product. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error deleting product:", error);
-        alert("An error occurred while deleting the product.");
+    setIsDeleteModalOpen(false);
+    try {
+      const result = await deleteProductsItem(productId);
+      setIsDeleteModalOpen(false);
+      if (result.success) {
+        console.log("Products deleted successfully");
+        getProducts(); // Refresh inventory after delete
+      } else {
+        console.error("Failed to delete product:", result.error);
+        alert("Failed to delete product. Please try again.");
       }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("An error occurred while deleting the product.");
     }
   };
 
@@ -1093,7 +1037,7 @@ export function ProductsPage() {
 
   // if (loading) {
   //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-80 flex items-center justify-center">
+  //     <div className="min-h-screen bg-gradient-to-br from-[#f5f1e8] via-white to-green-80 flex items-center justify-center">
   //       <motion.div
   //         animate={{ rotate: 360 }}
   //         transition={{
@@ -1102,7 +1046,7 @@ export function ProductsPage() {
   //           ease: "linear",
   //         }}
   //       >
-  //         <Package className="w-16 h-16 text-green-800" />
+  //         <Package className="w-16 h-16 text-[#004f3f]" />
   //       </motion.div>
   //     </div>
   //   );
@@ -1146,7 +1090,7 @@ export function ProductsPage() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    className="bg-green-800 hover:bg-green-900 text-white shadow-lg"
+                    className="bg-[#004f3f] hover:bg-green-900 text-white shadow-lg"
                     onClick={() => setIsAddModalOpen(true)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -1158,100 +1102,80 @@ export function ProductsPage() {
           </motion.div>
 
           {/* Stats Cards */}
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              whileHover={{ y: -4 }}
-            >
-              <Card className="border-blue-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-green-50 to-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">
-                        Total Jewelries
-                      </p>
-                      <p className="text-xl font-bold text-blue-800">
-                        {totalProducts}
-                      </p>
+            {[
+              {
+                label: "Total Jewelries",
+                value: totalProducts,
+                icon: Package,
+                color: "from-[#004f3f] to-[#e2cd9e]",
+                textColor: "text-[#004f3f]",
+              },
+              {
+                label: "In Stock",
+                value: inStockCount,
+                icon: TrendingUp,
+                color: "from-[#e2cd9e] to-[#004f3f]",
+                textColor: "text-[#004f3f]",
+              },
+              {
+                label: "Low Stock",
+                value: lowStockCount,
+                icon: AlertTriangle,
+                color: "from-[#e2cd9e] to-[#004f3f]",
+                textColor: "text-[#004f3f]",
+              },
+              {
+                label: "Out of Stock",
+                value: outOfStockCount,
+                icon: XCircle,
+                color: "from-[#e2cd9e] to-[#004f3f]",
+                textColor: "text-[#004f3f]",
+              },
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Card
+                  className={`bg-gradient-to-br ${stat.color} border-0 shadow-lg hover:shadow-2xl transition-all overflow-hidden`}
+                >
+                  <motion.div
+                    className="absolute inset-0 opacity-0 hover:opacity-10 bg-white"
+                    whileHover={{ opacity: 0.1 }}
+                  />
+                  <CardContent className="p-6 relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider">
+                          {stat.label}
+                        </p>
+                        <motion.p
+                          className={`text-3xl font-bold ${stat.textColor}`}
+                          initial={{ scale: 0.5 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 100 }}
+                        >
+                          {stat.value}
+                        </motion.p>
+                      </div>
+                      <motion.div
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                        className={`bg-gradient-to-br ${stat.color} p-4 rounded-full`}
+                      >
+                        <stat.icon className="w-6 h-6 text-white" />
+                      </motion.div>
                     </div>
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <Package className="w-6 h-6 text-blue-800" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ y: -4 }}
-            >
-              <Card className="border-green-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-green-50 to-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">In Stock</p>
-                      <p className="text-xl font-bold text-green-600">
-                        {inStockCount}
-                      </p>
-                    </div>
-                    <div className="bg-green-100 p-3 rounded-full">
-                      <TrendingUp className="w-6 h-6 text-green-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ y: -4 }}
-            >
-              <Card className="border-yellow-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-yellow-50 to-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">Low Stock</p>
-                      <p className="text-xl font-bold text-yellow-600">
-                        {lowStockCount}
-                      </p>
-                    </div>
-                    <div className="bg-yellow-100 p-3 rounded-full">
-                      <AlertTriangle className="w-6 h-6 text-yellow-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ y: -4 }}
-            >
-              <Card className="border-red-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-red-50 to-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">Out of Stock</p>
-                      <p className="text-xl font-bold text-red-600">
-                        {outOfStockCount}
-                      </p>
-                    </div>
-                    <div className="bg-red-100 p-3 rounded-full">
-                      <XCircle className="w-6 h-6 text-red-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
 
           {/* Filters section */}
@@ -1263,15 +1187,19 @@ export function ProductsPage() {
           >
             <div className="p-4">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="relative flex-1 w-full group max-w-xl">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-green-800 transition-colors duration-200 w-5 h-5" />
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative flex-1 w-full max-w-xl group"
+                >
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#004f3f]/60 group-hover:text-[#004f3f] transition-colors w-5 h-5" />
                   <Input
-                    placeholder="Search by name, SKU, brand, category..."
+                    placeholder="Search by name, SKU, type, stock status..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 bg-gray-50 focus:border-green-800 focus:ring-2 focus:ring-blue-200 transition-all duration-300 ease-in-out shadow-sm hover:bg-white hover:shadow-md"
+                    className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#e2cd9e] bg-[#f5f1e8] focus:border-[#004f3f] focus:ring-2 focus:ring-[#004f3f]/20 transition-all shadow-md hover:shadow-lg"
                   />
-                </div>
+                </motion.div>
 
                 <div className="flex items-center gap-3">
                   <motion.div
@@ -1279,16 +1207,19 @@ export function ProductsPage() {
                     whileTap={{ scale: 0.95 }}
                   >
                     <Button
-                      variant="outline"
                       onClick={() => setIsFilterDrawerOpen(true)}
-                      className="border-green-800 text-green-900 hover:bg-green-80 bg-transparent relative"
+                      className="border-2 border-[#004f3f] text-[#004f3f] hover:bg-[#004f3f] hover:text-[#e2cd9e] bg-transparent font-semibold transition-all shadow-md"
                     >
                       <Filter className="w-4 h-4 mr-2" />
                       Filters
                       {activeFilterCount > 0 && (
-                        <Badge className="ml-2 bg-green-800 text-white">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="ml-2 bg-[#e2cd9e] text-[#004f3f] px-2 py-0.5 rounded-full text-xs font-bold"
+                        >
                           {activeFilterCount}
-                        </Badge>
+                        </motion.div>
                       )}
                     </Button>
                   </motion.div>
@@ -1322,17 +1253,23 @@ export function ProductsPage() {
           >
             <AnimatePresence>
               {filteredProducts.map((product, index) => (
+                // Replace product card rendering with this
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.03, y: -5 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{
+                    delay: index * 0.05,
+                    type: "spring",
+                    stiffness: 100,
+                  }}
+                  whileHover={{ y: -12, scale: 1.05 }}
+                  className="group"
                 >
-                  <Card className="h-full hover:shadow-xl transition-all duration-300 bg-white border-blue-200 overflow-hidden">
+                  <Card className="h-full hover:shadow-2xl transition-all duration-300 bg-gradient-to-b from-[#f5f1e8] to-white border-[#e2cd9e] border-2 overflow-hidden">
                     <CardContent className="p-0">
-                      {/* Product Image */}
+                      {/* Jewelry Image with Shine Effect */}
                       <div
                         className="relative aspect-square bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer group"
                         onClick={() =>
@@ -1344,16 +1281,29 @@ export function ProductsPage() {
                           )
                         }
                       >
+                        {" "}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+                          animate={{ x: ["100%", "-100%"] }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                          whileHover={{ opacity: 0.3 }}
+                        />
                         {product.images?.[0] ? (
                           <>
-                            <img
-                              src={product.images[0] || "/placeholder.svg"}
+                            <motion.img
+                              src={product.images[0]}
                               alt={product.name}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-500"
+                              whileHover={{ scale: 1.25 }}
                             />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
-                              <Eye className="w-6 h-6 sm:w-8 sm:h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </div>
+                            <motion.div
+                              className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center"
+                              whileHover={{
+                                backgroundColor: "rgba(0,0,0,0.3)",
+                              }}
+                            >
+                              <Eye className="w-8 h-8 text-[#e2cd9e] drop-shadow-lg" />
+                            </motion.div>
                             {product.images.length > 1 && (
                               <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-black/60 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs">
                                 +{product.images.length - 1}
@@ -1361,115 +1311,113 @@ export function ProductsPage() {
                             )}
                           </>
                         ) : (
-                          <ImageIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
+                          <ImageIcon className="w-16 h-16 text-[#004f3f]/30" />
                         )}
-
-                        {/* Status badge overlay */}
-                        <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2">
-                          <StatusBadge status={product.status} />
-                        </div>
+                        {/* Status Badge with Glow */}
+                        <motion.div
+                          className="absolute top-3 left-3"
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: "spring", delay: 0.2 }}
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <div className="bg-[#004f3f] text-[#e2cd9e] px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            {product.status}
+                          </div>
+                        </motion.div>
                       </div>
 
                       {/* Product Info */}
-                      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-                        <div>
-                          <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">
+                      <div className="p-4 space-y-3">
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 }}
+                        >
+                          <h3 className="font-bold text-[#004f3f] text-base line-clamp-1">
                             {product.name}
                           </h3>
-                          <p className="text-xs text-gray-500 font-mono mt-1">
+                          <p className="text-xs text-[#004f3f]/60 font-mono mt-1">
                             {product.sku}
                           </p>
-                        </div>
+                        </motion.div>
 
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs flex-wrap">
-                          <div className="flex items-center gap-1 bg-purple-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
-                            <Tag className="w-3 h-3 text-purple-600 flex-shrink-0" />
-                            <span className="text-purple-700 capitalize truncate max-w-[80px] sm:max-w-none">
-                              {product.category}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1 bg-green-80 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
-                            <Building2 className="w-3 h-3 text-green-800 flex-shrink-0" />
-                            <span className="text-green-900 truncate max-w-[80px] sm:max-w-none">
-                              {product.brand}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <motion.div
+                          className="flex items-center justify-between pt-2 border-t-2 border-[#e2cd9e]/30"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.15 }}
+                        >
                           <div>
-                            <p className="text-xs text-gray-500">Stock</p>
-                            <p
-                              className={cn(
-                                "text-base sm:text-lg font-bold",
-                                product.stock === 0
-                                  ? "text-red-600"
-                                  : product.stock <= (product.minStock || 5)
-                                  ? "text-yellow-600"
-                                  : "text-green-600"
-                              )}
+                            <p className="text-xs text-[#004f3f]/60">Stock</p>
+                            <motion.p
+                              className="text-lg font-bold text-[#004f3f]"
+                              key={product.stock}
+                              initial={{ scale: 1.2 }}
+                              animate={{ scale: 1 }}
                             >
                               {product.stock}
-                            </p>
+                            </motion.p>
                           </div>
                           <div className="text-right">
-                            <p className="text-xs text-gray-500">Price</p>
-                            <p className="text-base sm:text-lg font-bold text-gray-900 truncate max-w-[120px]">
+                            <p className="text-xs text-[#004f3f]/60">Price</p>
+                            <p className="text-lg font-bold text-[#e2cd9e]">
                               ₦{Number(product.price).toLocaleString()}
                             </p>
                           </div>
-                        </div>
-
-                        {product.description && (
-                          <p className="text-xs text-gray-600 line-clamp-2 pt-2 border-t border-gray-100">
-                            {product.description}
-                          </p>
-                        )}
+                        </motion.div>
 
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-1 sm:gap-1.5 pt-2">
+                        <motion.div
+                          className="flex items-center gap-2 pt-3"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 }}
+                        >
                           <motion.div
-                            whileHover={{ scale: 1.1 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             className="flex-1"
                           >
                             <Button
-                              variant="outline"
-                              size="sm"
                               onClick={() => handleViewProduct(product)}
-                              className="w-full hover:bg-green-80 text-green-800 border-blue-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+                              className="w-full bg-[#004f3f] hover:bg-[#004f3f]/90 text-[#e2cd9e] border-0 font-semibold shadow-md hover:shadow-lg transition-all"
                             >
-                              <Eye className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                              <span className="hidden xs:inline">View</span>
+                              <Eye className="w-4 h-4 mr-2" />
+                              View
                             </Button>
                           </motion.div>
                           {(user?.role === "CEO" ||
                             user?.role === "General Manager") && (
                             <>
-                              <motion.div whileHover={{ scale: 1.1 }}>
+                              <motion.div
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
                                 <Button
-                                  variant="ghost"
-                                  size="sm"
                                   onClick={() => handleEditClick(product)}
-                                  className="hover:bg-green-100 text-green-600 h-8 sm:h-9 w-8 sm:w-9 p-0"
+                                  className="bg-[#e2cd9e] hover:bg-[#e2cd9e]/90 text-[#004f3f] h-9 w-9 p-0 shadow-md"
                                 >
-                                  <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                  <Edit className="w-4 h-4" />
                                 </Button>
                               </motion.div>
-                              <motion.div whileHover={{ scale: 1.1 }}>
+                              <motion.div
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
                                 <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    handleDeleteProduct(product.id)
-                                  }
-                                  className="hover:bg-red-100 text-red-600 h-8 sm:h-9 w-8 sm:w-9 p-0"
+                                  onClick={() => {
+                                    setIsDeleteModalOpen(true);
+                                    setSelectedProduct(product.id);
+                                  }}
+                                  className="bg-red-100 hover:bg-red-200 text-red-600 h-9 w-9 p-0 shadow-md"
                                 >
-                                  <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                  <Trash2 className="w-4 h-4" />
                                 </Button>
                               </motion.div>
                             </>
                           )}
-                        </div>
+                        </motion.div>
                       </div>
                     </CardContent>
                   </Card>
@@ -1485,7 +1433,7 @@ export function ProductsPage() {
               className="text-center py-12"
             >
               <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">
+              <p className="text-[#f5f1e8]0 text-lg">
                 {searchTerm || activeFilterCount > 0
                   ? "No product found matching your criteria."
                   : "No product available. Add your first product!"}
@@ -1537,6 +1485,12 @@ export function ProductsPage() {
           imageUrl={selectedImage.url}
           title={selectedImage.title}
           allImages={selectedImage.allImages}
+        />
+        <DeleteInvoiceModal
+          open={isDeleteModalOpen}
+          setOpen={setIsDeleteModalOpen}
+          onConfirm={() => handleDeleteProduct(selectedProduct)}
+          invoice={selectedProduct}
         />
       </div>
     </Layout>

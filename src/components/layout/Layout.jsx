@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import SidebarWrapper from "./SidebarWrapper";
+
 import { Header } from "./Header";
 
 import { useAuth } from "../auth/AuthProvider";
 import { StockMonitor } from "../stock-monitor";
+import SidebarWrapper from "./SidebarWrapper";
 
 export default function Layout({ children }) {
   const { user } = useAuth();

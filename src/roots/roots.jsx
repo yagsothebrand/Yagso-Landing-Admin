@@ -7,9 +7,6 @@ import { NotificationProvider } from "@/components/notification/NotificationProv
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { InvoiceProvider } from "@/components/invoice/InvoiceProvider";
 import { ProductsProvider } from "@/components/products/ProductsProvider";
-import SidebarWrapper from "@/components/layout/SidebarWrapper";
-import { Header } from "@/components/layout/Header";
-import { StockMonitor } from "@/components/stock-monitor";
 import { Toaster } from "@/components/ui/toaster";
 
 const Root = () => {

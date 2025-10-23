@@ -110,9 +110,9 @@ export function AdministrationPage() {
 
   const getRoleBadge = (role) => {
     const colors = {
-      CEO: "bg-purple-100 text-purple-700 border-purple-200",
-      "General Manager": "bg-blue-100 text-blue-700 border-blue-200",
-      "Sales Representative": "bg-gray-100 text-gray-700 border-gray-200",
+      CEO: "bg-[#e2cd9e]   text-[#004f3f] border-[#ffffff]",
+      "General Manager": "bg-[#e2cd9e]   text-[#004f3f] border-[#fffffff]",
+      "Sales Representative": "bg-[#e2cd9e]   text-[#004f3f] border-[#ffffff]",
     };
     return <Badge className={`${colors[role]} border text-xs`}>{role}</Badge>;
   };
@@ -196,17 +196,17 @@ export function AdministrationPage() {
               transition={{ delay: 0.1 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="relative overflow-hidden hover:shadow-lg transition-all  bg-gradient-to-br from-blue-50 to-white border-gray-200">
+              <Card className="relative overflow-hidden hover:shadow-lg transition-all  bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] text-[#004f3f] border-gray-200">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-600 mb-1">Total Users</p>
-                      <p className="text-xl sm:text-2xl font-bold text-blue-600">
+                      <p className="text-sm  mb-1">Total Users</p>
+                      <p className="text-xl sm:text-2xl font-bold">
                         {users.length}
                       </p>
                     </div>
-                    <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
-                      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                    <div className="bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] p-2 sm:p-3 rounded-full">
+                      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                   </div>
                 </CardContent>
@@ -219,17 +219,17 @@ export function AdministrationPage() {
               transition={{ delay: 0.2 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="border-green-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-green-50 to-white">
+              <Card className="border-green-200 shadow-sm hover:shadow-md transition-all  bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] text-[#004f3f]">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-600 mb-1">Active Users</p>
-                      <p className="text-xl sm:text-2xl font-bold text-green-600">
+                      <p className="text-sm text-gray-600 mb-1">Active Users</p>
+                      <p className="text-xl sm:text-2xl font-bold ">
                         {users.filter((u) => u.status === "active").length}
                       </p>
                     </div>
-                    <div className="bg-green-100 p-2 sm:p-3 rounded-full">
-                      <UserCheck className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                    <div className="bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] p-2 sm:p-3 rounded-full">
+                      <UserCheck className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                   </div>
                 </CardContent>
@@ -242,17 +242,17 @@ export function AdministrationPage() {
               transition={{ delay: 0.3 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="border-red-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-red-50 to-white">
+              <Card className="border-red-200 shadow-sm hover:shadow-md transition-all  bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] text-[#004f3f]">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-600 mb-1">Suspended</p>
-                      <p className="text-xl sm:text-2xl font-bold text-red-600">
+                      <p className="text-sm text-gray-600 mb-1">Suspended</p>
+                      <p className="text-xl sm:text-2xl font-bold">
                         {users.filter((u) => u.status === "inactive").length}
                       </p>
                     </div>
-                    <div className="bg-red-100 p-2 sm:p-3 rounded-full">
-                      <UserX className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                    <div className="bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] p-2 sm:p-3 rounded-full">
+                      <UserX className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                   </div>
                 </CardContent>
@@ -265,12 +265,12 @@ export function AdministrationPage() {
               transition={{ delay: 0.4 }}
               whileHover={{ y: -4 }}
             >
-              <Card className="border-purple-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-purple-50 to-white">
+              <Card className="border-purple-200 shadow-sm hover:shadow-md transition-all  bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] text-[#004f3f]">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-600 mb-1">Admins</p>
-                      <p className="text-xl sm:text-2xl font-bold text-purple-600">
+                      <p className="text-sm text-gray-600 mb-1">Admins</p>
+                      <p className="text-xl sm:text-2xl font-bold ">
                         {
                           users.filter((u) =>
                             ["CEO", "General Manager"].includes(u.role)
@@ -278,8 +278,8 @@ export function AdministrationPage() {
                         }
                       </p>
                     </div>
-                    <div className="bg-purple-100 p-2 sm:p-3 rounded-full">
-                      <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                    <div className=" bg-gradient-to-br from-[#e2cd9e] to-[#004f3f] p-2 sm:p-3 rounded-full">
+                      <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                   </div>
                 </CardContent>
@@ -304,7 +304,7 @@ export function AdministrationPage() {
                 >
                   <Card className="overflow-hidden hover:shadow-lg transition-all border-gray-200">
                     {/* Profile Image - Large and Prominent */}
-                    <div className="p-6 pb-4 bg-green-50">
+                    <div className="p-6 pb-4 bg-gradient-to-br from-[#e2cd9e] to-[#004f3f]">
                       <div className="flex flex-col items-center">
                         {u.profileImage ? (
                           <img
@@ -320,10 +320,10 @@ export function AdministrationPage() {
                         )}
 
                         {/* User Name and Email */}
-                        <h3 className="text-xl font-bold  text-center mb-1">
+                        <h3 className="text-xl font-bold text-[#e2cd9e]  text-center mb-1">
                           {u.firstName} {u.lastName}
                         </h3>
-                        <p className="text-sm text-gray-500 text-center break-words w-full px-2 mb-3">
+                        <p className="text-sm text-[#e2cd9e] text-center break-words w-full px-2 mb-3">
                           {u.email}
                         </p>
 
@@ -335,12 +335,12 @@ export function AdministrationPage() {
                       </div>
                     </div>
 
-                    <CardContent className="pt-4 pb-4 px-4 bg-white">
+                    <CardContent className="pt-4 pb-4 px-4  bg-gradient-to-br from-[#004f3f] to-[#e2cd9e]">
                       {/* User Info */}
                       <div className="space-y-3 mb-4 ">
                         {/* Extension ID */}
                         <div className=" rounded-lg p-3">
-                          <p className="text-xs text-gray-600 mb-1.5 font-semibold">
+                          <p className="text-xs text-[#e2cd9e]  mb-1.5 font-semibold">
                             Extension ID
                           </p>
                           {u.extensionId ? (
@@ -377,7 +377,7 @@ export function AdministrationPage() {
                                     u
                                   )
                                 }
-                                className="w-full text-blue-600 border-blue-600 hover:bg-blue-50 text-xs h-8"
+                                className="w-full text-[#ffffff] border-[#ffffff] hover:bg-[#e2cd9e] text-xs h-8"
                               >
                                 {isUserLoading(u.id, "generate") ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -391,20 +391,20 @@ export function AdministrationPage() {
                         {canManageUser(u) && (
                           <Button
                             onClick={() => deleteUpdateUserProfile(u.id)}
-                            className="absolute top-2 right-2 bg-red-200  text-red-600 rounded-full p-2 transition-colors"
+                            className="absolute top-2 right-2 bg-[#e2cd9e]  text-red-600 rounded-full p-2 transition-colors"
                             title="Delete User"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         )}
                         {/* Last Login */}
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs text-gray-600 mb-1.5 font-semibold">
+                        <div className="rounded-lg p-3">
+                          <p className="text-xs text-[#e2cd9e] mb-1.5 font-semibold">
                             Last Login
                           </p>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-3 h-3 text-gray-500" />
-                            <span className="text-xs text-gray-900">
+                          <div className="flex items-center text-white gap-2">
+                            <Clock className="w-3 h-3" />
+                            <span className="text-xs ">
                               {formatDate(u.lastLogin)}
                             </span>
                           </div>
@@ -412,8 +412,8 @@ export function AdministrationPage() {
 
                         {/* Role Selector */}
                         {canManageUser(u) && (
-                          <div className="bg-gray-50 rounded-lg p-3">
-                            <p className="text-xs text-gray-600 mb-2 font-semibold">
+                          <div className="rounded-lg p-3">
+                            <p className="text-xs text-[#e2cd9e] mb-2 font-semibold">
                               Update Role
                             </p>
                             <Select
@@ -423,10 +423,10 @@ export function AdministrationPage() {
                               }
                               disabled={isUserLoading(u.id, "role")}
                             >
-                              <SelectTrigger className="w-full bg-white border-gray-300 text-xs h-8">
+                              <SelectTrigger className="w-full bg-[#e2cd9e] text-[#004f3f] border-gray-300 text-xs h-8">
                                 <SelectValue placeholder="Select role" />
                               </SelectTrigger>
-                              <SelectContent className="bg-white">
+                              <SelectContent className="bg-[#e2cd9e] text-[#004f3f]">
                                 <SelectItem value="Sales Representative">
                                   Sales Representative
                                 </SelectItem>
@@ -446,7 +446,7 @@ export function AdministrationPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleViewUser(u)}
-                          className="flex-1 text-blue-600 border-blue-600 hover:bg-blue-50 text-xs h-9"
+                          className="flex-1 text-[#ffffff] border-[#e2cd9e] hover:bg-yellow-50 text-xs h-9"
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           View Details
@@ -466,7 +466,7 @@ export function AdministrationPage() {
                                     u
                                   )
                                 }
-                                className="flex-1 text-yellow-600 border-yellow-600 hover:bg-yellow-50 text-xs h-9"
+                                className="flex-1 text-[#ffffff] border-[#e2cd9e] hover:bg-yellow-50 text-xs h-9"
                               >
                                 {isUserLoading(u.id, "status") ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -523,7 +523,7 @@ export function AdministrationPage() {
                           className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                         />
                       ) : (
-                        <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-blue-600 text-3xl font-bold shadow-lg">
+                        <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-[#e2cd9e] text-3xl font-bold shadow-lg">
                           {selectedUser.firstName?.[0]}
                           {selectedUser.lastName?.[0]}
                         </div>
