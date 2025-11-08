@@ -23,6 +23,9 @@ import Page from "./pages/landing/Index";
 import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
 import { ProductsPage } from "./pages/ProductsPage";
 import { WaitListEmails } from "./pages/WaitListEmails";
+import ProductDetails from "./pages/landing/ProductDetails";
+import Layout from "./components/layouts/Layout";
+import Home from "./pages/landing/Home";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,6 +48,26 @@ function App() {
             </Suspense>
           ),
         },
+        {
+          path: "/home",
+
+          element: (
+            <Suspense fallback={<LoadingHelper />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/product/:slug",
+          element: (
+            <Suspense fallback={<LoadingHelper />}>
+              <Layout>
+                <ProductDetails />
+              </Layout>
+            </Suspense>
+          ),
+        },
+
         {
           path: "/:id",
           element: (
@@ -103,7 +126,7 @@ function App() {
             </Suspense>
           ),
         },
-       
+
         {
           path: "/dashboard/categories",
           element: (
