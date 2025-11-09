@@ -1,6 +1,6 @@
 import "./App.css";
 import "./index.css";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./roots/roots";
 import { LoadingHelper } from "./lib/LoadingHelper";
