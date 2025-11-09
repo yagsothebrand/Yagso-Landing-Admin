@@ -4,33 +4,51 @@ import React, { useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import gsap from "gsap";
 import EarringCarousel from "./EarringCarousel";
-import EarringShowcase from "./EarringShowcase";
 
 const Carousel = () => {
   const ref = useRef(null);
   const textRef = useRef(null);
+  const descRef = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    if (inView && textRef.current) {
-      const text = textRef.current.textContent || "About Yagso";
+    if (inView && textRef.current && descRef.current) {
+      const titleText = textRef.current.textContent || "About Yagso";
+      const descText = descRef.current.textContent || "";
       const tl = gsap.timeline();
 
+      // Clear both texts
       textRef.current.textContent = "";
+      descRef.current.textContent = "";
 
-      // Typing animation - reveal one character at a time
+      // Title typing animation
       tl.to(
         {},
         {
-          duration: text.length * 0.08,
+          duration: titleText.length * 0.08,
           onUpdate: function () {
             const progress = this.progress();
-            const charsToShow = Math.floor(progress * text.length);
-            textRef.current.textContent = text.substring(0, charsToShow);
+            const charsToShow = Math.floor(progress * titleText.length);
+            textRef.current.textContent = titleText.substring(0, charsToShow);
           },
         }
       );
 
+      // Description typing animation (starts after title)
+      tl.to(
+        {},
+        {
+          duration: descText.length * 0.03,
+          onUpdate: function () {
+            const progress = this.progress();
+            const charsToShow = Math.floor(progress * descText.length);
+            descRef.current.textContent = descText.substring(0, charsToShow);
+          },
+        },
+        "+=0.2" // Small delay after title finishes
+      );
+
+      // Title glow effect (repeating)
       tl.to(
         textRef.current,
         {
@@ -66,7 +84,10 @@ const Carousel = () => {
           About Yagso
         </h2>
 
-        <p className="text-[16px] text-[#a1a1a1ef] mt-6 leading-relaxed max-w-[500px]">
+        <p 
+          ref={descRef}
+          className="text-[16px] text-[#a1a1a1ef] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
+        >
           At Yagso, every piece is shaped with meticulous detail and passion.
           Our designs reflect more than just adornment—they are crafted to
           illuminate the story and confidence of every woman who wears them.

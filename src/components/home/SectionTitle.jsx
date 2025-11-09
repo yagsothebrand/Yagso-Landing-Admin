@@ -10,7 +10,7 @@ const SectionTitle = ({ title, see = false }) => {
       className="flex items-center justify-between mb-8"
     >
       <div>
-        <h2 className="text-3xl md:text-4xl font-bold text-bg-gradient-to-r from-[#debfad] to-[#c9956f]  mb-2">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#debfad] text-bg-gradient-to-r from-[#debfad] to-[#c9956f]  mb-2">
           {title}
         </h2>
         <div className="h-1 w-16 bg-gradient-to-r from-[#debfad] to-[#c9956f] rounded-full"></div>

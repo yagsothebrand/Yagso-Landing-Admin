@@ -92,9 +92,10 @@ const ProductCard = ({ id, img, category, title, price }) => {
 
         {/* Text */}
         <div className="mt-2">
-          <p className="text-gray-400 text-[12px]">{category}</p>
-          <h4 className="text-[18px] font-[600]">{title}</h4>
-          <p className="text-gray-500 text-[16px] font-[600]">${price}</p>
+          <p className="text-gray-200 text-[12px]">{category}</p>
+          <h4 className="text-[18px] text-[#debfad] font-[600]">{title}</h4>
+
+          <p className="text-gray-300 text-[16px] font-[600]">₦{price}</p>
 
           <motion.button
             whileHover={{ scale: 1.03 }}

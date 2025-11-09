@@ -54,7 +54,7 @@ const Header = ({ onOpenContact }) => {
       <div className="flex justify-between items-center h-[80px] max-w-[1200px] mx-auto px-[1rem] md:px-[2rem] lg:px-[4rem]">
         <div className="flex items-center gap-4">
           <button
-            className="block md:hidden"
+            className="lg:hidden"
             onClick={() => setMenuOpen(true)}
             aria-label="Open Menu"
           >
@@ -69,7 +69,7 @@ const Header = ({ onOpenContact }) => {
                 onClick={() => handleNavClick(item)}
                 className="cursor-pointer relative group"
               >
-                <span className="transition-colors duration-300 group-hover:text-[#133827]">
+                <span className="transition-colors duration-300 text-[#133827] group-hover:text-[#133827]">
                   {item}
                 </span>
                 <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-[#133827] transition-all duration-300 group-hover:w-full"></span>
@@ -91,7 +91,7 @@ const Header = ({ onOpenContact }) => {
         <ul className="flex flex-row gap-6 items-center text-[16px]">
           <li className="relative">
             <Link to="/cart">
-              <ShoppingCart className="w-5 h-5 hover:text-[#133827]" />
+              <ShoppingCart className="w-5 h-5 hover:text-[#133827] text-[#133827]" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
                   {cartCount}
@@ -102,12 +102,12 @@ const Header = ({ onOpenContact }) => {
 
           <li>
             <Link to="/account">
-              <User className="w-5 h-5 hover:text-[#133827] transition-colors duration-300" />
+              <User className="w-5 h-5 hover:text-[#133827] text-[#133827] transition-colors duration-300" />
             </Link>
           </li>
           <li className="relative">
             <Link to="/wishlist">
-              <Heart className="w-5 h-5 hover:text-red-500" />
+              <Heart className="w-5 h-5 hover:text-red-500 text-[#133827]" />
               {wishCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#133827] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
                   {wishCount}
@@ -124,7 +124,7 @@ const Header = ({ onOpenContact }) => {
           {navLinks.bottom.map((cat) => (
             <li
               key={cat}
-              className="cursor-pointer hover:text-[#133827] transition-colors duration-300"
+              className="cursor-pointer hover:text-bold text-[#133827] transition-colors duration-300"
             >
               {cat}
             </li>

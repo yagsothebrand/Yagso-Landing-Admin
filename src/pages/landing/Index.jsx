@@ -5,6 +5,13 @@ import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 import { Gem, Lock } from "lucide-react";
 
 import PreparingAccessLoader from "@/components/PreparingAccessLoader";
+import Layout from "@/components/layouts/Layout";
+import GetInspired from "@/components/home/GetInspired";
+import BestSeller from "@/components/home/BestSeller";
+import YagsoTicker from "@/components/home/YagsoTicker";
+import Carousel from "@/components/home/Carousel";
+import NewCollections from "@/components/home/NewCollections";
+import NewArrivals from "@/components/home/NewArrivals";
 
 export default function Page() {
   const navigate = useNavigate();
@@ -182,78 +189,19 @@ export default function Page() {
 
   // ✨ Real landing page
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-emerald-950 via-stone-950 to-emerald-900 text-emerald-100 relative overflow-hidden"
-      >
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            initial={{
-              x:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerWidth : 1200),
-              y:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerHeight : 800),
-              scale: 0,
-            }}
-            animate={{
-              scale: [0, 1, 0],
-              opacity: [0, 1, 0],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 3,
-              delay: i * 0.1,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatDelay: 2,
-            }}
-          >
-            <Gem className="w-4 h-4 text-emerald-400" />
-          </motion.div>
-        ))}
+    <Layout>
+      <GetInspired />
+      <BestSeller />
+      <YagsoTicker />
+      <Carousel />
+      {/* <YagsoTicker /> */}
+      {/* <PopularCategory /> */}
 
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1, ease: "backOut" }}
-          className="text-center z-10"
-        >
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.3, duration: 1, ease: "backOut" }}
-            className="w-32 h-32 mx-auto mb-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-full flex items-center justify-center shadow-2xl"
-          >
-            <Gem className="w-16 h-16 text-white" />
-          </motion.div>
+      {/* <YagsoTicker /> */}
 
-          <motion.h1
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-5xl md:text-6xl font-light text-emerald-100 mb-6"
-          >
-            Welcome to Yagso
-          </motion.h1>
-
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="text-xl text-emerald-300/80 max-w-2xl mx-auto leading-relaxed"
-          >
-            You've unlocked access to our exclusive jewelry collection.
-            <br />
-            Discover timeless pieces crafted with extraordinary care.
-          </motion.p>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+      <NewCollections />
+      <YagsoTicker />
+      <NewArrivals />
+    </Layout>
   );
 }

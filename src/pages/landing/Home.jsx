@@ -3,26 +3,28 @@ import GetInspired from "@/components/home/GetInspired";
 import NewArrivals from "@/components/home/NewArrivals";
 import NewCollections from "@/components/home/NewCollections";
 import YagsoTicker from "@/components/home/YagsoTicker";
+import Layout from "@/components/layouts/Layout";
 import { Carousel } from "@/components/ui/carousel";
 import React from "react";
 
 const Home = () => {
   return (
     <>
-      <GetInspired />
+      <Layout>
+        <GetInspired />
 
-      <BestSeller />
-      <YagsoTicker />
-      <Carousel />
-      {/* <YagsoTicker /> */}
-      {/* <PopularCategory /> */}
+        <BestSeller />
+        <YagsoTicker />
+        <Carousel />
+        {/* <YagsoTicker /> */}
+        {/* <PopularCategory /> */}
 
-      {/* <YagsoTicker /> */}
+        {/* <YagsoTicker /> */}
 
-      <NewCollections />
-      <YagsoTicker />
-      <NewArrivals />
-
+        <NewCollections />
+        <YagsoTicker />
+        <NewArrivals />
+      </Layout>
       {/* <TrendyCollection /> */}
     </>
   );
