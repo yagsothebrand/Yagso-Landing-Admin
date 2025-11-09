@@ -23,6 +23,7 @@ const WaitListEmails = lazy(() => import("./pages/WaitListEmails"));
 const ProductDetails = lazy(() => import("./pages/landing/ProductDetails"));
 const Layout = lazy(() => import("./components/layouts/Layout"));
 const Home = lazy(() => import("./pages/landing/Home"));
+import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
 function App() {
   const router = createBrowserRouter([
     {
