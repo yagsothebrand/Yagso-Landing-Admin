@@ -513,8 +513,6 @@ const EditProductDrawer = ({ product, isOpen, onClose, onSave }) => {
                   />
                 </div>
 
-               
-
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-2">
                     Type *
@@ -862,7 +860,7 @@ const ActiveFilters = ({
 };
 
 // Main Productss Page Component
-export function ProductsPage() {
+function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
@@ -1496,3 +1494,4 @@ export function ProductsPage() {
     </Layout>
   );
 }
+export default ProductsPage;
