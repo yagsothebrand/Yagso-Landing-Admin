@@ -8,6 +8,8 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { InvoiceProvider } from "@/components/invoice/InvoiceProvider";
 import { ProductsProvider } from "@/components/products/ProductsProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { CartProvider } from "@/components/cart/CartProvider";
+import CartDrawer from "@/pages/CartDrawer";
 
 const Root = () => {
   // const { user } = useAuth();
@@ -18,11 +20,14 @@ const Root = () => {
         <AuthProvider>
           <InvoiceProvider>
             <ProductsProvider>
-              <Toaster />
+              <CartProvider>
+                <CartDrawer />
+                <Toaster />
 
-              <ErrorBoundary FallbackComponent={ErrorPage}>
-                <Outlet />
-              </ErrorBoundary>
+                <ErrorBoundary FallbackComponent={ErrorPage}>
+                  <Outlet />
+                </ErrorBoundary>
+              </CartProvider>
             </ProductsProvider>
           </InvoiceProvider>
         </AuthProvider>

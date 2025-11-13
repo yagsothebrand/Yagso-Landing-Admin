@@ -189,9 +189,5 @@ export default function Page() {
   }
 
   // ✨ Real landing page
-  return (
-    <Layout>
-      <Home />
-    </Layout>
-  );
+  return <Home />;
 }

@@ -1,58 +1,24 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect, useRef } from "react"
-import EmblaCarousel from "embla-carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import ProductCard from "../cards/ProductCard"
-import SectionTitle from "./SectionTitle"
+import { useState, useEffect, useRef } from "react";
+import EmblaCarousel from "embla-carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ProductCard from "../cards/ProductCard";
+import SectionTitle from "./SectionTitle";
+import { useProducts } from "../products/ProductsProvider";
 
 const BestSeller = () => {
-  const viewportRef = useRef(null)
-  const emblaRef = useRef(null)
-  const [canScrollPrev, setCanScrollPrev] = useState(false)
-  const [canScrollNext, setCanScrollNext] = useState(false)
+  const viewportRef = useRef(null);
+  const emblaRef = useRef(null);
+  const { products } = useProducts();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const products = [
-    {
-      id: 1,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/c_fill,g_auto,w_auto,e_improve,e_sharpen,e_background_removal/e_dropshadow:azimuth_220;elevation_60;spread_20/f_png/v1759480529/coppertist-wu-mvNCH3DinOQ-unsplash_fgbbpm.jpg",
-      title: "Graceful Links",
-      category: "Necklaces",
-      price: 150,
-    },
-    {
-      id: 2,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/c_fill,g_auto,w_auto,e_improve,e_sharpen,e_background_removal/e_dropshadow:azimuth_220;elevation_60;spread_20/f_png/v1759480529/coppertist-wu-mvNCH3DinOQ-unsplash_fgbbpm.jpg",
-      title: "Signature Hoops",
-      category: "Earrings",
-      price: 50,
-    },
-    {
-      id: 3,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/c_fill,g_auto,w_auto,e_improve,e_sharpen,e_background_removal/e_dropshadow:azimuth_220;elevation_60;spread_20/f_png/v1759480529/coppertist-wu-mvNCH3DinOQ-unsplash_fgbbpm.jpg",
-      title: "Radiant Bands",
-      category: "Rings",
-      price: 80,
-    },
-    {
-      id: 4,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/c_fill,g_auto,w_auto,e_improve,e_sharpen,e_background_removal/e_dropshadow:azimuth_220;elevation_60;spread_20/f_png/v1759480529/coppertist-wu-mvNCH3DinOQ-unsplash_fgbbpm.jpg",
-      title: "Shimmer Cuffs",
-      category: "Bracelets",
-      price: 120,
-    },
-    {
-      id: 5,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/c_fill,g_auto,w_auto,e_improve,e_sharpen,e_background_removal/e_dropshadow:azimuth_220;elevation_60;spread_20/f_png/v1759480529/coppertist-wu-mvNCH3DinOQ-unsplash_fgbbpm.jpg",
-      title: "Luxe Chain",
-      category: "Necklaces",
-      price: 90,
-    },
-  ]
-
+  // const bestSellerProducts = products.filter((product) => product.placement === "best-sellers")
+  const bestSellerProducts = products.filter((product) => product);
   useEffect(() => {
-    if (!viewportRef.current) return
+    if (!viewportRef.current) return;
 
     const embla = EmblaCarousel(
       viewportRef.current,
@@ -61,24 +27,24 @@ const BestSeller = () => {
         align: "start",
         slidesToScroll: 1,
       },
-      [Autoplay({ delay: 2500, stopOnInteraction: false })],
-    )
+      [Autoplay({ delay: 2500, stopOnInteraction: false })]
+    );
 
-    emblaRef.current = embla
+    emblaRef.current = embla;
 
     const updateButtons = () => {
-      setCanScrollPrev(embla.canScrollPrev())
-      setCanScrollNext(embla.canScrollNext())
-    }
+      setCanScrollPrev(embla.canScrollPrev());
+      setCanScrollNext(embla.canScrollNext());
+    };
 
-    embla.on("select", updateButtons)
-    updateButtons()
+    embla.on("select", updateButtons);
+    updateButtons();
 
-    return () => embla.destroy()
-  }, [])
+    return () => embla.destroy();
+  }, []);
 
-  const scrollPrev = () => emblaRef.current?.scrollPrev()
-  const scrollNext = () => emblaRef.current?.scrollNext()
+  const scrollPrev = () => emblaRef.current?.scrollPrev();
+  const scrollNext = () => emblaRef.current?.scrollNext();
 
   return (
     <div
@@ -106,10 +72,12 @@ const BestSeller = () => {
               >
                 <ProductCard
                   id={prod.id}
-                  title={prod.title}
+                  name={prod.name}
                   category={prod.category}
                   price={prod.price}
-                  img={prod.img}
+                  images={prod.images}
+                  variants={prod.variants}
+                  placement={prod.placement}
                 />
               </div>
             ))}
@@ -133,7 +101,7 @@ const BestSeller = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BestSeller
+export default BestSeller;

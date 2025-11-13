@@ -1,3 +1,4 @@
+// src/App.jsx
 import "./App.css";
 import "./index.css";
 import { Suspense, lazy } from "react";
@@ -5,8 +6,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./roots/roots";
 import { LoadingHelper } from "./lib/LoadingHelper";
 import { ProtectedRoute } from "./components/auth/protected-route";
+import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
+import { ErrorBoundary } from "react-error-boundary";
 
-// Public pages
+// -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./components/layout/AdminDashboard"));
@@ -23,7 +26,18 @@ const WaitListEmails = lazy(() => import("./pages/WaitListEmails"));
 const ProductDetails = lazy(() => import("./pages/landing/ProductDetails"));
 const Layout = lazy(() => import("./components/layouts/Layout"));
 const Home = lazy(() => import("./pages/landing/Home"));
-import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
+
+// -------- Helper wrapper for lazy + error boundary --------
+const SafeSuspense = ({ children }) => (
+  <Suspense fallback={<LoadingHelper />}>
+    <ErrorBoundary
+      fallback={<div>Something went wrong loading this page.</div>}
+    >
+      {children}
+    </ErrorBoundary>
+  </Suspense>
+);
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -35,163 +49,160 @@ function App() {
       ),
       children: [
         // ------------------------
-        // ✅ Public routes
+        // Public routes
         // ------------------------
         {
           index: true,
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <Page />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/home",
-
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <Home />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
-          path: "/product/:slug",
+          path: "/product/:id",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <Layout>
                 <ProductDetails />
               </Layout>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
-
         {
           path: "/:id",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <Page />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/admin",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <Index />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/waitlist",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <WaitlistForm />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
 
         // ------------------------
-        // 🔐 Protected routes
+        // Protected routes
         // ------------------------
         {
           path: "/dashboard",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="Sales Representative">
                 <AdminDashboard />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/invoices",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="Sales Representative">
                 <InvoicesPage />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/products",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="Sales Representative">
                 <ProductsPage />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
-
         {
           path: "/dashboard/categories",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="Sales Representative">
                 <CategoryPage />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/administration",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="General Manager">
                 <AdministrationPage />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/analytics",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="General Manager">
                 <AnalyticsDashboard />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/email",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="General Manager">
                 <EmailLogsPage />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "/dashboard/waitlist",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ProtectedRoute requiredRole="General Manager">
                 <WaitListEmails />
               </ProtectedRoute>
-            </Suspense>
+            </SafeSuspense>
           ),
         },
 
         // ------------------------
-        // 🚧 Coming Soon / Fallback
+        // Coming Soon / Fallback
         // ------------------------
         {
           path: "/coming-soon",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <ComingSoon />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
         {
           path: "*",
           element: (
-            <Suspense fallback={<LoadingHelper />}>
+            <SafeSuspense>
               <NotFound />
-            </Suspense>
+            </SafeSuspense>
           ),
         },
       ],

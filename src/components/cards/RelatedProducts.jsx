@@ -3,39 +3,37 @@ import { motion, useAnimation, useInView } from "framer-motion";
 import EmblaCarousel from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import ProductCard from "./ProductCard";
+import { useProducts } from "@/components/products/ProductsProvider";
 
-const RelatedProducts = () => {
-  const related = [
-    {
-      id: 1,
-      title: "Luna Studs",
-      price: 80,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/v1760121650/download-fotor-20251010183145_mcpayu.png",
-    },
-    {
-      id: 2,
-      title: "Aurora Drops",
-      price: 120,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/v1760121652/download-fotor-20251010191944_guluoz.png",
-    },
-    {
-      id: 3,
-      title: "Opal Hoops",
-      price: 90,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/v1760121653/download_2_-fotor-2025101019328_obleje.png",
-    },
-    {
-      id: 4,
-      title: "Golden Halo",
-      price: 150,
-      img: "https://res.cloudinary.com/deywxghov/image/upload/v1760121650/download-fotor-20251010183145_mcpayu.png",
-    },
-  ];
-
+const RelatedProducts = ({ currentProduct }) => {
+  const { products } = useProducts();
   const viewportRef = useRef(null);
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+
+  // Filter products by same category
+  let related = [];
+
+  if (products?.length) {
+    if (currentProduct?.category) {
+      related = products.filter(
+        (p) =>
+          p?.category === currentProduct.category && p.id !== currentProduct.id
+      );
+    }
+
+    // Fallback to random products if no category or not enough related ones
+    if (products && related.length < 4) {
+      const others = products.filter((p) => p.id !== currentProduct?.id);
+      while (related.length < 4 && others.length > 0) {
+        const randIndex = Math.floor(Math.random() * others.length);
+        related.push(others.splice(randIndex, 1)[0]);
+      }
+    }
+  }
+
+  // Fill with random products if less than 4
 
   useEffect(() => {
     if (!viewportRef.current) return;
@@ -57,9 +55,11 @@ const RelatedProducts = () => {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { delay: i * 0.2, duration: 0.6, ease: "easeOut" },
+      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
     }),
   };
+
+  if (!related || related.length === 0) return null;
 
   return (
     <section
@@ -82,7 +82,15 @@ const RelatedProducts = () => {
               animate={controls}
               custom={i}
             >
-              <ProductCard product={product} />
+              <ProductCard
+                id={product.id}
+                images={product.images}
+                name={product.name}
+                category={product.category}
+                price={product.price}
+                variants={product.colors || []}
+                placement={product.placement}
+              />
             </motion.div>
           ))}
         </div>
@@ -98,7 +106,15 @@ const RelatedProducts = () => {
             animate={controls}
             custom={i}
           >
-            <ProductCard product={product} />
+            <ProductCard
+              id={product.id}
+              images={product.images}
+              name={product.name}
+              category={product.category}
+              price={product.price}
+              variants={product.colors || []}
+              placement={product.placement}
+            />
           </motion.div>
         ))}
       </div>
