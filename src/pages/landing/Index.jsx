@@ -12,6 +12,7 @@ import YagsoTicker from "@/components/home/YagsoTicker";
 import Carousel from "@/components/home/Carousel";
 import NewCollections from "@/components/home/NewCollections";
 import NewArrivals from "@/components/home/NewArrivals";
+import Home from "./Home";
 
 export default function Page() {
   const navigate = useNavigate();
@@ -190,18 +191,7 @@ export default function Page() {
   // ✨ Real landing page
   return (
     <Layout>
-      <GetInspired />
-      <BestSeller />
-      <YagsoTicker />
-      <Carousel />
-      {/* <YagsoTicker /> */}
-      {/* <PopularCategory /> */}
-
-      {/* <YagsoTicker /> */}
-
-      <NewCollections />
-      <YagsoTicker />
-      <NewArrivals />
+      <Home />
     </Layout>
   );
 }
