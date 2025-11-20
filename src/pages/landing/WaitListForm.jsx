@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -18,6 +25,26 @@ function generatePasscode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+async function checkEmailExists(email) {
+  try {
+    const q = query(collection(db, "waitlist"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      return {
+        exists: true,
+        tokenId: doc.id,
+        passcode: doc.data().passcode,
+      };
+    }
+    return { exists: false };
+  } catch (err) {
+    console.error("Error checking email:", err);
+    return { exists: false };
+  }
+}
+
 export default function HomePage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,7 +59,6 @@ export default function HomePage() {
   const heroRef = useRef(null);
 
   const videos = [
-    // { src: "/moo.mp4", alt: "Gold rings in eggshells" },
     { src: "/bowl.mp4", alt: "Jeweled chess piece" },
     { src: "/media.mp4", alt: "Statement rings on hands" },
     { src: "/hand.mp4", alt: "Luxury lifestyle flatlay" },
@@ -137,37 +163,50 @@ export default function HomePage() {
     setSuccess(false);
 
     try {
-      const passcode = generatePasscode();
+      const existingEmail = await checkEmailExists(email);
 
-      // Inside handleSubmit
-      const docRef = await addDoc(collection(db, "waitlist"), {
-        email,
-        passcode,
-        createdAt: serverTimestamp(),
-        loginAttempt: 0,
-        lastLogin: serverTimestamp(),
-      });
+      let tokenId;
+      let passcode;
+      let isExistingEmail = false;
 
-      // Save locally (optional)
-      // localStorage.setItem("token", docRef.id);
+      if (existingEmail.exists) {
+        isExistingEmail = true;
+        tokenId = existingEmail.tokenId;
+        passcode = existingEmail.passcode;
+        console.log("✅ Email already in waitlist, reusing token:", tokenId);
+      } else {
+        passcode = generatePasscode();
+        const docRef = await addDoc(collection(db, "waitlist"), {
+          email,
+          passcode,
+          createdAt: serverTimestamp(),
+          loginAttempt: 0,
+          lastLogin: serverTimestamp(),
+        });
+        tokenId = docRef.id;
+        console.log("✅ Added to waitlist with token:", tokenId);
+      }
 
-      // ✅ Build the unique link with ID
-      const magicLink = `https://yagso.com/${docRef.id}`;
+      const magicLink = `https://yagso.com/${tokenId}`;
 
-      // Send email with link + passcode
       const emailRes = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, passcode, magicLink }),
+        body: JSON.stringify({ email, passcode, magicLink, tokenId }),
       });
 
       if (!emailRes.ok) {
         throw new Error("Failed to send email");
       }
 
-      setSuccess(true);
-      console.log("✅ Added to waitlist with token:", docRef.id);
-      return docRef.id;
+      if (isExistingEmail) {
+        setError("");
+        setSuccess(true);
+      } else {
+        setSuccess(true);
+      }
+
+      return tokenId;
     } catch (err) {
       console.error(err);
       setError(err.message || "Something went wrong. Please try again.");
@@ -266,6 +305,10 @@ export default function HomePage() {
               >
                 Your exclusive passcode has been sent.
                 <br />
+                <span className="text-base text-green-700">
+                  Check your email for the login link and access code.
+                </span>
+                <br />
                 Prepare to discover extraordinary luxury.
               </motion.p>
 
@@ -358,7 +401,7 @@ export default function HomePage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 1, delay: 0.5 }}
                     >
-                      {/* Exclusive Collection */}
+                      Discover the art of timeless luxury.
                     </motion.p>
                     <motion.p
                       className="text-xl md:text-2xl text-stone-300 font-light mb-16 leading-relaxed max-w-2xl mx-auto"
@@ -367,7 +410,6 @@ export default function HomePage() {
                       transition={{ duration: 1, delay: 0.7 }}
                     >
                       {" "}
-                      {/* Be among the first to discover our most coveted pieces */}
                     </motion.p>
 
                     <motion.button
