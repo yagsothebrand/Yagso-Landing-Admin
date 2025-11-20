@@ -49,6 +49,7 @@ export default function HomePage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isExistingEmail, setIsExistingEmail] = useState(false);
   const [error, setError] = useState("");
   const [focusedInput, setFocusedInput] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -167,10 +168,8 @@ export default function HomePage() {
 
       let tokenId;
       let passcode;
-      let isExistingEmail = false;
 
       if (existingEmail.exists) {
-        isExistingEmail = true;
         tokenId = existingEmail.tokenId;
         passcode = existingEmail.passcode;
         console.log("✅ Email already in waitlist, reusing token:", tokenId);
@@ -199,12 +198,8 @@ export default function HomePage() {
         throw new Error("Failed to send email");
       }
 
-      if (isExistingEmail) {
-        setError("");
-        setSuccess(true);
-      } else {
-        setSuccess(true);
-      }
+      setIsExistingEmail(existingEmail.exists);
+      setSuccess(true);
 
       return tokenId;
     } catch (err) {
@@ -294,7 +289,7 @@ export default function HomePage() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="text-5xl md:text-6xl font-light bg-gradient-to-r from-green-800 to-green-900 bg-clip-text text-transparent mb-8"
               >
-                Welcome to Yagso
+                {isExistingEmail ? "Welcome Back" : "Welcome to Yagso"}
               </motion.h1>
 
               <motion.p
@@ -303,13 +298,29 @@ export default function HomePage() {
                 transition={{ delay: 0.9, duration: 0.8 }}
                 className="text-lg neon-text text-green-800 mb-12 leading-relaxed"
               >
-                Your exclusive passcode has been sent.
-                <br />
-                <span className="text-base text-green-700">
-                  Check your email for the login link and access code.
-                </span>
-                <br />
-                Prepare to discover extraordinary luxury.
+                {isExistingEmail ? (
+                  <>
+                    We've resent your exclusive access link.
+                    <br />
+                    <span className="text-base text-green-700">
+                      Check your email for your login link and access code.
+                    </span>
+                    <br />
+                    <span className="text-sm text-green-600">
+                      Same passcode as before.
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Your exclusive passcode has been sent.
+                    <br />
+                    <span className="text-base text-green-700">
+                      Check your email for the login link and access code.
+                    </span>
+                    <br />
+                    Prepare to discover extraordinary luxury.
+                  </>
+                )}
               </motion.p>
 
               <motion.button
@@ -320,6 +331,7 @@ export default function HomePage() {
                   setSuccess(false);
                   setEmail("");
                   setShowForm(false);
+                  setIsExistingEmail(false);
                 }}
                 className="px-10 py-4 bg-gradient-to-r from-green-700 to-green-900 text-white text-md font-light rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
               >
