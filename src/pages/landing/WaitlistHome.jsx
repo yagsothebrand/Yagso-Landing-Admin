@@ -101,9 +101,9 @@ export default function HomePage() {
   };
 
   // Success screen for new waitlist users
-  if (success) {
-    return <SuccessScreen onReset={handleReset} isExistingEmail={false} />;
-  }
+//   if (success) {
+//     return <SuccessScreen onReset={handleReset} isExistingEmail={false} />;
+//   }
 
   return (
     <div
