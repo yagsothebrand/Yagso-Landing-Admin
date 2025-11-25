@@ -173,33 +173,19 @@ export default function HomePage() {
       }
 
       // 2. Check if email exists in waitlist already
-      const existingEmail = await checkEmailExists(email);
+      let existingEmail;
+      try {
+        existingEmail = await checkEmailExists(email);
+      } catch (err) {
+        throw new Error("Failed to check email. Please try again.");
+      }
 
-      let tokenId = existingEmail.exists ? existingEmail.tokenId : null;
-      let passcode = "";
+      let tokenId = existingEmail.tokenId;
+      let passcode = existingEmail.passcode || ""; // Get existing passcode if it exists
 
-      // 3. Generate values
-      const magicLink = `${window.location.origin}/auth/login?token=${tokenId}`;
-
+      // 3. For NEW emails: create Firestore doc FIRST to get a valid tokenId
       if (!existingEmail.exists) {
         passcode = generatePasscode();
-      }
-
-      // 4. Send the email FIRST (before creating Firestore doc)
-      const emailRes = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, passcode, magicLink, tokenId }),
-      });
-
-      console.log("Email response:", emailRes);
-      if (!emailRes.ok) {
-        const errData = await emailRes.json();
-        throw new Error(errData.error || "Failed to send email.");
-      }
-
-      // 5. ONLY NOW create Firestore doc (because email sending succeeded)
-      if (!existingEmail.exists) {
         const docRef = await addDoc(collection(db, "waitlist"), {
           email,
           passcode,
@@ -207,16 +193,29 @@ export default function HomePage() {
           loginAttempt: 0,
           lastLogin: serverTimestamp(),
         });
-
-        tokenId = docRef.id;
+        tokenId = docRef.id; // Now we have a real ID
       }
 
-      // 6. Success UI
+      // 4. Generate magic link with valid tokenId
+      const magicLink = `${window.location.origin}/auth/login?token=${tokenId}`;
+
+      // 5. Send the email with valid token
+      const emailRes = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, passcode, magicLink, tokenId }),
+      });
+
+      if (!emailRes.ok) {
+        const errData = await emailRes.json();
+        throw new Error(errData.error || "Failed to send email.");
+      }
+
+      // 6. Success! Set UI state
       setIsExistingEmail(existingEmail.exists);
       setSuccess(true);
     } catch (err) {
       setError(err.message || "Something went wrong");
-      return; // VERY IMPORTANT
     } finally {
       setLoading(false);
     }
@@ -318,7 +317,7 @@ export default function HomePage() {
                     </span>
                     <br />
                     <span className="text-sm text-green-600">
-                      Same passcode as before.
+                      Your access code remains the same.
                     </span>
                   </>
                 ) : (
@@ -343,6 +342,7 @@ export default function HomePage() {
                   setEmail("");
                   setShowForm(false);
                   setIsExistingEmail(false);
+                  setError("");
                 }}
                 className="px-10 py-4 bg-gradient-to-r from-green-700 to-green-900 text-white text-md font-light rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
               >
@@ -439,7 +439,10 @@ export default function HomePage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 1, delay: 0.9 }}
-                      onClick={() => setShowForm(true)}
+                      onClick={() => {
+                        setShowForm(true);
+                        setError("");
+                      }}
                       className="px-5 py-5 bg-green-50 hover:bg-white text-green-900 text-base rounded-full shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-white/20 font-light tracking-wider inline-flex items-center space-x-3"
                     >
                       <span>Request Exclusive Access</span>
