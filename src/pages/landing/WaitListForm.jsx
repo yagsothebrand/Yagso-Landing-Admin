@@ -221,7 +221,7 @@ export default function HomePage() {
       setLoading(false);
     }
   };
-
+  console.log(success, isExistingEmail);
   return (
     <div
       ref={containerRef}
