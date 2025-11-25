@@ -74,6 +74,7 @@ export default function HomePage() {
 
       // Existing email → login flow
       if (existing.exists && existing.tokenId) {
+        // Existing user → login flow
         setToken(existing.tokenId);
         setAccessGranted(true);
         navigate(`/${existing.tokenId}`, { replace: true });
@@ -91,14 +92,10 @@ export default function HomePage() {
         tokenId
       );
       console.log(response);
-
       if (response.data.success === true) {
-        // Set showForm to false first, then success in a separate state update
+        // Hide form first, then show success
         setShowForm(false);
-        // Use setTimeout to ensure state updates separately
-        setTimeout(() => {
-          setSuccess(true);
-        }, 0);
+        setSuccess(true);
         console.log("Waitlist email sent successfully.");
         return;
       }
@@ -122,44 +119,60 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
-      <BackgroundVideos
-        currentImageIndex={currentImageIndex}
-        showForm={showForm}
-        videoRefs={videoRefs}
-      />
-
-      <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
-
-      <Sparkles />
-
-      <HeroSection
-        showForm={showForm}
-        onShowForm={() => setShowForm(true)}
-        heroRef={heroRef}
-      />
-
-      {!showForm && success ? (
-        <SuccessScreen onReset={handleReset} isExistingEmail={false} />
-      ) : null}
-
-      <AnimatePresence>
-        {showForm && !success && (
-          <EmailForm
-            onSubmit={handleEmailSubmit}
-            loading={loading}
-            error={error}
-            onClose={() => setShowForm(false)}
+      {/* Only show background when not in success state */}
+      {!success && (
+        <>
+          <BackgroundVideos
+            currentImageIndex={currentImageIndex}
+            showForm={showForm}
+            videoRefs={videoRefs}
           />
+
+          <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+
+          <Sparkles />
+        </>
+      )}
+
+      {/* Show hero and form only when not in success state */}
+      {!success && (
+        <>
+          <HeroSection
+            showForm={showForm}
+            onShowForm={() => setShowForm(true)}
+            heroRef={heroRef}
+          />
+
+          <AnimatePresence>
+            {showForm && (
+              <EmailForm
+                onSubmit={handleEmailSubmit}
+                loading={loading}
+                error={error}
+                onClose={() => setShowForm(false)}
+              />
+            )}
+          </AnimatePresence>
+        </>
+      )}
+
+      {/* Show success screen */}
+      <AnimatePresence>
+        {success && (
+          <SuccessScreen onReset={handleReset} isExistingEmail={false} />
         )}
       </AnimatePresence>
 
-      <footer className="relative z-10 py-8 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-stone-500 text-sm font-light">
-            © 2025 Yagso. Timeless luxury.
-          </p>
-        </div>
-      </footer>
+      {/* Footer only when not in success state */}
+      {!success && (
+        <footer className="relative z-10 py-8 px-6">
+          <div className="max-w-7xl mx-auto text-center">
+            <p className="text-stone-500 text-sm font-light">
+              © 2025 Yagso. Timeless luxury.
+            </p>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }
