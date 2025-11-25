@@ -161,7 +161,7 @@ export default function HomePage() {
     e.preventDefault();
 
     setError("");
-    setSuccess(false);
+
     setLoading(true);
 
     try {
@@ -212,8 +212,9 @@ export default function HomePage() {
       }
 
       // 6. Success! Set UI state
-      setIsExistingEmail(existingEmail.exists);
+      setIsExistingEmail(false);
       setSuccess(true);
+      setLoading(false);
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
