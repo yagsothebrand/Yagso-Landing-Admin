@@ -192,6 +192,7 @@ export default function HomePage() {
         body: JSON.stringify({ email, passcode, magicLink, tokenId }),
       });
 
+      console.log("Email response:", emailRes);
       if (!emailRes.ok) {
         const errData = await emailRes.json();
         throw new Error(errData.error || "Failed to send email.");
