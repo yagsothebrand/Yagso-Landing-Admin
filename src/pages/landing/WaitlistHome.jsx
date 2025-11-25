@@ -74,7 +74,6 @@ export default function HomePage() {
 
       // Existing email → login flow
       if (existing.exists && existing.tokenId) {
-        // Existing user → login flow
         setToken(existing.tokenId);
         setAccessGranted(true);
         navigate(`/${existing.tokenId}`, { replace: true });
@@ -91,9 +90,15 @@ export default function HomePage() {
         magicLink,
         tokenId
       );
-      if (response.status === "200") {
-        setSuccess(true);
+      console.log(response);
+
+      if (response.data.success === true) {
+        // Set showForm to false first, then success in a separate state update
         setShowForm(false);
+        // Use setTimeout to ensure state updates separately
+        setTimeout(() => {
+          setSuccess(true);
+        }, 0);
         console.log("Waitlist email sent successfully.");
         return;
       }
@@ -110,7 +115,6 @@ export default function HomePage() {
     setSuccess(false);
     setShowForm(false);
     setError("");
-    return;
   };
 
   return (
@@ -134,7 +138,7 @@ export default function HomePage() {
         heroRef={heroRef}
       />
 
-      {success ? (
+      {!showForm && success ? (
         <SuccessScreen onReset={handleReset} isExistingEmail={false} />
       ) : null}
 
