@@ -85,10 +85,18 @@ export default function HomePage() {
       const { tokenId, passcode } = await addToWaitlist(email);
       const magicLink = `https://yagso.com/${tokenId}`;
 
-      await sendWaitlistEmail(email, passcode, magicLink, tokenId);
-
-      setSuccess(true);
-      setShowForm(false);
+      const response = await sendWaitlistEmail(
+        email,
+        passcode,
+        magicLink,
+        tokenId
+      );
+      if (response.status === "200") {
+        setSuccess(true);
+        setShowForm(false);
+        console.log("Waitlist email sent successfully.");
+        return;
+      }
     } catch (err) {
       setError(
         err?.response?.data?.error || err.message || "Something went wrong."
