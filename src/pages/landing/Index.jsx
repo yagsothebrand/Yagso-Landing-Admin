@@ -8,24 +8,28 @@ import PreparingAccessLoader from "@/components/PreparingAccessLoader";
 import Home from "./Home";
 import { BackgroundVideos } from "@/components/BackgroundVideos";
 import { Sparkles } from "@/components/Sparkles";
+import { useSearchParams } from "react-router-dom";
 
 export default function Page() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { token, accessGranted, loading, user } = useLandingAuth();
   const videoRefs = useRef([]);
   const [showLoader, setShowLoader] = useState(true);
+  const urlToken = searchParams.get("token");
 
-  // Only run after loading completes
   useEffect(() => {
-    if (loading) return; // wait until Firestore validates token
+    if (loading) return;
 
-    if (!token && !user) {
+    // Check URL token first, then context
+    const validToken = urlToken || token;
+
+    if (!validToken && !user) {
       navigate("/waitlist", { replace: true });
     } else {
-      // Valid session — hide loader after small delay
       setTimeout(() => setShowLoader(false), 800);
     }
-  }, [token, accessGranted, user, loading, navigate]);
+  }, [urlToken, token, user, loading, navigate]);
 
   if (loading || showLoader) {
     return (
