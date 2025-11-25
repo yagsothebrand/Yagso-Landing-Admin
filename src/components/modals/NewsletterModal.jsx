@@ -36,7 +36,7 @@ const NewsletterModal = ({ onClose, initialEmail = "" }) => {
     try {
       const userDocRef = doc(db, "users", user.userId); // assuming waitlistId is your doc ID
 
-      console.log(userData);
+   
 
       // --- 1. Get the user doc ---
       const userSnap = await getDoc(userDocRef);

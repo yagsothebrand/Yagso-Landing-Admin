@@ -12,14 +12,16 @@ const LandingAuthContext = createContext(null);
 export const LandingAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [accessGranted, setAccessGranted] = useState("false");
+  const [accessGranted, setAccessGranted] = useState(
+    localStorage.getItem("accessGranted") === "true"
+  );
 
   const [loading, setLoading] = useState(true);
 
   // Fetch user whenever token changes AND access is granted
   useEffect(() => {
     const fetchUser = async () => {
-      if (!token || accessGranted !== "true") {
+      if (!token || !accessGranted) {
         setUser(null);
         setLoading(false);
         return;
@@ -64,7 +66,7 @@ export const LandingAuthProvider = ({ children }) => {
     } else {
       localStorage.removeItem("token");
     }
-
+    console.log(user);
     // Save userId if user exists, otherwise remove it
     if (user?.userId) {
       localStorage.setItem("userId", user.userId);
