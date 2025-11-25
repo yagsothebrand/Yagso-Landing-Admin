@@ -159,35 +159,33 @@ export default function HomePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
     setError("");
     setSuccess(false);
+    setLoading(true);
 
     try {
-      const existingEmail = await checkEmailExists(email);
-
-      let tokenId;
-      let passcode;
-
-      if (existingEmail.exists) {
-        tokenId = existingEmail.tokenId;
-        passcode = existingEmail.passcode;
-        console.log("✅ Email already in waitlist, reusing token:", tokenId);
-      } else {
-        passcode = generatePasscode();
-        const docRef = await addDoc(collection(db, "waitlist"), {
-          email,
-          passcode,
-          createdAt: serverTimestamp(),
-          loginAttempt: 0,
-          lastLogin: serverTimestamp(),
-        });
-        tokenId = docRef.id;
-        console.log("✅ Added to waitlist with token:", tokenId);
+      // 1. Validate email format BEFORE anything
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        setError("Invalid email address. Please enter a valid email.");
+        setLoading(false);
+        return;
       }
 
-      const magicLink = `https://yagso.com/${tokenId}`;
+      // 2. Check if email exists in waitlist already
+      const existingEmail = await checkEmailExists(email);
 
+      let tokenId = existingEmail.exists ? existingEmail.tokenId : null;
+      let passcode = "";
+
+      // 3. Generate values
+      const magicLink = `${window.location.origin}/auth/login?token=${tokenId}`;
+
+      if (!existingEmail.exists) {
+        passcode = generatePasscode();
+      }
+
+      // 4. Send the email FIRST (before creating Firestore doc)
       const emailRes = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -195,19 +193,31 @@ export default function HomePage() {
       });
 
       if (!emailRes.ok) {
-        throw new Error("Failed to send email");
+        const errData = await emailRes.json();
+        throw new Error(errData.error || "Failed to send email.");
       }
 
+      // 5. ONLY NOW create Firestore doc (because email sending succeeded)
+      if (!existingEmail.exists) {
+        const docRef = await addDoc(collection(db, "waitlist"), {
+          email,
+          passcode,
+          createdAt: serverTimestamp(),
+          loginAttempt: 0,
+          lastLogin: serverTimestamp(),
+        });
+
+        tokenId = docRef.id;
+      }
+
+      // 6. Success UI
       setIsExistingEmail(existingEmail.exists);
       setSuccess(true);
-
-      return tokenId;
     } catch (err) {
-      console.error(err);
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.message || "Something went wrong");
+      return; // VERY IMPORTANT
     } finally {
       setLoading(false);
-      setEmail("");
     }
   };
 
