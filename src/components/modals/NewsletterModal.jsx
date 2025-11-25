@@ -34,7 +34,7 @@ const NewsletterModal = ({ onClose, initialEmail = "" }) => {
     setIsLoading(true);
 
     try {
-      const userDocRef = doc(db, "users", user.waitlistId); // assuming waitlistId is your doc ID
+      const userDocRef = doc(db, "users", user.userId); // assuming waitlistId is your doc ID
 
       console.log(userData);
 

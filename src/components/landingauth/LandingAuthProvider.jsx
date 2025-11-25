@@ -19,7 +19,7 @@ export const LandingAuthProvider = ({ children }) => {
   // Fetch user whenever token changes AND access is granted
   useEffect(() => {
     const fetchUser = async () => {
-      if (!token || accessGranted !== true) {
+      if (!token || accessGranted !== "true") {
         setUser(null);
         setLoading(false);
         return;
@@ -66,7 +66,7 @@ export const LandingAuthProvider = ({ children }) => {
     }
 
     // Save userId if user exists, otherwise remove it
-    if (user?.id) {
+    if (user?.userId) {
       localStorage.setItem("userId", user.userId);
     } else {
       localStorage.removeItem("userId");
