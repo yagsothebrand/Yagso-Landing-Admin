@@ -17,14 +17,21 @@ import {
 import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 import { useNavigate } from "react-router-dom";
 
+// Screen states
+const SCREEN_STATE = {
+  HOME: "home",
+  FORM: "form",
+  SUCCESS: "success",
+};
+
 export default function HomePage() {
+  const [screenState, setScreenState] = useState(SCREEN_STATE.HOME);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const navigate = useNavigate();
-  const { setToken, setAccessGranted } = useLandingAuth();
-  const [showForm, setShowForm] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+  const { setToken, setAccessGranted } = useLandingAuth();
 
   const containerRef = useRef(null);
   const videoRefs = useRef([]);
@@ -74,7 +81,6 @@ export default function HomePage() {
 
       // Existing email → login flow
       if (existing.exists && existing.tokenId) {
-        // Existing user → login flow
         setToken(existing.tokenId);
         setAccessGranted(true);
         navigate(`/${existing.tokenId}`, { replace: true });
@@ -92,11 +98,11 @@ export default function HomePage() {
         tokenId
       );
       console.log(response);
+
       if (response.data.success === true) {
-        // Hide form first, then show success
-        setShowForm(false);
-        setSuccess(true);
         console.log("Waitlist email sent successfully.");
+        // Transition to success screen
+        setScreenState(SCREEN_STATE.SUCCESS);
         return;
       }
     } catch (err) {
@@ -109,8 +115,16 @@ export default function HomePage() {
   };
 
   const handleReset = () => {
-    setSuccess(false);
-    setShowForm(false);
+    setScreenState(SCREEN_STATE.HOME);
+    setError("");
+  };
+
+  const handleOpenForm = () => {
+    setScreenState(SCREEN_STATE.FORM);
+  };
+
+  const handleCloseForm = () => {
+    setScreenState(SCREEN_STATE.HOME);
     setError("");
   };
 
@@ -119,60 +133,52 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
-      {/* Only show background when not in success state */}
-      {!success && (
+      {/* HOME & FORM screens - show background */}
+      {screenState !== SCREEN_STATE.SUCCESS && (
         <>
           <BackgroundVideos
             currentImageIndex={currentImageIndex}
-            showForm={showForm}
+            showForm={screenState === SCREEN_STATE.FORM}
             videoRefs={videoRefs}
           />
 
           <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
 
           <Sparkles />
-        </>
-      )}
 
-      {/* Show hero and form only when not in success state */}
-      {!success && (
-        <>
           <HeroSection
-            showForm={showForm}
-            onShowForm={() => setShowForm(true)}
+            showForm={screenState === SCREEN_STATE.FORM}
+            onShowForm={handleOpenForm}
             heroRef={heroRef}
           />
 
           <AnimatePresence>
-            {showForm && (
+            {screenState === SCREEN_STATE.FORM && (
               <EmailForm
                 onSubmit={handleEmailSubmit}
                 loading={loading}
                 error={error}
-                onClose={() => setShowForm(false)}
+                onClose={handleCloseForm}
               />
             )}
           </AnimatePresence>
+
+          <footer className="relative z-10 py-8 px-6">
+            <div className="max-w-7xl mx-auto text-center">
+              <p className="text-stone-500 text-sm font-light">
+                © 2025 Yagso. Timeless luxury.
+              </p>
+            </div>
+          </footer>
         </>
       )}
 
-      {/* Show success screen */}
+      {/* SUCCESS screen - full overlay */}
       <AnimatePresence>
-        {success && (
+        {screenState === SCREEN_STATE.SUCCESS && (
           <SuccessScreen onReset={handleReset} isExistingEmail={false} />
         )}
       </AnimatePresence>
-
-      {/* Footer only when not in success state */}
-      {!success && (
-        <footer className="relative z-10 py-8 px-6">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-stone-500 text-sm font-light">
-              © 2025 Yagso. Timeless luxury.
-            </p>
-          </div>
-        </footer>
-      )}
     </div>
   );
 }
