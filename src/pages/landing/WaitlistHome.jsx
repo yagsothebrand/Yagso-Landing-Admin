@@ -110,6 +110,7 @@ export default function HomePage() {
     setSuccess(false);
     setShowForm(false);
     setError("");
+    return;
   };
 
   return (

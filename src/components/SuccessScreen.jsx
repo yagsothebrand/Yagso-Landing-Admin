@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Star, CheckCircle } from "lucide-react"
+import { motion } from "framer-motion";
+import { Star, CheckCircle } from "lucide-react";
 
-export function SuccessScreen({ isExistingEmail, onReset }) {
-  const sparkles = Array.from({ length: 30 }, (_, i) => i)
+export function SuccessScreen({ onReset, isExistingEmail }) {
+  console.log(isExistingEmail, "isExistingEmail get in jorrr");
+  const sparkles = Array.from({ length: 30 }, (_, i) => i);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -15,8 +16,12 @@ export function SuccessScreen({ isExistingEmail, onReset }) {
           initial={{
             opacity: 0,
             scale: 0,
-            x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200),
-            y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800),
+            x:
+              Math.random() *
+              (typeof window !== "undefined" ? window.innerWidth : 1200),
+            y:
+              Math.random() *
+              (typeof window !== "undefined" ? window.innerHeight : 800),
           }}
           animate={{
             opacity: [0, 1, 0],
@@ -69,13 +74,17 @@ export function SuccessScreen({ isExistingEmail, onReset }) {
               <>
                 Welcome back!
                 <br />
-                <span className="text-base text-green-700">Your account has been verified.</span>
+                <span className="text-base text-green-700">
+                  Your account has been verified.
+                </span>
               </>
             ) : (
               <>
                 Your exclusive passcode has been sent.
                 <br />
-                <span className="text-base text-green-700">Check your email for the login link and access code.</span>
+                <span className="text-base text-green-700">
+                  Check your email for the login link and access code.
+                </span>
                 <br />
                 Prepare to discover extraordinary luxury.
               </>
@@ -94,5 +103,5 @@ export function SuccessScreen({ isExistingEmail, onReset }) {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
