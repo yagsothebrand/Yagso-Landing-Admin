@@ -29,8 +29,10 @@ const GetInspired = () => {
       },
     });
 
-    // Split heading text into spans — KEEP spaces!
+    // Split heading text into spans
     const heading = headingRef.current;
+    if (!heading) return; // ← safeguard
+
     const text = heading.textContent;
     heading.textContent = "";
     const letters = text.split("");
@@ -39,7 +41,6 @@ const GetInspired = () => {
       span.textContent = char;
       span.style.display = "inline-block";
       span.style.opacity = "0";
-      // preserve word spacing
       if (char === " ") span.style.marginRight = "4px";
       heading.appendChild(span);
     });
@@ -65,17 +66,8 @@ const GetInspired = () => {
   }, [inView, controls]);
 
   return (
-    <div
-      ref={ref}
-      className="relative w-full overflow-hidden  bg-transparent"
-    >
-      {/* ✨ Animated Header */}
-      <h2
-        ref={headingRef}
-        className="text-[26px] lg:text-[32px] px-4 md:px-[2rem] lg:px-[4rem] pb-[8rem] text-left bg-gradient-to-r from-white via-[#a3f5c0] to-white bg-[length:200%_100%] bg-clip-text text-transparent font-semibold tracking-wide leading-tight"
-      >
-        {/* Get Inspired By Our Community */}
-      </h2>
+    <div ref={ref} className="relative w-full overflow-hidden bg-transparent">
+      {/* ✨ Add your animated header */}
 
       {/* 🩶 Fade edges */}
       <div className="absolute left-0 top-0 h-full w-[80px] bg-gradient-to-r from-[#133827] via-[#133827]/60 to-transparent z-10 pointer-events-none"></div>

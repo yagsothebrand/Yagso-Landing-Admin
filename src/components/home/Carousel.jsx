@@ -66,7 +66,7 @@ const Carousel = () => {
   return (
     <div
       id="about-section"
-      className="w-full lg:max-w-[1200px] mx-auto px-4 md:px-8 lg:px-[4rem] py-[5rem] grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+      className="w-full lg:max-w-[1200px] mx-auto px-4 md:px-8 lg:px-[4rem] py-[1rem] grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
     >
       <motion.div
         ref={ref}
