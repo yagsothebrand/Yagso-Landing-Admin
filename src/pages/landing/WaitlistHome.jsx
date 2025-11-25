@@ -100,11 +100,6 @@ export default function HomePage() {
     setError("");
   };
 
-  // Success screen for new waitlist users
-//   if (success) {
-//     return <SuccessScreen onReset={handleReset} isExistingEmail={false} />;
-//   }
-
   return (
     <div
       ref={containerRef}
@@ -125,6 +120,10 @@ export default function HomePage() {
         onShowForm={() => setShowForm(true)}
         heroRef={heroRef}
       />
+
+      {success ? (
+        <SuccessScreen onReset={handleReset} isExistingEmail={false} />
+      ) : null}
 
       <AnimatePresence>
         {showForm && (
