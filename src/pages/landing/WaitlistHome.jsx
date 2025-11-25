@@ -139,7 +139,7 @@ export default function HomePage() {
       ) : null}
 
       <AnimatePresence>
-        {showForm && (
+        {showForm && !success && (
           <EmailForm
             onSubmit={handleEmailSubmit}
             loading={loading}
