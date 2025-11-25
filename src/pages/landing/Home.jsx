@@ -1,32 +1,47 @@
-import BestSeller from "@/components/home/BestSeller";
-import GetInspired from "@/components/home/GetInspired";
-import NewArrivals from "@/components/home/NewArrivals";
-import NewCollections from "@/components/home/NewCollections";
-import YagsoTicker from "@/components/home/YagsoTicker";
+import React, { useRef } from "react";
 import Layout from "@/components/layouts/Layout";
-import { Carousel } from "@/components/ui/carousel";
-import React from "react";
+import GetInspired from "@/components/home/GetInspired";
+import YagsoTicker from "@/components/home/YagsoTicker";
+import Carousel from "@/components/home/Carousel";
+import BestSeller from "@/components/home/BestSeller";
+import NewCollections from "@/components/home/NewCollections";
+import GuidedTour from "@/components/home/GuidedTour";
+import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 
 const Home = () => {
+
+  const carouselRef = useRef();
+  const bestSellerRef = useRef();
+
+  const refs = {
+    carousel: carouselRef,
+    bestSeller: bestSellerRef,
+  };
+
   return (
-    <>
-      <Layout>
+    <Layout>
+      <div>
         <GetInspired />
-
-        <BestSeller />
+      </div>
+      <div>
         <YagsoTicker />
+      </div>
+      <div ref={carouselRef}>
         <Carousel />
-        {/* <YagsoTicker /> */}
-        {/* <PopularCategory /> */}
-
-        {/* <YagsoTicker /> */}
-
-        <NewCollections />
+      </div>
+      <div ref={bestSellerRef}>
+        <BestSeller />
+      </div>
+      <div>
         <YagsoTicker />
-        <NewArrivals />
-      </Layout>
-      {/* <TrendyCollection /> */}
-    </>
+      </div>
+      <div>
+        <NewCollections />
+      </div>
+
+      <GuidedTour refs={refs} />
+    </Layout>
   );
 };
+
 export default Home;

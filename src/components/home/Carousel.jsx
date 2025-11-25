@@ -13,7 +13,7 @@ const Carousel = () => {
 
   useEffect(() => {
     if (inView && textRef.current && descRef.current) {
-      const titleText = textRef.current.textContent || "About Yagso";
+      const titleText = textRef.current.textContent;
       const descText = descRef.current.textContent || "";
       const tl = gsap.timeline();
 
@@ -74,15 +74,15 @@ const Carousel = () => {
         animate={inView ? { x: 0, opacity: 1 } : {}}
         transition={{ duration: 0.9, ease: "easeOut" }}
       >
-        <h2
+        <h6
           ref={textRef}
           className="text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#debfad] via-[#fff4ec] to-[#debfad] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
           style={{
             display: "inline-block",
           }}
         >
-          About Yagso
-        </h2>
+         
+        </h6>
 
         <p 
           ref={descRef}

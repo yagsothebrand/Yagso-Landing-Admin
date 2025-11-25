@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X, Sparkles, Mail, Check } from "lucide-react";
 
-const NewsletterModal = ({ onSubmit, onClose }) => {
+const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -20,6 +20,10 @@ const NewsletterModal = ({ onSubmit, onClose }) => {
       onClose?.();
     }, 2000);
   };
+
+  useEffect(() => {
+    setEmail(initialEmail); // Update if initialEmail changes
+  }, [initialEmail]);
 
   // Close on ESC key
   useEffect(() => {
@@ -379,9 +383,4 @@ const NewsletterModal = ({ onSubmit, onClose }) => {
   );
 };
 
-// Demo Wrapper
-export default function App() {
-  const [showModal, setShowModal] = useState(true);
-
-  return;
-}
+export default NewsletterModal;

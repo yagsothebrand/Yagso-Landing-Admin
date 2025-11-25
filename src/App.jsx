@@ -8,6 +8,8 @@ import { LoadingHelper } from "./lib/LoadingHelper";
 import { ProtectedRoute } from "./components/auth/protected-route";
 import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvider";
 import { ErrorBoundary } from "react-error-boundary";
+import WaitlistHome from "./pages/landing/WaitlistHome";
+import TokenPage from "./pages/landing/TokenPage";
 
 // -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
@@ -77,14 +79,14 @@ function App() {
             </SafeSuspense>
           ),
         },
-        {
-          path: "/:id",
-          element: (
-            <SafeSuspense>
-              <Page />
-            </SafeSuspense>
-          ),
-        },
+        // {
+        //   path: "/:id",
+        //   element: (
+        //     <SafeSuspense>
+        //       <TokenPage />
+        //     </SafeSuspense>
+        //   ),
+        // },
         {
           path: "/admin",
           element: (
@@ -97,7 +99,16 @@ function App() {
           path: "/waitlist",
           element: (
             <SafeSuspense>
-              <WaitlistForm />
+              <WaitlistHome />
+            </SafeSuspense>
+          ),
+        },
+
+        {
+          path: "/:token",
+          element: (
+            <SafeSuspense>
+              <TokenPage />
             </SafeSuspense>
           ),
         },

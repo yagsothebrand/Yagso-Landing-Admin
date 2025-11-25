@@ -9,11 +9,14 @@ import Header from "./Header";
 import Footer from "./Footer";
 import NewsletterModal from "../modals/NewsletterModal";
 import ContactModal from "../home/ContactModal";
+import { useLandingAuth } from "../landingauth/LandingAuthProvider";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, contactBtnRef }) => {
   const [showContact, setShowContact] = useState(false);
   const [showNewsletter, setShowNewsletter] = useState(false);
   const location = useLocation();
+  const { user, loading } = useLandingAuth(); // <- get user
+  if (loading) return null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,21 +52,15 @@ const Layout = ({ children }) => {
         </div>
       </div>
 
-      {/* Floating Contact Button */}
       <motion.button
+        ref={contactBtnRef}
         onClick={() => setShowContact(true)}
-        className={`fixed right-2 top-[70%] -translate-y-1/2 z-[100] bg-[#debfad] text-primaryGreen rounded-full px-[1.5rem] h-14 flex items-center justify-center gap-2 shadow-lg transition-all
-          ${
-            showNewsletter
-              ? "pointer-events-none opacity-40"
-              : "hover:bg-[#b89e90]"
-          }`}
+        className="fixed right-2 top-[70%] -translate-y-1/2 z-[200] bg-[#debfad] text-primaryGreen rounded-full px-[1.5rem] h-14 flex items-center justify-center gap-2 shadow-lg transition-all hover:bg-[#b89e90]"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        disabled={showNewsletter}
       >
-        <p>Contact us</p>
-        <Phone size={18} />
+        {" "}
+        Contact us <Phone size={18} />{" "}
       </motion.button>
 
       <AnimatePresence>
@@ -72,7 +69,11 @@ const Layout = ({ children }) => {
 
       <AnimatePresence>
         {showNewsletter && (
-          <NewsletterModal onSubmit={handleNewsletterSubmit} />
+          <NewsletterModal
+            onSubmit={handleNewsletterSubmit}
+            initialEmail={user?.email || ""}
+            onClose={() => setShowNewsletter(false)}
+          />
         )}
       </AnimatePresence>
     </>

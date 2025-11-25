@@ -106,3 +106,4 @@ export const deleteInvoiceFromFirebase = async (invoiceId) => {
     return { success: false, error: error.message };
   }
 };
+

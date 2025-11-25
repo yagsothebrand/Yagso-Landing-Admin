@@ -13,12 +13,14 @@ const LandingAuthContext = createContext(null);
 export const LandingAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [accessGranted, setAccessGranted] = useState("false");
+
   const [loading, setLoading] = useState(true);
 
-  // Fetch user whenever token changes
+  // Fetch user whenever token changes AND access is granted
   useEffect(() => {
     const fetchUser = async () => {
-      if (!token) {
+      if (!token || accessGranted !== true) {
         setUser(null);
         setLoading(false);
         return;
@@ -31,6 +33,7 @@ export const LandingAuthProvider = ({ children }) => {
 
         if (docSnap.exists()) {
           const userData = { id: docSnap.id, ...docSnap.data() };
+          console.log("✅ User fetched:", userData);
           setUser(userData);
 
           await updateDoc(docRef, {
@@ -42,6 +45,7 @@ export const LandingAuthProvider = ({ children }) => {
           localStorage.removeItem("token");
           setUser(null);
           setToken(null);
+          setAccessGranted(false);
         }
       } catch (error) {
         console.error("🔥 Error fetching user:", error);
@@ -51,20 +55,39 @@ export const LandingAuthProvider = ({ children }) => {
     };
 
     fetchUser();
-  }, [token]);
+  }, [token, accessGranted]);
 
   // Keep localStorage synced
+
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);
     } else {
       localStorage.removeItem("token");
     }
-  }, [token]);
 
+    // Save userId if user exists, otherwise remove it
+    if (user?.id) {
+      localStorage.setItem("userId", user.userId);
+    } else {
+      localStorage.removeItem("userId");
+    }
+
+    localStorage.setItem("accessGranted", accessGranted ? "true" : "false");
+  }, [token, accessGranted, user]);
+
+  console.log(user);
   return (
     <LandingAuthContext.Provider
-      value={{ user, setUser, token, setToken, loading }}
+      value={{
+        user,
+        setUser,
+        token,
+        setToken,
+        accessGranted,
+        setAccessGranted,
+        loading,
+      }}
     >
       {children}
     </LandingAuthContext.Provider>

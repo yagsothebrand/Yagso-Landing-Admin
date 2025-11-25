@@ -54,7 +54,7 @@ const Header = ({ onOpenContact }) => {
       <div className="flex justify-between items-center h-[80px] max-w-[1200px] mx-auto px-[1rem] md:px-[2rem] lg:px-[4rem]">
         <div className="flex items-center gap-4">
           <button
-            className="lg:hidden"
+            className="sm:block md:hidden lg:hidden p-2 rounded-md hover:bg-gray-200 transition"
             onClick={() => setMenuOpen(true)}
             aria-label="Open Menu"
           >
