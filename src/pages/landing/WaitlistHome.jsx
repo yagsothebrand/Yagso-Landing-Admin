@@ -70,16 +70,19 @@ export default function HomePage() {
     setError("");
 
     try {
-      const existingEmailData = await checkEmailExists(email);
+      const existing = await checkEmailExists(email);
 
-      if (existingEmailData.exists) {
-        setToken(existingEmailData.tokenId);
-        setAccessGranted(true); // reactive now
-        navigate(`/${existingEmailData.tokenId}`, { replace: true });
+      // Existing email → login flow
+      if (existing.exists) {
+        setToken(existing.tokenId);
+        setAccessGranted(true);
+
+        // Redirect to user page
+        navigate(`/${existing.tokenId}`, { replace: true });
         return;
       }
 
-      // New user → create waitlist doc
+      // New user → create waitlist entry
       const { tokenId, passcode } = await addToWaitlist(email);
       const magicLink = `https://yagso.com/${tokenId}`;
 
@@ -88,7 +91,9 @@ export default function HomePage() {
       setSuccess(true);
       setShowForm(false);
     } catch (err) {
-      setError(err.message || "Something went wrong, please try again.");
+      setError(
+        err?.response?.data?.error || err.message || "Something went wrong."
+      );
     } finally {
       setLoading(false);
     }
