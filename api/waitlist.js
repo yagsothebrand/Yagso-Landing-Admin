@@ -1,6 +1,10 @@
 // api/send-email.js
 import axios from "axios";
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export default async function handler(req, res) {
   console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
 
