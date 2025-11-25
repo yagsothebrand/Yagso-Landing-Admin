@@ -9,7 +9,7 @@ export function PasscodeVerification({
   onVerify,
   onResend,
   onBack,
-  verifyLoading,
+  loading: verifyLoading,
   resendLoading,
   error,
 }) {

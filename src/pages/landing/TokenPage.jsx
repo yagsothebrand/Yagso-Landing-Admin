@@ -33,6 +33,7 @@ export default function TokenPage() {
   const { setToken, setAccessGranted } = useLandingAuth();
 
   const [loading, setLoading] = useState(true);
+  const [resendLoading, setResendLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState("");
@@ -125,7 +126,7 @@ export default function TokenPage() {
       setAccessGranted(true);
 
       localStorage.setItem("token", waitlistDocId);
-    localStorage.setItem("userId", finalUserId);
+      localStorage.setItem("userId", finalUserId);
       localStorage.setItem("accessGranted", "true");
 
       // ✅ Redirect
@@ -156,10 +157,19 @@ export default function TokenPage() {
             email={email}
             onVerify={handlePasscodeVerify}
             loading={loading}
+            resendLoading={resendLoading}
             error={error}
             onResend={async () => {
-              const magicLink = `https://yagso.com/${token}`;
-              await sendWaitlistEmail(email, passcode, magicLink, token);
+              try {
+                const magicLink = `https://yagso.com/${token}`;
+                setResendLoading(true);
+                setError("");
+                await sendWaitlistEmail(email, passcode, magicLink, token);
+                setTimeout(() => setResendLoading(false), 2000);
+              } catch (err) {
+                setResendLoading(false);
+                setError(err.message || "Something went wrong sending email");
+              }
             }}
           />
         )}
