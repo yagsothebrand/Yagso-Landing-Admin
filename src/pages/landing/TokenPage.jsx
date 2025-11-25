@@ -75,7 +75,7 @@ export default function TokenPage() {
     }
 
     loadData();
-  }, [token, setToken, setAccessGranted]);
+  }, []);
 
   // 👉 Handle passcode verification
   const handlePasscodeVerify = async (passcode) => {

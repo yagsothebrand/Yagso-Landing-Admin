@@ -1,12 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import {
-  doc,
   getDoc,
   updateDoc,
   increment,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db, doc } from "@/firebase";
 
 const LandingAuthContext = createContext(null);
 

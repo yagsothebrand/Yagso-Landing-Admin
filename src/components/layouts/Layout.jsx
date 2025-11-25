@@ -16,21 +16,28 @@ const Layout = ({ children, contactBtnRef }) => {
   const [showNewsletter, setShowNewsletter] = useState(false);
   const location = useLocation();
   const { user, loading } = useLandingAuth(); // <- get user
-  if (loading) return null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
 
   useEffect(() => {
-    const hasSignup = localStorage.getItem("newsletterSignup");
-    if (!hasSignup) setShowNewsletter(true);
-  }, []);
+    if (
+      !loading &&
+      user &&
+      (!user.newsletter || user.newsletter.subscribed === false)
+    ) {
+      setShowNewsletter(true);
+    }
+  }, [user, loading]);
 
-  const handleNewsletterSubmit = (email) => {
-    localStorage.setItem("newsletterSignup", email);
-    setShowNewsletter(false);
-  };
+  // if (!showNewsletter) return null;
+  console.log("Layout render:", { loading, user });
+
+  // const handleNewsletterSubmit = (email) => {
+  //   localStorage.setItem("newsletterSignup", email);
+  //   setShowNewsletter(false);
+  // };
 
   return (
     <>
@@ -46,9 +53,10 @@ const Layout = ({ children, contactBtnRef }) => {
 
       <div id="smooth-wrapper" className="lg:mx-[4rem]">
         <Header onOpenContact={() => setShowContact(true)} />
+
         <div className="relative z-10 bg-[#133827]/90 min-h-screen flex flex-col">
-          {children}
-          <Footer />
+          {!loading ? children : null}
+          {!loading ? <Footer /> : null}
         </div>
       </div>
 
@@ -70,7 +78,7 @@ const Layout = ({ children, contactBtnRef }) => {
       <AnimatePresence>
         {showNewsletter && (
           <NewsletterModal
-            onSubmit={handleNewsletterSubmit}
+            // onSubmit={handleNewsletterSubmit}
             initialEmail={user?.email || ""}
             onClose={() => setShowNewsletter(false)}
           />

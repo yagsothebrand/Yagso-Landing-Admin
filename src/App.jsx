@@ -44,11 +44,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <LandingAuthProvider>
-          <Root />
-        </LandingAuthProvider>
-      ),
+      element: <Root />,
       children: [
         // ------------------------
         // Public routes

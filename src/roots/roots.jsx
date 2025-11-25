@@ -10,12 +10,14 @@ import { ProductsProvider } from "@/components/products/ProductsProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/pages/CartDrawer";
+import { LandingAuthProvider } from "@/components/landingauth/LandingAuthProvider";
 
 const Root = () => {
   // const { user } = useAuth();
   return (
     <>
       {/* <Navbar /> */}
+           <LandingAuthProvider>
       <NotificationProvider>
         <AuthProvider>
           <InvoiceProvider>
@@ -32,6 +34,7 @@ const Root = () => {
           </InvoiceProvider>
         </AuthProvider>
       </NotificationProvider>
+      </LandingAuthProvider>
       {/* <Footer /> */}
     </>
   );

@@ -1,28 +1,87 @@
-import React, { useState, useEffect, useRef } from "react";
-import { X, Sparkles, Mail, Check } from "lucide-react";
+"use client";
 
-const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
+import { useState, useEffect, useRef } from "react";
+import { X, Sparkles, Mail, Check } from "lucide-react";
+import { db } from "@/firebase";
+import { useLandingAuth } from "../landingauth/LandingAuthProvider";
+import {
+  updateDoc,
+  addDoc,
+  serverTimestamp,
+  doc,
+  collection,
+} from "firebase/firestore";
+
+const NewsletterModal = ({ onClose, initialEmail = "" }) => {
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef(null);
-
+  const { user } = useLandingAuth();
+  console.log(
+    "🚀 ~ file: NewsletterModal.jsx:18 ~ NewsletterModal ~ user:",
+    user
+  );
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValid = validEmail.test(email);
 
-  const handleSubmit = () => {
-    if (!isValid) return;
-    setSubmitted(true);
-    setTimeout(() => {
-      onSubmit?.(email);
-      onClose?.();
-    }, 2000);
+  const handleSubmit = async () => {
+    if (!isValid || !user) return;
+
+    setIsLoading(true);
+
+    try {
+      const userDocRef = doc(db, "users", user.id);
+
+      // --- 1. Get the user doc ---
+      const userSnap = await getDoc(userDocRef);
+
+      if (!userSnap.exists()) {
+        console.error("User not found in Firestore.");
+        return;
+      }
+
+      const userData = userSnap.data();
+
+      // --- 2. If newsletter does NOT exist, create it ---
+      if (!userData.newsletter) {
+        await updateDoc(userDocRef, {
+          newsletter: {
+            subscribed: true,
+            subscribedAt: serverTimestamp(),
+          },
+        });
+      } else {
+        // If newsletter exists, update subscription
+        await updateDoc(userDocRef, {
+          "newsletter.subscribed": true,
+          "newsletter.subscribedAt": serverTimestamp(),
+        });
+      }
+
+      // --- 3. Create newsletter record in newsletters collection ---
+      await addDoc(collection(db, "newsletters"), {
+        userId: user.id,
+        email: email,
+        subscribed: true,
+        createdAt: serverTimestamp(),
+      });
+
+      setSubmitted(true);
+      setTimeout(() => {
+        onClose?.();
+      }, 2000);
+    } catch (error) {
+      console.error("🔥 Error saving newsletter:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    setEmail(initialEmail); // Update if initialEmail changes
+    setEmail(initialEmail);
   }, [initialEmail]);
 
   // Close on ESC key
@@ -73,10 +132,6 @@ const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
         }
         @keyframes pulse {
           0%, 100% { transform: scale(1); }
@@ -294,7 +349,7 @@ const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
             )}
 
             <button
-              disabled={!isValid}
+              disabled={!isValid || isLoading}
               onClick={handleSubmit}
               onMouseDown={(e) =>
                 (e.currentTarget.style.transform = "scale(0.97)")
@@ -302,9 +357,10 @@ const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
               onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
               style={{
                 marginTop: "1.5rem",
-                background: isValid
-                  ? "linear-gradient(135deg, #133827 0%, #0d2b1d 100%)"
-                  : "#d1d5db",
+                background:
+                  isValid && !isLoading
+                    ? "linear-gradient(135deg, #133827 0%, #0d2b1d 100%)"
+                    : "#d1d5db",
                 color: "white",
                 padding: "1rem 2rem",
                 borderRadius: "0.75rem",
@@ -312,14 +368,15 @@ const NewsletterModal = ({ onSubmit, onClose, initialEmail = "" }) => {
                 fontWeight: "600",
                 width: "100%",
                 border: "none",
-                cursor: isValid ? "pointer" : "not-allowed",
+                cursor: isValid && !isLoading ? "pointer" : "not-allowed",
                 transition: "all 0.2s ease",
-                boxShadow: isValid
-                  ? "0 4px 15px rgba(19, 56, 39, 0.3)"
-                  : "none",
+                boxShadow:
+                  isValid && !isLoading
+                    ? "0 4px 15px rgba(19, 56, 39, 0.3)"
+                    : "none",
               }}
             >
-              Let's go 🚀
+              {isLoading ? "Saving..." : "Let's go 🚀"}
             </button>
 
             <p
