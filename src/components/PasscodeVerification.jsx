@@ -9,7 +9,8 @@ export function PasscodeVerification({
   onVerify,
   onResend,
   onBack,
-  loading,
+  verifyLoading,
+  resendLoading,
   error,
 }) {
   const [passcode, setPasscode] = useState("");
@@ -54,6 +55,7 @@ export function PasscodeVerification({
           <p className="text-sm text-green-600 mt-4">{email}</p>
         </motion.div>
 
+        {/* FORM */}
         <motion.form
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -75,17 +77,18 @@ export function PasscodeVerification({
             />
           </div>
 
+          {/* VERIFY BUTTON */}
           <motion.button
             type="submit"
-            disabled={loading || passcode.length !== 6}
-            whileHover={{ scale: loading ? 1 : 1.02 }}
-            whileTap={{ scale: loading ? 1 : 0.98 }}
+            disabled={verifyLoading || passcode.length !== 6}
+            whileHover={{ scale: verifyLoading ? 1 : 1.02 }}
+            whileTap={{ scale: verifyLoading ? 1 : 0.98 }}
             className="w-full py-5 bg-gradient-to-r from-green-700 to-green-900 text-white font-semibold rounded-full shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-green-700/50 text-lg"
           >
             <AnimatePresence mode="wait">
-              {loading ? (
+              {verifyLoading ? (
                 <motion.div
-                  key="loading"
+                  key="verify-loading"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -100,15 +103,32 @@ export function PasscodeVerification({
             </AnimatePresence>
           </motion.button>
 
+          {/* RESEND BUTTON */}
           <motion.button
             type="button"
             onClick={onResend}
-            disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-white to-white text-green-600 hover:text-green-500 font-light rounded-full transition-all duration-300 disabled:opacity-50"
+            disabled={resendLoading}
+            className="w-full py-3 bg-white text-green-600 hover:text-green-500 font-light rounded-full transition-all duration-300 disabled:opacity-50"
           >
-            Resend Passcode
+            <AnimatePresence mode="wait">
+              {resendLoading ? (
+                <motion.div
+                  key="resend-loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center justify-center space-x-3"
+                >
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Sending...</span>
+                </motion.div>
+              ) : (
+                <span>Resend Passcode</span>
+              )}
+            </AnimatePresence>
           </motion.button>
 
+          {/* ERROR */}
           <AnimatePresence>
             {error && (
               <motion.div
