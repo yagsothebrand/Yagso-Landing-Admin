@@ -73,11 +73,10 @@ export default function HomePage() {
       const existing = await checkEmailExists(email);
 
       // Existing email → login flow
-      if (existing.exists) {
+      if (existing.exists && existing.tokenId) {
+        // Existing user → login flow
         setToken(existing.tokenId);
         setAccessGranted(true);
-
-        // Redirect to user page
         navigate(`/${existing.tokenId}`, { replace: true });
         return;
       }
