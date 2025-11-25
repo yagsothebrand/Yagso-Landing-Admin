@@ -7,6 +7,7 @@ import { useLandingAuth } from "../landingauth/LandingAuthProvider";
 import {
   updateDoc,
   addDoc,
+  getDoc,
   serverTimestamp,
   doc,
   collection,
