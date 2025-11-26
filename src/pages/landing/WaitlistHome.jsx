@@ -97,8 +97,7 @@ export default function HomePage() {
         magicLink,
         tokenId
       );
-      console.log(response.data);
-      console.log("Waitlist email sent successfully.", response.success);
+
       if (response.success === true) {
         console.log("Waitlist email sent successfully.");
         // Transition to success screen
@@ -154,6 +153,12 @@ export default function HomePage() {
           />
 
           <AnimatePresence>
+            {screenState === SCREEN_STATE.SUCCESS && (
+              <SuccessScreen onReset={handleReset} isExistingEmail={false} />
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
             {screenState === SCREEN_STATE.FORM && (
               <EmailForm
                 onSubmit={handleEmailSubmit}
@@ -175,11 +180,6 @@ export default function HomePage() {
       )}
 
       {/* SUCCESS screen - full overlay */}
-      <AnimatePresence>
-        {screenState === SCREEN_STATE.SUCCESS && (
-          <SuccessScreen onReset={handleReset} isExistingEmail={false} />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
