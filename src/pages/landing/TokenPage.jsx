@@ -30,7 +30,7 @@ import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 export default function TokenPage() {
   const { token } = useParams(); // 🔥 this is the waitlist docId
   const navigate = useNavigate();
-  const { setToken, setAccessGranted } = useLandingAuth();
+  const { setToken, setAccessGranted, setUserId } = useLandingAuth();
 
   const [loading, setLoading] = useState(true);
   const [resendLoading, setResendLoading] = useState(false);
@@ -124,7 +124,7 @@ export default function TokenPage() {
       // ✅ Update context and localStorage
       setToken(waitlistDocId); // Keep original waitlist token // Store actual user ID
       setAccessGranted(true);
-
+      setUserId(finalUserId);
       localStorage.setItem("token", waitlistDocId);
       localStorage.setItem("userId", finalUserId);
       localStorage.setItem("accessGranted", "true");

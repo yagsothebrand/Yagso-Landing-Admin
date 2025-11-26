@@ -21,61 +21,37 @@ const NewsletterModal = ({ onClose, initialEmail = "" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef(null);
   const { user } = useLandingAuth();
-  console.log(
-    "🚀 ~ file: NewsletterModal.jsx:18 ~ NewsletterModal ~ user:",
-    user
-  );
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValid = validEmail.test(email);
 
   const handleSubmit = async () => {
     if (!isValid || !user) return;
-
     setIsLoading(true);
 
     try {
-      const userDocRef = doc(db, "users", user.userId); // assuming waitlistId is your doc ID
+      const userDocRef = doc(db, "users", user.id); // FIXED
 
-   
+      await updateDoc(userDocRef, {
+        "newsletter.subscribed": true,
+        "newsletter.subscribedAt": serverTimestamp(),
+      });
 
-      // --- 1. Get the user doc ---
-      const userSnap = await getDoc(userDocRef);
-
-      if (!userSnap.exists()) {
-        console.error("User not found in Firestore.");
-        return;
-      }
-
-      const userData = userSnap.data();
-
-      // --- 2. If newsletter does NOT exist, create it ---
-      if (!userData.newsletter) {
-        await updateDoc(userDocRef, {
-          newsletter: {
-            subscribed: true,
-            subscribedAt: serverTimestamp(),
-          },
-        });
-      } else {
-        // If newsletter exists, update subscription
-        await updateDoc(userDocRef, {
-          "newsletter.subscribed": true,
-          "newsletter.subscribedAt": serverTimestamp(),
-        });
-      }
-
-      // --- 3. Create newsletter record in newsletters collection ---
       await addDoc(collection(db, "newsletters"), {
         userId: user.id,
-        email: email,
+        email,
         subscribed: true,
         createdAt: serverTimestamp(),
       });
 
+      // 🔥 REFRESH USER STATE SO LAYOUT HIDES MODAL
+      const refreshedSnap = await getDoc(userDocRef);
+      setUser({
+        id: refreshedSnap.id,
+        ...refreshedSnap.data(),
+      });
+
       setSubmitted(true);
-      setTimeout(() => {
-        onClose?.();
-      }, 2000);
+      setTimeout(() => onClose?.(), 2000);
     } catch (error) {
       console.error("🔥 Error saving newsletter:", error);
     } finally {

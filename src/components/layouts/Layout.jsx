@@ -22,22 +22,16 @@ const Layout = ({ children, contactBtnRef }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (
-      !loading &&
-      user &&
-      (!user.newsletter || user.newsletter.subscribed === false)
-    ) {
-      setShowNewsletter(true);
+    if (!loading && user) {
+      const isSubscribed = user.newsletter?.subscribed === true;
+
+      if (!isSubscribed) {
+        setShowNewsletter(true);
+      } else {
+        setShowNewsletter(false);
+      }
     }
   }, [user, loading]);
-
-  // if (!showNewsletter) return null;
-  console.log("Layout render:", { loading, user });
-
-  // const handleNewsletterSubmit = (email) => {
-  //   localStorage.setItem("newsletterSignup", email);
-  //   setShowNewsletter(false);
-  // };
 
   return (
     <>

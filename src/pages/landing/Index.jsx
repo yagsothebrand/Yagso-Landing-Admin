@@ -8,28 +8,27 @@ import PreparingAccessLoader from "@/components/PreparingAccessLoader";
 import Home from "./Home";
 import { BackgroundVideos } from "@/components/BackgroundVideos";
 import { Sparkles } from "@/components/Sparkles";
-import { useSearchParams } from "react-router-dom";
 
 export default function Page() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { token, accessGranted, loading, user } = useLandingAuth();
+  const { token, accessGranted, loading, userId, user } = useLandingAuth();
   const videoRefs = useRef([]);
   const [showLoader, setShowLoader] = useState(true);
-  const urlToken = searchParams.get("token");
-
+  console.log(token, accessGranted, userId, user);
+  // Only run after loading completes
   useEffect(() => {
+    // ⛔ Wait until auth context fully loads
     if (loading) return;
 
-    // Check URL token first, then context
-    const validToken = urlToken || token;
-
-    if (!validToken && !user) {
+    // ⛔ After loading finishes, *then* validate access
+    if (!accessGranted || !token || !userId) {
       navigate("/waitlist", { replace: true });
-    } else {
-      setTimeout(() => setShowLoader(false), 800);
+      return;
     }
-  }, [urlToken, token, user, loading, navigate]);
+
+    // ⭕ Valid session — hide loader
+    setTimeout(() => setShowLoader(false), 800);
+  }, [token, accessGranted, userId, loading, navigate]);
 
   if (loading || showLoader) {
     return (
