@@ -135,36 +135,39 @@ export default function HomePage() {
     >
       <BackgroundVideos
         currentImageIndex={currentImageIndex}
-        showForm={screenState === SCREEN_STATE.FORM}
+        // showForm={screenState === SCREEN_STATE.FORM}
         videoRefs={videoRefs}
       />
 
       <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
 
       <Sparkles />
-
-      <HeroSection
-        showForm={screenState === SCREEN_STATE.FORM}
-        onShowForm={handleOpenForm}
-        heroRef={heroRef}
-      />
-
-      <AnimatePresence>
-        {screenState === SCREEN_STATE.FORM && (
-          <EmailForm
-            onSubmit={handleEmailSubmit}
-            loading={loading}
-            error={error}
-            onClose={handleCloseForm}
+      {screenState !== SCREEN_STATE.SUCCESS && (
+        <>
+          <HeroSection
+            showForm={screenState === SCREEN_STATE.FORM}
+            onShowForm={handleOpenForm}
+            heroRef={heroRef}
           />
-        )}
-      </AnimatePresence>
 
+          <AnimatePresence>
+            {screenState === SCREEN_STATE.FORM && (
+              <EmailForm
+                onSubmit={handleEmailSubmit}
+                loading={loading}
+                error={error}
+                onClose={handleCloseForm}
+              />
+            )}
+          </AnimatePresence>
+        </>
+      )}
       <AnimatePresence>
         {screenState === SCREEN_STATE.SUCCESS && (
           <SuccessScreen onReset={handleReset} isExistingEmail={false} />
         )}
       </AnimatePresence>
+
       <footer className="relative z-10 py-8 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-stone-500 text-sm font-light">
