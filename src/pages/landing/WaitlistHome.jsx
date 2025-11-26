@@ -97,12 +97,13 @@ export default function HomePage() {
         magicLink,
         tokenId
       );
-      console.log(response);
+      console.log(response.data.success);
 
-      if (response.data.success === true) {
+      if (response.data.success === "true") {
         console.log("Waitlist email sent successfully.");
         // Transition to success screen
         setScreenState(SCREEN_STATE.SUCCESS);
+        console.log("Success screen shown", SCREEN_STATE.SUCCESS, screenState);
         return;
       }
     } catch (err) {
