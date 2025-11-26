@@ -133,51 +133,48 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
+      <BackgroundVideos
+        currentImageIndex={currentImageIndex}
+        showForm={screenState === SCREEN_STATE.FORM}
+        videoRefs={videoRefs}
+      />
+
+      <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+
+      <Sparkles />
+
+      <HeroSection
+        showForm={screenState === SCREEN_STATE.FORM}
+        onShowForm={handleOpenForm}
+        heroRef={heroRef}
+      />
       {screenState !== SCREEN_STATE.SUCCESS && (
-        <>
-          <BackgroundVideos
-            currentImageIndex={currentImageIndex}
-            showForm={screenState === SCREEN_STATE.FORM}
-            videoRefs={videoRefs}
-          />
-
-          <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
-
-          <Sparkles />
-
-          <HeroSection
-            showForm={screenState === SCREEN_STATE.FORM}
-            onShowForm={handleOpenForm}
-            heroRef={heroRef}
-          />
-
-          <AnimatePresence>
-            {screenState === SCREEN_STATE.FORM && (
-              <EmailForm
-                onSubmit={handleEmailSubmit}
-                loading={loading}
-                error={error}
-                onClose={handleCloseForm}
-              />
-            )}
-          </AnimatePresence>
-
-          <footer className="relative z-10 py-8 px-6">
-            <div className="max-w-7xl mx-auto text-center">
-              <p className="text-stone-500 text-sm font-light">
-                © 2025 Yagso. Timeless luxury.
-              </p>
-            </div>
-          </footer>
-        </>
+        <AnimatePresence>
+          {screenState === SCREEN_STATE.FORM && (
+            <EmailForm
+              onSubmit={handleEmailSubmit}
+              loading={loading}
+              error={error}
+              onClose={handleCloseForm}
+            />
+          )}
+        </AnimatePresence>
       )}
 
-      {/* SUCCESS SCREEN SHOULD BE OUTSIDE */}
       <AnimatePresence>
         {screenState === SCREEN_STATE.SUCCESS && (
           <SuccessScreen onReset={handleReset} isExistingEmail={false} />
         )}
       </AnimatePresence>
+      <footer className="relative z-10 py-8 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-stone-500 text-sm font-light">
+            © 2025 Yagso. Timeless luxury.
+          </p>
+        </div>
+      </footer>
+
+      {/* SUCCESS SCREEN SHOULD BE OUTSIDE */}
     </div>
   );
 }
