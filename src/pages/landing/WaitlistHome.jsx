@@ -99,7 +99,7 @@ export default function HomePage() {
       );
       console.log(response.data);
       console.log("Waitlist email sent successfully.", response.success);
-      if (response.data.success === "true") {
+      if (response.success === true) {
         console.log("Waitlist email sent successfully.");
         // Transition to success screen
         setScreenState(SCREEN_STATE.SUCCESS);
