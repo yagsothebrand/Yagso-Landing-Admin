@@ -148,18 +148,17 @@ export default function HomePage() {
         onShowForm={handleOpenForm}
         heroRef={heroRef}
       />
-      {screenState !== SCREEN_STATE.SUCCESS && (
-        <AnimatePresence>
-          {screenState === SCREEN_STATE.FORM && (
-            <EmailForm
-              onSubmit={handleEmailSubmit}
-              loading={loading}
-              error={error}
-              onClose={handleCloseForm}
-            />
-          )}
-        </AnimatePresence>
-      )}
+
+      <AnimatePresence>
+        {screenState === SCREEN_STATE.FORM && (
+          <EmailForm
+            onSubmit={handleEmailSubmit}
+            loading={loading}
+            error={error}
+            onClose={handleCloseForm}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {screenState === SCREEN_STATE.SUCCESS && (
