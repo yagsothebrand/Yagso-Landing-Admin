@@ -133,7 +133,6 @@ export default function HomePage() {
       ref={containerRef}
       className="min-h-screen bg-stone-950 overflow-hidden relative"
     >
-      {/* HOME & FORM screens - show background */}
       {screenState !== SCREEN_STATE.SUCCESS && (
         <>
           <BackgroundVideos
@@ -151,12 +150,6 @@ export default function HomePage() {
             onShowForm={handleOpenForm}
             heroRef={heroRef}
           />
-
-          <AnimatePresence>
-            {screenState === SCREEN_STATE.SUCCESS && (
-              <SuccessScreen onReset={handleReset} isExistingEmail={false} />
-            )}
-          </AnimatePresence>
 
           <AnimatePresence>
             {screenState === SCREEN_STATE.FORM && (
@@ -179,7 +172,12 @@ export default function HomePage() {
         </>
       )}
 
-      {/* SUCCESS screen - full overlay */}
+      {/* SUCCESS SCREEN SHOULD BE OUTSIDE */}
+      <AnimatePresence>
+        {screenState === SCREEN_STATE.SUCCESS && (
+          <SuccessScreen onReset={handleReset} isExistingEmail={false} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
