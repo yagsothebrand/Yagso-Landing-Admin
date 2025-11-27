@@ -30,6 +30,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuths from "@/hooks/useAuths";
 import { useNavigate } from "react-router-dom";
+import { sendAccountMail } from "@/lib/email-service";
 
 export default function YagsoLoginForm() {
   const navigate = useNavigate();

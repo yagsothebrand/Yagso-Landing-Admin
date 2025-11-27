@@ -1,13 +1,22 @@
-export const LoadingHelper = () => (
-  <div className="h-[80vh]">
-    <div className="absolute top-0 left-0 h-[85vh] z-[9999] w-screen bg-slate-500/50 flex justify-center items-center cursor-wait">
-      <figure className="w-[15rem] rounded-lg overflow-hidden">
-        <img
-          src="https://i.pinimg.com/originals/e6/8c/c3/e68cc33983bed347554ce23fe2bd08bd.gif"
-          alt="Logo"
-          className=" w-full object-contain mix-blend-multiply animate-pulse"
-        ></img>
-      </figure>
+import { BackgroundVideos } from "@/components/BackgroundVideos";
+import PreparingAccessLoader from "@/components/PreparingAccessLoader";
+import { Sparkles } from "@/components/Sparkles";
+import { AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+
+export const LoadingHelper = () => {
+  const videoRefs = useRef([]);
+
+  return (
+    <div className="min-h-screen bg-stone-950 overflow-hidden relative">
+      <BackgroundVideos currentImageIndex={0} videoRefs={videoRefs} />
+
+      <div className="fixed inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none" />
+
+      <Sparkles />
+      <AnimatePresence>
+        <PreparingAccessLoader key="loader" />
+      </AnimatePresence>
     </div>
-  </div>
-);
+  );
+};
