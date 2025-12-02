@@ -125,7 +125,7 @@ export default function YagsoLoginForm() {
       );
 
       const user = userCredential.user;
-      const docRef = doc(db, "users", user.uid);
+      const docRef = doc(db, "staff", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -155,7 +155,13 @@ export default function YagsoLoginForm() {
         setLoading(false);
       }
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(
+        err === "string"
+          ? err
+          : err?.message
+          ? err.message
+          : "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
@@ -175,7 +181,7 @@ export default function YagsoLoginForm() {
       );
       const user = userCredential.user;
 
-      await setDoc(doc(db, "users", user.uid), {
+      await setDoc(doc(db, "staff", user.uid), {
         authId: user.uid,
         firstName: signupData.firstName,
         lastName: signupData.lastName,
@@ -210,7 +216,13 @@ export default function YagsoLoginForm() {
         setSuccess("");
       }, 2000);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(
+        err === "string"
+          ? err
+          : err?.message
+          ? err.message
+          : "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
