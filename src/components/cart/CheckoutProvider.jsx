@@ -8,7 +8,7 @@ const CheckoutContext = createContext();
 
 export const CheckoutProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const { user } = useLandingAuth();
+  const { user, userId } = useLandingAuth();
 
   const generateCheckoutId = () => {
     return "chk_" + Math.random().toString(36).substring(2, 12);
@@ -17,6 +17,7 @@ export const CheckoutProvider = ({ children }) => {
   const getCheckoutId = async () => {
     setLoading(true);
 
+    const userRef = doc(db, "users", userId);
     try {
       // 1. Re-fetch the latest user document (prevents stale context data)
       const freshSnap = await getDoc(userRef);
