@@ -9,7 +9,6 @@ import GuidedTour from "@/components/home/GuidedTour";
 import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 
 const Home = () => {
-
   const carouselRef = useRef();
   const bestSellerRef = useRef();
 
@@ -40,6 +39,9 @@ const Home = () => {
       </div>
 
       <GuidedTour refs={refs} />
+      <div>
+        <YagsoTicker />
+      </div>
     </Layout>
   );
 };

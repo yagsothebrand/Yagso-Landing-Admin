@@ -47,27 +47,27 @@ const NewCollections = () => {
       image: "/pearl-essence.JPG",
       span: "md:col-span-1 md:row-span-1",
     },
-    {
-      id: 4,
-      title: "Midnight Stars",
-      subtitle: "Bold & captivating",
-      image: "/midnight.JPG",
-      span: "md:col-span-1 md:row-span-2",
-    },
-    {
-      id: 5,
-      title: "Rose Garden",
-      subtitle: "Romantic essence",
-      image: "/rose.JPG",
-      span: "md:col-span-2 md:row-span-1",
-    },
-    {
-      id: 6,
-      title: "Opal Mirage",
-      subtitle: "Mystical flair",
-      image: "/opal.JPG",
-      span: "md:col-span-1 md:row-span-1",
-    },
+    // {
+    //   id: 4,
+    //   title: "Midnight Stars",
+    //   subtitle: "Bold & captivating",
+    //   image: "/midnight.JPG",
+    //   span: "md:col-span-1 md:row-span-2",
+    // },
+    // {
+    //   id: 5,
+    //   title: "Rose Garden",
+    //   subtitle: "Romantic essence",
+    //   image: "/rose.JPG",
+    //   span: "md:col-span-2 md:row-span-1",
+    // },
+    // {
+    //   id: 6,
+    //   title: "Opal Mirage",
+    //   subtitle: "Mystical flair",
+    //   image: "/opal.JPG",
+    //   span: "md:col-span-1 md:row-span-1",
+    // },
   ];
 
   const itemVariants = {

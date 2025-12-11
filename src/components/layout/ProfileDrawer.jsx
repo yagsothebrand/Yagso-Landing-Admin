@@ -180,7 +180,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
           ? `${user.firstName} ${user.lastName}`
           : user?.email || "Unknown User";
 
-      const userRef = doc(db, "users", user.authId);
+      const userRef = doc(db, "staff", user.authId);
       await updateDoc(userRef, {
         firstName: formData.firstName,
         lastName: formData.lastName,

@@ -10,6 +10,7 @@ import { LandingAuthProvider } from "./components/landingauth/LandingAuthProvide
 import { ErrorBoundary } from "react-error-boundary";
 import WaitlistHome from "./pages/landing/WaitlistHome";
 import TokenPage from "./pages/landing/TokenPage";
+import { ErrorPage } from "./pages/ErrorPage";
 
 // -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
@@ -32,11 +33,7 @@ const Home = lazy(() => import("./pages/landing/Home"));
 // -------- Helper wrapper for lazy + error boundary --------
 const SafeSuspense = ({ children }) => (
   <Suspense fallback={<LoadingHelper />}>
-    <ErrorBoundary
-      fallback={<div>Something went wrong loading this page.</div>}
-    >
-      {children}
-    </ErrorBoundary>
+    <ErrorBoundary FallbackComponent={ErrorPage}>{children}</ErrorBoundary>
   </Suspense>
 );
 
@@ -115,81 +112,81 @@ function App() {
         {
           path: "/dashboard",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="Sales Representative">
+            <ProtectedRoute requiredRole="Sales Representative">
+              <SafeSuspense>
                 <AdminDashboard />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/invoices",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="Sales Representative">
+            <ProtectedRoute requiredRole="Sales Representative">
+              <SafeSuspense>
                 <InvoicesPage />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/products",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="Sales Representative">
+            <ProtectedRoute requiredRole="Sales Representative">
+              <SafeSuspense>
                 <ProductsPage />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/categories",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="Sales Representative">
+            <ProtectedRoute requiredRole="Sales Representative">
+              <SafeSuspense>
                 <CategoryPage />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/administration",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="General Manager">
+            <ProtectedRoute requiredRole="General Manager">
+              <SafeSuspense>
                 <AdministrationPage />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/analytics",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="General Manager">
+            <ProtectedRoute requiredRole="General Manager">
+              <SafeSuspense>
                 <AnalyticsDashboard />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/email",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="General Manager">
+            <ProtectedRoute requiredRole="General Manager">
+              <SafeSuspense>
                 <EmailLogsPage />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
         {
           path: "/dashboard/waitlist",
           element: (
-            <SafeSuspense>
-              <ProtectedRoute requiredRole="General Manager">
+            <ProtectedRoute requiredRole="General Manager">
+              <SafeSuspense>
                 <WaitListEmails />
-              </ProtectedRoute>
-            </SafeSuspense>
+              </SafeSuspense>
+            </ProtectedRoute>
           ),
         },
 

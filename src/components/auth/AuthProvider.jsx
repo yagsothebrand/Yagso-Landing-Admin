@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     setLoadingGetUserInformation(true);
 
     try {
-      const userRef = doc(db, "users", authId);
+      const userRef = doc(db, "staff", authId);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
@@ -57,7 +57,11 @@ export const AuthProvider = ({ children }) => {
         return null;
       }
     } catch (error) {
-      toast({ title: "Error fetching user data:", error });
+      toast({
+        title: "Error fetching user data:",
+        description: error?.message || error,
+      });
+
       return null;
     } finally {
       setLoadingGetUserInformation(false);
@@ -69,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   const getAllUsers = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "users"));
+      const querySnapshot = await getDocs(collection(db, "staff"));
       const usersList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -77,7 +81,11 @@ export const AuthProvider = ({ children }) => {
       setAllUsers(usersList);
       setLoading(false);
     } catch (error) {
-      toast({ title: "Error fetching all users:", error });
+      toast({
+        title: "Error fetching all users:",
+        description: error?.message || error,
+      });
+
       setLoading(false);
     }
   };
@@ -87,22 +95,24 @@ export const AuthProvider = ({ children }) => {
     console.log(uid);
     setLoader(true);
     try {
-      const userRef = doc(db, "users", uid);
+      const userRef = doc(db, "staff", uid);
       await updateDoc(userRef, { [field]: newStatus });
 
       await getUserInfo(user.authId);
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      toast({ title: "Error updating status:", error });
-      console.error("Error updating status:", error);
+      toast({
+        title: "Error fetching all users:",
+        description: error?.message || error,
+      });
     }
   };
 
   const updateUserProfile = async (uid, updates) => {
     setLoader(true);
     try {
-      const userRef = doc(db, "users", uid);
+      const userRef = doc(db, "staff", uid);
       await updateDoc(userRef, {
         ...updates,
         updatedAt: serverTimestamp(),
@@ -127,12 +137,16 @@ export const AuthProvider = ({ children }) => {
   const deleteUpdateUserProfile = async (uid) => {
     try {
       setLoader(true);
-      await deleteDoc(doc(db, "users", uid));
+      await deleteDoc(doc(db, "staff", uid));
       await getAllUsers(); // refresh list
       setLoader(false);
       return { success: true };
     } catch (error) {
-      toast({ title: "Error deleting user:", error });
+      toast({
+        title: "Error fetching all users:",
+        description: error?.message || error,
+      });
+
       setLoader(false);
       return { success: false, error: error.message };
     }
@@ -150,7 +164,11 @@ export const AuthProvider = ({ children }) => {
       setEmailLogs(usersList);
       setLoading(false);
     } catch (error) {
-      toast({ title: "Error fetching all users:", error });
+      toast({
+        title: "Error fetching all users:",
+        description: error?.message || error,
+      });
+
       setLoading(false);
     }
   };
@@ -166,7 +184,11 @@ export const AuthProvider = ({ children }) => {
       setWaitlistLogs(usersList);
       setLoading(false);
     } catch (error) {
-      toast({ title: "Error fetching all waitlist:", error });
+      toast({
+        title: "Error fetching all users:",
+        description: error?.message || error,
+      });
+
       setLoading(false);
     }
   };
@@ -177,7 +199,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const userRef = doc(db, "users", firebaseUser.uid);
+        const userRef = doc(db, "staff", firebaseUser.uid);
         const userSnap = await getDoc(userRef);
 
         // if (userSnap.exists()) {

@@ -17,23 +17,21 @@ const Root = () => {
   return (
     <>
       {/* <Navbar /> */}
-           <LandingAuthProvider>
-      <NotificationProvider>
-        <AuthProvider>
-          <InvoiceProvider>
-            <ProductsProvider>
-              <CartProvider>
-                <CartDrawer />
-                <Toaster />
+      <LandingAuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <InvoiceProvider>
+              <ProductsProvider>
+                <CartProvider>
+                  <CartDrawer />
+                  <Toaster />
 
-                <ErrorBoundary FallbackComponent={ErrorPage}>
                   <Outlet />
-                </ErrorBoundary>
-              </CartProvider>
-            </ProductsProvider>
-          </InvoiceProvider>
-        </AuthProvider>
-      </NotificationProvider>
+                </CartProvider>
+              </ProductsProvider>
+            </InvoiceProvider>
+          </AuthProvider>
+        </NotificationProvider>
       </LandingAuthProvider>
       {/* <Footer /> */}
     </>
