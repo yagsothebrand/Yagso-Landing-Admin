@@ -168,9 +168,9 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      <footer className="relative z-10 py-8 px-6">
+      <footer className="relative z-10 ">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-stone-500 text-sm font-light">
+          <p className="text-stone-700 text-sm font-bold">
             © 2025 Yagso. Timeless luxury.
           </p>
         </div>
