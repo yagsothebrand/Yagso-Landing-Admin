@@ -17,25 +17,33 @@ export const CheckoutProvider = ({ children }) => {
   const getCheckoutId = async () => {
     setLoading(true);
 
-    let checkoutId;
+    try {
+      // 1. Re-fetch the latest user document (prevents stale context data)
+      const freshSnap = await getDoc(userRef);
 
-    if (user.checkoutId) {
-      // Found existing checkoutId
+      if (!freshSnap.exists()) {
+        throw new Error("User does not exist in Firestore.");
+      }
+
+      const freshData = freshSnap.data();
+
+      // 2. If checkoutId already exists → use it
+      if (freshData.checkoutId) {
+        return freshData.checkoutId;
+      }
+
+      // 3. Otherwise generate a new ID
+      const newCheckoutId = generateCheckoutId();
+
+      await setDoc(userRef, { checkoutId: newCheckoutId }, { merge: true });
+
+      return newCheckoutId;
+    } catch (err) {
+      console.error("getCheckoutId ERROR:", err);
+      throw err;
+    } finally {
       setLoading(false);
-      return user.checkoutId;
     }
-
-    // Generate new checkout ID
-    checkoutId = generateCheckoutId();
-
-    await setDoc(
-      userRef,
-      { checkoutId },
-      { merge: true } // don’t overwrite other user fields
-    );
-
-    setLoading(false);
-    return checkoutId;
   };
 
   return (
