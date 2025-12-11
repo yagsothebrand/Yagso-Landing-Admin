@@ -42,24 +42,24 @@ export const CartProvider = ({ children }) => {
     loadCart();
   }, [userId]);
 
-  useEffect(() => {
-    if (loading || !userId) return;
+  // useEffect(() => {
+  //   if (loading || !userId) return;
 
-    const saveCart = async () => {
-      try {
-        const userRef = doc(db, "users", userId);
-        await setDoc(
-          userRef,
-          { cart: cart, cartUpdatedAt: new Date() },
-          { merge: true }
-        );
-      } catch (error) {
-        console.error("Error saving cart:", error);
-      }
-    };
+  //   const saveCart = async () => {
+  //     try {
+  //       const userRef = doc(db, "users", userId);
+  //       // await setDoc(
+  //       //   userRef,
+  //       //   { cart: cart, cartUpdatedAt: new Date() },
+  //       //   { merge: true }
+  //       // );
+  //     } catch (error) {
+  //       console.error("Error saving cart:", error);
+  //     }
+  //   };
 
-    saveCart();
-  }, [cart, loading, userId]);
+  //   saveCart();
+  // }, [cart, loading, userId]);
 
   const addToCart = (product, quantity = 1, selectedVariant = null) => {
     setCart((prevCart) => {
