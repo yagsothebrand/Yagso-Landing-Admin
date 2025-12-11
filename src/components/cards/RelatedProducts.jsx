@@ -90,6 +90,7 @@ const RelatedProducts = ({ currentProduct }) => {
                 price={product.price}
                 variants={product.colors || []}
                 placement={product.placement}
+              stock={product.stock}
               />
             </motion.div>
           ))}

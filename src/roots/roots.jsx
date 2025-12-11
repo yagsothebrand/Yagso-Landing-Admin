@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/pages/CartDrawer";
 import { LandingAuthProvider } from "@/components/landingauth/LandingAuthProvider";
+import { CheckoutProvider } from "@/components/cart/CheckoutProvider";
 
 const Root = () => {
   // const { user } = useAuth();
@@ -22,12 +23,14 @@ const Root = () => {
           <AuthProvider>
             <InvoiceProvider>
               <ProductsProvider>
-                <CartProvider>
-                  <CartDrawer />
-                  <Toaster />
+                <CheckoutProvider>
+                  <CartProvider>
+                    <CartDrawer />
+                    <Toaster />
 
-                  <Outlet />
-                </CartProvider>
+                    <Outlet />
+                  </CartProvider>
+                </CheckoutProvider>
               </ProductsProvider>
             </InvoiceProvider>
           </AuthProvider>

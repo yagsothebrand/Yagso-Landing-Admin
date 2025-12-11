@@ -78,6 +78,7 @@ const BestSeller = () => {
                   images={prod.images}
                   variants={prod.variants}
                   placement={prod.placement}
+                  stock={prod.stock}
                 />
               </div>
             ))}

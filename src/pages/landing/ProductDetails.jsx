@@ -44,7 +44,7 @@ const ProductDetails = () => {
 
     setProduct(prod);
     setSelectedImage(prod.images?.[0] || null);
-    setColor(prod.colors?.[0] || null);
+    setColor(prod?.colors?.[0] || null);
 
     // Set wishlist state based on product data
     setWishlist(prod.wishlist?.includes(token) || false);
@@ -74,18 +74,31 @@ const ProductDetails = () => {
   const increaseQty = () => setQuantity((q) => q + 1);
   const decreaseQty = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
+  // Detect available variants dynamically
+  const variants = product?.colors || product?.sizes || product?.variants || [];
+
+  // Pick selected variant or fallback to null
+  const selectedVariant = variants.length > 0 ? color : null;
+
   const handleAddToCart = () => {
-    if (!color) return alert("Please select a color/variant");
-    addToCart({
+    // If variants exist but user did not select one
+    if (variants.length > 0 && !selectedVariant) {
+      triggerToast("Please select a variant");
+      return;
+    }
+
+    const productToAdd = {
       id: product.id,
-      title: product.name,
+      name: product.name,
       price: product.price,
-      quantity,
-      color,
-      image: selectedImage,
-      category: product.category,
-    });
+      images: product.images,
+      stock: product.stock || 50,
+      discountPercentage: product.discountPercentage || 0,
+    };
+
+    addToCart(productToAdd, quantity, selectedVariant);
     triggerToast("Added to cart ✅");
+
     setQuantity(1);
   };
 
@@ -151,11 +164,11 @@ const ProductDetails = () => {
           <p className="text-3xl font-bold mt-4">${product.price}</p>
 
           {/* Color Selector */}
-          {product.colors && (
+          {product?.colors && (
             <div className="mt-4">
               <p className="text-sm text-[#debfad]/80">Color:</p>
               <div className="flex gap-3 mt-2">
-                {product.colors.map((c) => (
+                {product?.colors.map((c) => (
                   <button
                     key={c}
                     onClick={() => setColor(c)}
@@ -201,7 +214,12 @@ const ProductDetails = () => {
           {/* Add to cart */}
           <button
             onClick={handleAddToCart}
-            className="bg-[#debfad] text-[#133827] font-semibold py-3 rounded-xl mt-5 hover:bg-[#ebd6c9] transition hover:scale-[1.02] active:scale-[0.97]"
+            disabled={variants.length > 0 && !selectedVariant}
+            className={`btn-primary w-full ${
+              variants.length > 0 && !selectedVariant
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             Add to Cart
           </button>
@@ -242,7 +260,7 @@ const ProductDetails = () => {
 
       {/* Related */}
       <div className="mt-16">
-        <RelatedProducts />
+        <RelatedProducts currentProduct={product} />
       </div>
     </div>
   );

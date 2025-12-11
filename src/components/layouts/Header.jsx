@@ -1,9 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart, User, Heart, Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+
+import {
+  ShoppingCart,
+  User,
+  Heart,
+  Menu,
+  X,
+  ChevronDown,
+  Loader2,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "../cart/CartProvider";
+import { Link } from "react-router-dom";
 
 const navLinks = {
   left: ["About", "Shop", "Contact"],
@@ -14,14 +24,19 @@ const Header = ({ onOpenContact }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const [wishCount, setWishCount] = useState(0);
+  const { setIsDrawerOpen, getCartCount, loading } = useCart();
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setCartCount(getCartCount());
+  }, [getCartCount]);
 
   const scrollToAbout = () => {
     const section = document.querySelector("#about-section");
@@ -33,16 +48,6 @@ const Header = ({ onOpenContact }) => {
     else if (item === "Contact") onOpenContact?.();
     else if (item === "Shop") window.location.href = "/";
   };
-
-  useEffect(() => {
-    const update = () => {
-      setCartCount(JSON.parse(localStorage.getItem("cart") || "[]").length);
-      setWishCount(JSON.parse(localStorage.getItem("wishlist") || "[]").length);
-    };
-    update();
-    window.addEventListener("storageUpdate", update);
-    return () => window.removeEventListener("storageUpdate", update);
-  }, []);
 
   return (
     <header
@@ -90,14 +95,26 @@ const Header = ({ onOpenContact }) => {
         {/* Right Icons */}
         <ul className="flex flex-row gap-6 items-center text-[16px]">
           <li className="relative">
-            <Link to="/cart">
-              <ShoppingCart className="w-5 h-5 hover:text-[#133827] text-[#133827]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
-                  {cartCount}
-                </span>
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="relative p-2 hover:bg-gray-100 rounded-lg transition"
+            >
+              {loading ? (
+                <Loader2 className="w-5 h-5 text-[#133827] animate-spin" />
+              ) : (
+                <ShoppingCart className="w-5 h-5 text-[#133827]" />
               )}
-            </Link>
+              {cartCount > 0 && (
+                <motion.span
+                  key={cartCount}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                >
+                  {cartCount}
+                </motion.span>
+              )}
+            </button>
           </li>
 
           <li>
@@ -212,4 +229,5 @@ const Header = ({ onOpenContact }) => {
   );
 };
 
+export { Header };
 export default Header;

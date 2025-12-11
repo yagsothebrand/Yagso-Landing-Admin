@@ -11,6 +11,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import WaitlistHome from "./pages/landing/WaitlistHome";
 import TokenPage from "./pages/landing/TokenPage";
 import { ErrorPage } from "./pages/ErrorPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 // -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
@@ -68,6 +69,16 @@ function App() {
             <SafeSuspense>
               <Layout>
                 <ProductDetails />
+              </Layout>
+            </SafeSuspense>
+          ),
+        },
+        {
+          path: "/checkout/:checkoutId",
+          element: (
+            <SafeSuspense>
+              <Layout>
+                <CheckoutPage />
               </Layout>
             </SafeSuspense>
           ),

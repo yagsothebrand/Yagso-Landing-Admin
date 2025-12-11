@@ -1,159 +1,178 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react"
+import { createContext, useContext, useState, useEffect } from "react";
 
-import { db } from "@/firebase"
-import { doc, setDoc, deleteDoc, getDoc } from "firebase/firestore"
-import { useLandingAuth } from "../landingauth/LandingAuthProvider"
+import { db, doc } from "@/firebase";
+import { useLandingAuth } from "../landingauth/LandingAuthProvider";
+import { getDoc, setDoc } from "firebase/firestore";
 
-const CartContext = createContext(null)
+const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const { token } = useLandingAuth()
-  const [cart, setCart] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [lastAddedItem, setLastAddedItem] = useState(null)
+  const [cart, setCart] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { userId } = useLandingAuth();
 
+  // Load cart from Firestore when userId changes
   useEffect(() => {
-    if (!token) {
-      setCart([])
-      return
+    if (!userId) {
+      setLoading(false);
+      setCart([]);
+      return;
     }
 
     const loadCart = async () => {
-      setLoading(true)
       try {
-        const cartRef = doc(db, "users", token, "cart", "items")
-        const cartSnap = await getDoc(cartRef)
-        if (cartSnap.exists()) {
-          setCart(cartSnap.data().items || [])
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists() && userSnap.data().cart) {
+          setCart(userSnap.data().cart);
         } else {
-          setCart([])
+          setCart([]);
         }
       } catch (error) {
-        console.error("[v0] Error loading cart:", error)
+        console.error("Error loading cart:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadCart()
-  }, [token])
+    loadCart();
+  }, [userId]);
 
-  const addToCart = useCallback(
-    async (product) => {
-      if (!token) {
-        console.warn("[v0] User not authenticated")
-        return
+  useEffect(() => {
+    if (loading || !userId) return;
+
+    const saveCart = async () => {
+      try {
+        const userRef = doc(db, "users", userId);
+        await setDoc(
+          userRef,
+          { cart: cart, cartUpdatedAt: new Date() },
+          { merge: true }
+        );
+      } catch (error) {
+        console.error("Error saving cart:", error);
       }
+    };
 
-      const existingItem = cart.find((item) => item.id === product.id && item.variant === product.variant)
+    saveCart();
+  }, [cart, loading, userId]);
 
-      let updatedCart
+  const addToCart = (product, quantity = 1, selectedVariant = null) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find(
+        (item) => item.id === product.id && item.variant === selectedVariant
+      );
+
       if (existingItem) {
-        updatedCart = cart.map((item) =>
-          item.id === product.id && item.variant === product.variant
-            ? { ...item, quantity: item.quantity + (product.quantity || 1) }
-            : item,
-        )
+        const newQuantity = existingItem.quantity + quantity;
+        if (newQuantity > (product.stock || 0)) {
+          console.log("[v0] Cannot add - exceeds stock");
+          return prevCart;
+        }
+        return prevCart.map((item) =>
+          item.id === product.id && item.variant === selectedVariant
+            ? { ...item, quantity: newQuantity }
+            : item
+        );
       } else {
-        updatedCart = [...cart, { ...product, quantity: product.quantity || 1 }]
+        if (quantity > (product.stock || 0)) {
+          console.log("[v0] Cannot add - quantity exceeds stock");
+          return prevCart;
+        }
+        return [
+          ...prevCart,
+          {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images?.[0] || "/placeholder.svg",
+            variant: selectedVariant,
+            quantity,
+            stock: product.stock,
+            discount: product.discountPercentage || 0,
+          },
+        ];
       }
+    });
+    setIsDrawerOpen(true);
+  };
 
-      setCart(updatedCart)
-      setLastAddedItem(product)
-      setIsDrawerOpen(true)
-
-      try {
-        const cartRef = doc(db, "users", token, "cart", "items")
-        await setDoc(cartRef, { items: updatedCart, updatedAt: new Date() })
-      } catch (error) {
-        console.error("[v0] Error saving cart:", error)
-      }
-    },
-    [token, cart],
-  )
-
-  const updateCartItem = useCallback(
-    async (productId, variant, quantity) => {
-      if (!token) return
-
-      let updatedCart
-      if (quantity <= 0) {
-        updatedCart = cart.filter((item) => !(item.id === productId && item.variant === variant))
-      } else {
-        updatedCart = cart.map((item) =>
-          item.id === productId && item.variant === variant ? { ...item, quantity } : item,
-        )
-      }
-
-      setCart(updatedCart)
-
-      try {
-        const cartRef = doc(db, "users", token, "cart", "items")
-        await setDoc(cartRef, { items: updatedCart, updatedAt: new Date() })
-      } catch (error) {
-        console.error("[v0] Error updating cart:", error)
-      }
-    },
-    [token, cart],
-  )
-
-  const removeFromCart = useCallback(
-    async (productId, variant) => {
-      if (!token) return
-
-      const updatedCart = cart.filter((item) => !(item.id === productId && item.variant === variant))
-
-      setCart(updatedCart)
-
-      try {
-        const cartRef = doc(db, "users", token, "cart", "items")
-        await setDoc(cartRef, { items: updatedCart, updatedAt: new Date() })
-      } catch (error) {
-        console.error("[v0] Error removing from cart:", error)
-      }
-    },
-    [token, cart],
-  )
-
-  const clearCart = useCallback(async () => {
-    if (!token) return
-
-    setCart([])
-
-    try {
-      const cartRef = doc(db, "users", token, "cart", "items")
-      await deleteDoc(cartRef)
-    } catch (error) {
-      console.error("[v0] Error clearing cart:", error)
+  const updateCartItem = (itemId, variant, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId, variant);
+      return;
     }
-  }, [token])
 
-  return (
-    <CartContext.Provider
-      value={{
-        cart,
-        loading,
-        addToCart,
-        updateCartItem,
-        removeFromCart,
-        clearCart,
-        isDrawerOpen,
-        setIsDrawerOpen,
-        lastAddedItem,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  )
-}
+    setCart((prevCart) => {
+      return prevCart.map((item) => {
+        if (item.id === itemId && item.variant === variant) {
+          if (newQuantity > (item.stock || 0)) {
+            return item;
+          }
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+    });
+  };
+
+  const removeFromCart = (itemId, variant) => {
+    setCart((prevCart) =>
+      prevCart.filter(
+        (item) => !(item.id === itemId && item.variant === variant)
+      )
+    );
+  };
+
+  const clearCart = async () => {
+    setCart([]);
+    if (userId) {
+      try {
+        const cartRef = doc(db, "users", userId, "cart", "items");
+        await setDoc(cartRef, { items: [] }, { merge: true });
+      } catch (error) {
+        console.error("[v0] Error clearing cart:", error);
+      }
+    }
+  };
+
+  const getCartTotal = () => {
+    return cart.reduce((total, item) => {
+      const basePrice = item.price * item.quantity;
+      const discount = item.discount ? (basePrice * item.discount) / 100 : 0;
+      return total + (basePrice - discount);
+    }, 0);
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((count, item) => count + item.quantity, 0);
+  };
+
+  const value = {
+    cart,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    addToCart,
+    updateCartItem,
+    removeFromCart,
+    clearCart,
+    getCartTotal,
+    getCartCount,
+    userId,
+    loading,
+  };
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+};
 
 export const useCart = () => {
-  const context = useContext(CartContext)
+  const context = useContext(CartContext);
   if (!context) {
-    throw new Error("useCart must be used within CartProvider")
+    throw new Error("useCart must be used within a CartProvider");
   }
-  return context
-}
+  return context;
+};
