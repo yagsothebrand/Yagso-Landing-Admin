@@ -20,7 +20,7 @@ const NewsletterModal = ({ onClose, initialEmail = "" }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef(null);
-  const { user } = useLandingAuth();
+  const { user, setUser } = useLandingAuth();
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValid = validEmail.test(email);
 
