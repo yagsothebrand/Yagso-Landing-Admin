@@ -31,7 +31,7 @@ export default function TokenPage() {
   const { token } = useParams(); // 🔥 this is the waitlist docId
   const navigate = useNavigate();
   const { setToken, setAccessGranted, setUserId } = useLandingAuth();
-
+  console.log("TokenPage token:", token);
   const [loading, setLoading] = useState(true);
   const [resendLoading, setResendLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -45,13 +45,13 @@ export default function TokenPage() {
   useEffect(() => {
     if (!token) return;
 
-    // ✅ Immediately save to context & localStorage
     setToken(token);
-    setAccessGranted(false); // passcode not verified yet
+    setAccessGranted(false); // Passcode not verified yet
     localStorage.setItem("token", token);
     localStorage.setItem("accessGranted", "false");
 
     async function loadData() {
+           console.log("Waitlist data loaded:");
       try {
         const docRef = doc(db, "waitlist", token);
         const docSnap = await getDoc(docRef);
@@ -65,9 +65,10 @@ export default function TokenPage() {
         const data = docSnap.data();
         setEmail(data.email);
         setPasscode(data.passcode);
-        setShowPasscode(true); // show passcode verification
+        console.log("Waitlist data loaded:", data);
+        setShowPasscode(true); // Show passcode verification
       } catch (err) {
-        console.error(err);
+        console.error("Error loading waitlist data:", err);
         setError("Something went wrong.");
       } finally {
         setLoading(false);
@@ -75,7 +76,7 @@ export default function TokenPage() {
     }
 
     loadData();
-  }, []);
+  }, [token]); // Add token as a dependency
 
   // 👉 Handle passcode verification
   const handlePasscodeVerify = async (passcode) => {

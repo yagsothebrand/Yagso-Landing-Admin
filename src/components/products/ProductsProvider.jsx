@@ -296,11 +296,12 @@ export const ProductsProvider = ({ children }) => {
 
     return stats;
   };
-  const reduceStock = async (products) => {
+  const reduceStock = async (product) => {
+    console.log("Reducing stock for products:", product);
     try {
-      const updatedProducts = [...products];
+      const updatedProducts = [...product];
 
-      for (const item of products) {
+      for (const item of product) {
         const idx = updatedProducts.findIndex((i) => i.id === item.id);
         if (idx !== -1) {
           const currentStock = updatedProducts[idx].stock || 0;

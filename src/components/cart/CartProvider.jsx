@@ -12,9 +12,8 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { userId } = useLandingAuth();
+  const { userId, user } = useLandingAuth();
 
-  // Load cart from Firestore when userId changes
   useEffect(() => {
     if (!userId) {
       setLoading(false);
@@ -42,24 +41,35 @@ export const CartProvider = ({ children }) => {
     loadCart();
   }, [userId]);
 
-  // useEffect(() => {
-  //   if (loading || !userId) return;
+  useEffect(() => {
+    if (loading || !userId) return;
 
-  //   const saveCart = async () => {
-  //     try {
-  //       const userRef = doc(db, "users", userId);
-  //       // await setDoc(
-  //       //   userRef,
-  //       //   { cart: cart, cartUpdatedAt: new Date() },
-  //       //   { merge: true }
-  //       // );
-  //     } catch (error) {
-  //       console.error("Error saving cart:", error);
-  //     }
-  //   };
+    const saveCart = async () => {
+      try {
+        const userRef = doc(db, "users", userId);
+        await setDoc(
+          userRef,
+          { cart: cart, cartUpdatedAt: new Date() },
+          { merge: true }
+        );
+      } catch (error) {
+        console.error("Error saving cart:", error);
+      }
+    };
 
-  //   saveCart();
-  // }, [cart, loading, userId]);
+    saveCart();
+  }, [cart, loading, userId]);
+
+  // On mount, load cart from localStorage
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) setCart(JSON.parse(storedCart));
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product, quantity = 1, selectedVariant = null) => {
     setCart((prevCart) => {
@@ -129,14 +139,23 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = async () => {
-    setCart([]);
-    if (userId) {
-      try {
-        const cartRef = doc(db, "users", userId, "cart", "items");
-        await setDoc(cartRef, { items: [] }, { merge: true });
-      } catch (error) {
-        console.error("[v0] Error clearing cart:", error);
-      }
+    if (!userId) {
+      setCart([]);
+      return;
+    }
+
+    try {
+      const cartRef = doc(db, "users", userId);
+
+      await setDoc(
+        cartRef,
+        { cart: [], cartUpdatedAt: new Date() },
+        { merge: true }
+      );
+
+      setCart([]); // Update state after Firestore
+    } catch (error) {
+      console.error("[v0] Error clearing cart:", error);
     }
   };
 

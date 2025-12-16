@@ -12,6 +12,7 @@ import WaitlistHome from "./pages/landing/WaitlistHome";
 import TokenPage from "./pages/landing/TokenPage";
 import { ErrorPage } from "./pages/ErrorPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import Account from "./pages/AccountPage";
 
 // -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
@@ -116,7 +117,16 @@ function App() {
             </SafeSuspense>
           ),
         },
-
+        {
+          path: "/account",
+          element: (
+            <SafeSuspense>
+              <Layout>
+                <Account />
+              </Layout>
+            </SafeSuspense>
+          ),
+        },
         // ------------------------
         // Protected routes
         // ------------------------

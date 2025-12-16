@@ -25,10 +25,12 @@ const Root = () => {
               <ProductsProvider>
                 <CheckoutProvider>
                   <CartProvider>
-                    <CartDrawer />
-                    <Toaster />
+                    <CheckoutProvider>
+                      <CartDrawer />
+                      <Toaster />
 
-                    <Outlet />
+                      <Outlet />
+                    </CheckoutProvider>
                   </CartProvider>
                 </CheckoutProvider>
               </ProductsProvider>

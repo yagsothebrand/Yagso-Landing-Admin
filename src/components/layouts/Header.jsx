@@ -24,7 +24,7 @@ const Header = ({ onOpenContact }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [wishCount, setWishCount] = useState(0);
+
   const { setIsDrawerOpen, getCartCount, loading } = useCart();
   const [cartCount, setCartCount] = useState(0);
 
@@ -42,11 +42,16 @@ const Header = ({ onOpenContact }) => {
     const section = document.querySelector("#about-section");
     if (section) section.scrollIntoView({ behavior: "smooth" });
   };
+  const scrollToShop = () => {
+    const section = document.querySelector("#shop-section");
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleNavClick = (item) => {
     if (item === "About") scrollToAbout();
+    if (item === "Shop") scrollToShop();
     else if (item === "Contact") onOpenContact?.();
-    else if (item === "Shop") window.location.href = "/";
+    
   };
 
   return (
@@ -97,12 +102,12 @@ const Header = ({ onOpenContact }) => {
           <li className="relative">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-lg transition"
+              className="relative p-2  rounded-lg transition"
             >
               {loading ? (
-                <Loader2 className="w-5 h-5 text-[#133827] animate-spin" />
+                <Loader2 className="w-5 h-5 text-[#133827] hover:text-[#edd2a8] animate-spin" />
               ) : (
-                <ShoppingCart className="w-5 h-5 text-[#133827]" />
+                <ShoppingCart className="w-5 h-5 text-[#133827] hover:text-[#edd2a8]" />
               )}
               {cartCount > 0 && (
                 <motion.span
@@ -119,17 +124,7 @@ const Header = ({ onOpenContact }) => {
 
           <li>
             <Link to="/account">
-              <User className="w-5 h-5 hover:text-[#133827] text-[#133827] transition-colors duration-300" />
-            </Link>
-          </li>
-          <li className="relative">
-            <Link to="/wishlist">
-              <Heart className="w-5 h-5 hover:text-red-500 text-[#133827]" />
-              {wishCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#133827] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
-                  {wishCount}
-                </span>
-              )}
+              <User className="w-5 h-5 hover:text-[#edd2a8] text-[#133827] transition-colors duration-300" />
             </Link>
           </li>
         </ul>

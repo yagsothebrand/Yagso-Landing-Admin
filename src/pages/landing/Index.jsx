@@ -1,13 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
 import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
-import PreparingAccessLoader from "@/components/PreparingAccessLoader";
 import Home from "./Home";
-import { BackgroundVideos } from "@/components/BackgroundVideos";
-import { Sparkles } from "@/components/Sparkles";
 import { LoadingHelper } from "@/lib/LoadingHelper";
 
 export default function Page() {
