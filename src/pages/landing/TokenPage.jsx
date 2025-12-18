@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
+import Cookies from 'js-cookie';
 
 import { BackgroundVideos } from "@/components/BackgroundVideos";
 import { PasscodeVerification } from "@/components/PasscodeVerification";
@@ -47,11 +48,20 @@ export default function TokenPage() {
 
     setToken(token);
     setAccessGranted(false); // Passcode not verified yet
-    localStorage.setItem("token", token);
-    localStorage.setItem("accessGranted", "false");
+    
+    // Save to cookies
+    Cookies.set("token", token, { 
+      expires: 7, 
+      secure: true, 
+      sameSite: 'strict' 
+    });
+    Cookies.set("accessGranted", "false", { 
+      expires: 7, 
+      sameSite: 'strict' 
+    });
 
     async function loadData() {
-           console.log("Waitlist data loaded:");
+      console.log("Waitlist data loaded:");
       try {
         const docRef = doc(db, "waitlist", token);
         const docSnap = await getDoc(docRef);
@@ -122,13 +132,26 @@ export default function TokenPage() {
         await updateWaitlistWithUserId(waitlistDocId, finalUserId);
       }
 
-      // ✅ Update context and localStorage
-      setToken(waitlistDocId); // Keep original waitlist token // Store actual user ID
+      // ✅ Update context and cookies
+      setToken(waitlistDocId); // Keep original waitlist token
       setAccessGranted(true);
-      setUserId(finalUserId);
-      localStorage.setItem("token", waitlistDocId);
-      localStorage.setItem("userId", finalUserId);
-      localStorage.setItem("accessGranted", "true");
+      setUserId(finalUserId); // Store actual user ID
+      
+      // Save to cookies with security options
+      Cookies.set("token", waitlistDocId, { 
+        expires: 7, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
+      Cookies.set("userId", finalUserId, { 
+        expires: 7, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
+      Cookies.set("accessGranted", "true", { 
+        expires: 7, 
+        sameSite: 'strict' 
+      });
 
       // ✅ Redirect
       navigate("/", { replace: true });

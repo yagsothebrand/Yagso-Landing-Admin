@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import Cookies from 'js-cookie';
 import {
   getDoc,
   getDocs,
@@ -17,10 +17,10 @@ const LandingAuthContext = createContext(null);
 
 export const LandingAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [userId, setUserId] = useState(() => localStorage.getItem("userId"));
+  const [token, setToken] = useState(() => Cookies.get("token") || null);
+  const [userId, setUserId] = useState(() => Cookies.get("userId") || null);
   const [accessGranted, setAccessGranted] = useState(
-    localStorage.getItem("accessGranted") === "true"
+    Cookies.get("accessGranted") === "true"
   );
   const [loading, setLoading] = useState(true);
 
@@ -42,7 +42,7 @@ export const LandingAuthProvider = ({ children }) => {
 
         if (!waitlistSnap.exists()) {
           console.warn("⚠️ Token does not match any waitlist entry");
-          localStorage.removeItem("token");
+          Cookies.remove("token");
           setToken(null);
           setUser(null);
           setUserId(null);
@@ -94,15 +94,32 @@ export const LandingAuthProvider = ({ children }) => {
     fetchUser();
   }, [token, accessGranted]);
 
-  // Keep localStorage in sync
+  // Keep cookies in sync
   useEffect(() => {
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
+    if (token) {
+      Cookies.set("token", token, { 
+        expires: 7, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
+    } else {
+      Cookies.remove("token");
+    }
 
-    if (userId) localStorage.setItem("userId", userId);
-    else localStorage.removeItem("userId");
+    if (userId) {
+      Cookies.set("userId", userId, { 
+        expires: 7, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
+    } else {
+      Cookies.remove("userId");
+    }
 
-    localStorage.setItem("accessGranted", accessGranted ? "true" : "false");
+    Cookies.set("accessGranted", accessGranted ? "true" : "false", { 
+      expires: 7, 
+      sameSite: 'strict' 
+    });
   }, [token, accessGranted, userId]);
 
   return (

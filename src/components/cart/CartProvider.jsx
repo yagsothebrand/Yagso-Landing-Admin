@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 import { db, doc } from "@/firebase";
 import { useLandingAuth } from "../landingauth/LandingAuthProvider";
@@ -60,15 +61,29 @@ export const CartProvider = ({ children }) => {
     saveCart();
   }, [cart, loading, userId]);
 
-  // On mount, load cart from localStorage
+  // On mount, load cart from cookies
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) setCart(JSON.parse(storedCart));
+    const storedCart = Cookies.get("cart");
+    if (storedCart) {
+      try {
+        setCart(JSON.parse(storedCart));
+      } catch (error) {
+        console.error("Error parsing cart from cookies:", error);
+        Cookies.remove("cart");
+      }
+    }
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Save cart to cookies whenever it changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    if (cart.length > 0) {
+      Cookies.set("cart", JSON.stringify(cart), {
+        expires: 7,
+        sameSite: "strict",
+      });
+    } else {
+      Cookies.remove("cart");
+    }
   }, [cart]);
 
   const addToCart = (product, quantity = 1, selectedVariant = null) => {
@@ -141,6 +156,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     if (!userId) {
       setCart([]);
+      Cookies.remove("cart");
       return;
     }
 
@@ -154,6 +170,7 @@ export const CartProvider = ({ children }) => {
       );
 
       setCart([]); // Update state after Firestore
+      Cookies.remove("cart"); // Clear cookie
     } catch (error) {
       console.error("[v0] Error clearing cart:", error);
     }

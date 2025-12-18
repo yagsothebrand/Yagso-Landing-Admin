@@ -13,6 +13,8 @@ import TokenPage from "./pages/landing/TokenPage";
 import { ErrorPage } from "./pages/ErrorPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import Account from "./pages/AccountPage";
+import TermsOfService from "./pages/TermsOfService";
+import ReturnAndRefundPolicy from "./pages/RefundPolicy";
 
 // -------- Lazy-loaded components --------
 const Index = lazy(() => import("./pages/admin/Index"));
@@ -105,6 +107,27 @@ function App() {
           element: (
             <SafeSuspense>
               <WaitlistHome />
+            </SafeSuspense>
+          ),
+        },
+        {
+          path: "/terms",
+          element: (
+            <SafeSuspense>
+              <Layout>
+                <TermsOfService />
+              </Layout>
+            </SafeSuspense>
+          ),
+        },
+        {
+          path: "/return-refund",
+          element: (
+            <SafeSuspense>
+              {" "}
+              <Layout>
+                <ReturnAndRefundPolicy />
+              </Layout>
             </SafeSuspense>
           ),
         },

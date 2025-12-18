@@ -10,7 +10,6 @@ export default function ExistingEmailPrompt({ emailData, onBack }) {
 
   const handleVerify = () => {
     if (passcode === emailData.passcode) {
-    //   localStorage.setItem("accessGranted", "true");
       window.location.href = `/auth/${emailData.tokenId}`;
     } else {
       setMessage("Incorrect passcode. Try again.");
