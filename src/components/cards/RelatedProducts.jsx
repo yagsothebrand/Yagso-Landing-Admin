@@ -33,8 +33,6 @@ const RelatedProducts = ({ currentProduct }) => {
     }
   }
 
-  // Fill with random products if less than 4
-
   useEffect(() => {
     if (!viewportRef.current) return;
 
@@ -66,7 +64,7 @@ const RelatedProducts = ({ currentProduct }) => {
       ref={ref}
       className="px-4 md:px-8 lg:px-16 py-12 lg:max-w-[1200px] mx-auto"
     >
-      <h2 className="text-2xl font-semibold mb-6 text-center">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-[#debfad]">
         Related Products
       </h2>
 
@@ -90,7 +88,7 @@ const RelatedProducts = ({ currentProduct }) => {
                 price={product.price}
                 variants={product.colors || []}
                 placement={product.placement}
-              stock={product.stock}
+                stock={product.stock}
               />
             </motion.div>
           ))}
@@ -115,6 +113,7 @@ const RelatedProducts = ({ currentProduct }) => {
               price={product.price}
               variants={product.colors || []}
               placement={product.placement}
+              stock={product.stock}
             />
           </motion.div>
         ))}
