@@ -4,10 +4,12 @@ import gsap from "gsap";
 
 const videos = [
   "/GetInspired1.mp4",
-  "/GetInspired2.mp4",
-  "/GetInspired3.mp4",
+  "/lady.mp4",
+  // "/GetInspired2.mp4",
+
   "/GetInspired4.mp4",
-  "/GetInspired5.mp4",
+      "/pinterestVideo.mp4",
+    // "/yello.mp4",
 ];
 
 const GetInspired = () => {
