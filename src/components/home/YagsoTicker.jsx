@@ -11,7 +11,7 @@ const YagsoTicker = () => {
   ];
 
   return (
-    <section className="bg-[#debfad]">
+    <section className="bg-[#ffffff]">
       <LogoTicker logos={logos} speed={200} />
     </section>
   );

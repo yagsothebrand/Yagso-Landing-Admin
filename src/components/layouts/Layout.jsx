@@ -48,7 +48,7 @@ const Layout = ({ children, contactBtnRef }) => {
       <div id="smooth-wrapper" className="lg:mx-[4rem]">
         <Header onOpenContact={() => setShowContact(true)} />
 
-        <div className="relative z-10 bg-[#133827]/90 min-h-screen flex flex-col">
+        <div className="relative z-10 bg-[#ffffff]/70 min-h-screen flex flex-col">
           {!loading ? children : null}
           {!loading ? <Footer /> : null}
         </div>
@@ -57,7 +57,7 @@ const Layout = ({ children, contactBtnRef }) => {
       <motion.button
         ref={contactBtnRef}
         onClick={() => setShowContact(true)}
-        className="fixed right-2 top-[70%] -translate-y-1/2 z-[200] bg-[#debfad] text-primaryGreen rounded-full px-[1.5rem] h-14 flex items-center justify-center gap-2 shadow-lg transition-all hover:bg-[#b89e90]"
+        className="fixed right-2 top-[70%] -translate-y-1/2 z-[200] bg-[#ffffff]  text-[#0e4132] rounded-full px-[1.5rem] h-14 flex items-center justify-center gap-2 shadow-lg transition-all hover:bg-[#b89e90]/60"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >

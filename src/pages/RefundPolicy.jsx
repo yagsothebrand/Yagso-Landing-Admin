@@ -22,14 +22,14 @@ export default function ReturnAndRefundPolicy() {
       variants={container}
       initial="hidden"
       animate="visible"
-      className="max-w-4xl mx-auto px-4 py-16 text-[#c4a68f]"
+      className="mx-auto p-5 text-[#0e4132] border  bg-[#ffffff]/50"
     >
       {/* Header */}
       <motion.div variants={item} className="mb-10">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-wide mb-2">
           Return & Refund Policy
         </h1>
-        <p className="text-sm text-[#c4a68f]/70">
+        <p className="text-sm text-[#c4a68f]/90">
           Last updated: 2nd November 2025
         </p>
         <div className="mt-4 h-px w-24 bg-[#c4a68f]/40" />
@@ -116,7 +116,7 @@ export default function ReturnAndRefundPolicy() {
             Email:{" "}
             <a
               href="mailto:support@yagso.com"
-              className="underline hover:opacity-80"
+              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
             >
               support@yagso.com
             </a>
@@ -127,7 +127,7 @@ export default function ReturnAndRefundPolicy() {
               href="https://yagso.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:opacity-80"
+              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
             >
               yagso.com
             </a>

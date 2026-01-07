@@ -71,7 +71,7 @@ const ShopAllView = ({ products, onClose, addToCart, token }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto"
+      className="fixed inset-0 bg-[#debfad]/80 backdrop-blur-sm z-50 overflow-y-auto"
     >
       <div className="min-h-screen px-4 py-8">
         <div className="max-w-7xl mx-auto">
@@ -311,15 +311,15 @@ export const SectionTitle = ({ title, see = false, onSeeAll }) => {
       className="flex items-center justify-between mb-8"
     >
       <div>
-        <h2 className="text-3xl md:text-4xl font-bold text-[#debfad] mb-2">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#c4a68f] mb-2">
           {title}
         </h2>
-        <div className="h-1 w-16 bg-gradient-to-r from-[#debfad] to-[#c9956f] rounded-full"></div>
+        <div className="h-1 w-16 bg-gradient-to-r from-[#debfad] to-[#debfad] rounded-full"></div>
       </div>
       {see && (
         <button
           onClick={onSeeAll}
-          className="text-[#debfad] hover:text-[#c9956f] font-semibold transition-colors"
+          className="text-[#0e4132] hover:text-[#0e4132] font-semibold transition-colors"
         >
           See All →
         </button>

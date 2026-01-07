@@ -56,7 +56,7 @@ const Header = ({ onOpenContact }) => {
 
   return (
     <header
-      className={`relative left-0 right-0 bg-transparent text-black z-[9999] transition-all duration-300 ${
+      className={`relative left-0 right-0  bg-[#ffffff]/70 text-black z-[9999] transition-all duration-300 ${
         scrolled ? "shadow-md" : "shadow-none"
       }`}
     >
@@ -136,7 +136,7 @@ const Header = ({ onOpenContact }) => {
           {navLinks.bottom.map((cat) => (
             <li
               key={cat}
-              className="cursor-pointer hover:text-bold text-[#133827] transition-colors duration-300"
+              className="cursor-pointer hover:text-bold text-[#bda290] transition-colors duration-300"
             >
               {cat}
             </li>

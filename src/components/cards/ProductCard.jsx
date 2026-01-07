@@ -184,11 +184,11 @@ const ProductCard = ({
         {/* Text */}
         <div className="mt-2">
           <p className="text-gray-200 text-[12px]">{category}</p>
-          <h4 className="text-[18px] text-[#debfad] font-[600]">{name}</h4>
+          <h4 className="text-[18px] text-[#0e4132] font-[600]">{name}</h4>
 
-          <p className="text-gray-300 text-[16px] font-[600]">₦{formatPrice(price)}</p>
+          <p className="text-[16px] text-[#0e4132]  font-[600]">₦{formatPrice(price)}</p>
 
-          <p className="text-gray-400 text-[12px] mb-2">Stock: {stock || 0}</p>
+          <p className="text-[12px] text-[#0e4132]  mb-2">Stock: {stock || 0}</p>
 
           <motion.button
             whileHover={!isOutOfStock ? { scale: 1.03 } : {}}

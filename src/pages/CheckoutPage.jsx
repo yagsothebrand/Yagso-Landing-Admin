@@ -290,7 +290,7 @@ const CheckoutPage = () => {
     setIsProcessing(true);
 
     const handler = window.PaystackPop.setup({
-      key: "pk_test_8a6bb69995275fd42c913994e3745cbe7f88b268",
+      key: "pk_test_7060cd88fe87ef72b0eed820c0aded97a6869899",
       email: formData.email,
       amount: total * 100,
       currency: "NGN",

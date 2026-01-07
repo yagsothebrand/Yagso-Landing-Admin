@@ -45,7 +45,7 @@ const Account = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#c4a68f] via-[#b89780] to-[#ad8877]">
+      <div className="min-h-screen flex items-center justify-center ">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -56,7 +56,7 @@ const Account = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
-          <p className="text-[#254331] text-lg font-semibold">Loading your account...</p>
+          <p className="text-[#254331] text-lg font-semibold">Fetching up your account information...</p>
         </motion.div>
       </div>
     );
@@ -70,8 +70,8 @@ const Account = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center bg-[#254331]/95 backdrop-blur-sm p-12 rounded-2xl shadow-2xl"
         >
-          <User className="w-16 h-16 text-[#c4a68f] mx-auto mb-4" />
-          <p className="text-gray-200 text-xl">Please log in to view your account.</p>
+          <User className="w-16 h-16 text-[#0e4132] mx-auto mb-4" />
+          <p className="text-[#0e4132] text-xl">Please log in to view your account.</p>
         </motion.div>
       </div>
     );
@@ -95,8 +95,8 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#c4a68f] via-[#b89780] to-[#ad8877] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#254331]/5 to-transparent pointer-events-none" />
+    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+      <div className="absolute inset-0  pointer-events-none" />
       
       <motion.div
         className="max-w-7xl mx-auto space-y-8 relative z-10"
@@ -106,31 +106,25 @@ const Account = () => {
       >
         {/* Header */}
         <motion.div variants={itemVariants} className="text-center mb-12">
-          <motion.h1
+          {/* <motion.h1
             className="text-5xl font-bold text-[#254331] mb-2"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             My Account
-          </motion.h1>
-          <motion.p
-            className="text-[#254331]/80 text-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Manage your profile and track your orders
-          </motion.p>
+          </motion.h1> */}
+         
+        
         </motion.div>
 
         {/* Profile Section */}
         <motion.section
           variants={itemVariants}
-          className="bg-[#254331]/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-[#254331]/30"
+          className="bg-[#ffffff]/55 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border "
         >
-          <div className="bg-gradient-to-r from-[#254331] to-[#1e3527] px-8 py-6 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className=" px-8 py-6 relative overflow-hidden">
+            <div className="absolute inset-0 to-transparent" />
             <motion.div
               className="flex items-center gap-3 relative z-10"
               whileHover={{ x: 5 }}
@@ -143,7 +137,7 @@ const Account = () => {
               >
                 <User className="w-6 h-6 text-[#c4a68f]" />
               </motion.div>
-              <h2 className="text-2xl font-bold text-gray-200">Profile Details</h2>
+              <h2 className="text-2xl font-bold text-[#0e4132]">Profile Details</h2>
             </motion.div>
           </div>
           
@@ -163,7 +157,7 @@ const Account = () => {
                     <User className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-gray-300 mb-1">Full Name</p>
-                      <p className="text-gray-100 font-semibold">{billingInfo.fullName}</p>
+                      <p className="text-[#0e4132] font-semibold">{billingInfo.fullName}</p>
                     </div>
                   </motion.div>
                   
@@ -174,7 +168,7 @@ const Account = () => {
                     <Mail className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-gray-300 mb-1">Email Address</p>
-                      <p className="text-gray-100 font-semibold break-all">{email}</p>
+                      <p className="text-[#0e4132] font-semibold break-all">{email}</p>
                     </div>
                   </motion.div>
                   
@@ -185,7 +179,7 @@ const Account = () => {
                     <Phone className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-gray-300 mb-1">Phone Number</p>
-                      <p className="text-gray-100 font-semibold">{billingInfo.phone}</p>
+                      <p className="text-[#0e4132] font-semibold">{billingInfo.phone}</p>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -203,8 +197,8 @@ const Account = () => {
                     <MapPin className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
                       <p className="text-sm text-gray-300 mb-1">Address</p>
-                      <p className="text-gray-100 font-semibold">{billingInfo.address}</p>
-                      <p className="text-gray-200 mt-2">
+                      <p className="text-[#0e4132] font-semibold">{billingInfo.address}</p>
+                      <p className="text-[#0e4132] mt-2">
                         {billingInfo.city}, {billingInfo.state} {billingInfo.zipCode}
                       </p>
                     </div>
@@ -217,8 +211,8 @@ const Account = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <MapPin className="w-12 h-12 text-[#c4a68f]/50 mx-auto mb-3" />
-                <p className="text-gray-300">No billing information saved yet.</p>
+                <MapPin className="w-12 h-12 text-[#0e4132]/60 mx-auto mb-3" />
+                <p className="text-[#0e4132]">No billing information saved yet.</p>
               </motion.div>
             )}
           </div>
@@ -226,7 +220,7 @@ const Account = () => {
 
         {/* Orders Section */}
         <motion.section variants={itemVariants} className="space-y-6">
-          <div className="bg-gradient-to-r from-[#254331] to-[#1e3527] rounded-2xl px-8 py-6 shadow-2xl relative overflow-hidden">
+          <div className="rounded-2xl px-8 py-6 shadow-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
             <motion.div
               className="flex items-center gap-3 relative z-10"
@@ -234,15 +228,15 @@ const Account = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <motion.div
-                className="bg-[#c4a68f]/20 p-3 rounded-full"
+                className=" p-3 rounded-full"
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               >
                 <Package className="w-6 h-6 text-[#c4a68f]" />
               </motion.div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-200">Your Orders</h2>
-                <p className="text-[#c4a68f] text-sm">{orders.length} {orders.length === 1 ? 'order' : 'orders'} total</p>
+                <h2 className="text-2xl font-bold text-[#0e4132]">Your Orders</h2>
+                <p className="text-[#b8957a] text-sm">{orders.length} {orders.length === 1 ? 'order' : 'orders'} total</p>
               </div>
             </motion.div>
           </div>
@@ -258,14 +252,14 @@ const Account = () => {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.01 }}
-                    className="bg-[#254331]/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-[#254331]/30"
+                    className="backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border bg-[#bda290]/50 border-[#254331]/30"
                   >
                     {/* Order Header */}
-                    <div className="bg-gradient-to-r from-[#254331]/50 to-transparent px-6 py-4 border-b border-[#254331]/40">
+                    <div className="bg-gradient-to-r from-[#ffffff]/70 to-[#0e4132]/40 px-6 py-4 border-b border-[#254331]/40">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <Package className="w-5 h-5 text-[#c4a68f]" />
-                          <span className="font-bold text-lg text-gray-100">
+                          <span className="font-bold text-lg text-[#c4a68f]">
                             Order #{order.orderNumber}
                           </span>
                         </div>
@@ -285,8 +279,8 @@ const Account = () => {
                     </div>
 
                     {/* Order Details */}
-                    <div className="p-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="p-6 bg-white/70">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
                         <div className="space-y-3">
                           <motion.div
                             className="flex items-start gap-3"
@@ -294,8 +288,8 @@ const Account = () => {
                           >
                             <Calendar className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-gray-400">Order Date</p>
-                              <p className="font-medium text-gray-200">
+                              <p className="text-sm text-[#988f7e]">Order Date</p>
+                              <p className="font-medium text-[#0e4132]">
                                 {order.createdAt?.toDate
                                   ? order.createdAt.toDate().toLocaleDateString('en-US', {
                                       year: 'numeric',
@@ -315,8 +309,8 @@ const Account = () => {
                           >
                             <CreditCard className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-gray-400">Payment</p>
-                              <p className="font-medium text-gray-200">{order.paymentMethod}</p>
+                              <p className="text-sm text-[#988f7e]">Payment</p>
+                              <p className="font-medium text-[#0e4132]">{order.paymentMethod}</p>
                               <p className={`text-sm ${order.paymentStatus === 'Paid' ? 'text-green-400' : 'text-yellow-400'}`}>
                                 {order.paymentStatus}
                               </p>
@@ -327,10 +321,10 @@ const Account = () => {
                             className="flex items-start gap-3"
                             whileHover={{ x: 5 }}
                           >
-                            <div className="text-[#c4a68f] font-bold text-lg mt-0.5 flex-shrink-0">₦</div>
+                            <div className="text-[#0e4132] font-bold text-lg mt-0.5 flex-shrink-0">₦</div>
                             <div>
-                              <p className="text-sm text-gray-400">Total Amount</p>
-                              <p className="font-bold text-2xl text-gray-100">
+                              <p className="text-sm text-[#988f7e]">Total Amount</p>
+                              <p className="font-bold text-xl text-[#0e4132]">
                                 ₦{order.totalAmount?.toLocaleString() || 0}
                               </p>
                             </div>
@@ -344,12 +338,12 @@ const Account = () => {
                           >
                             <MapPin className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-gray-400 mb-1">Shipping Address</p>
-                              <p className="font-medium text-gray-200">{order.shippingAddress.fullName}</p>
-                              <p className="text-gray-300 text-sm mt-1">
+                              <p className="text-sm text-[#988f7e] mb-1">Shipping Name & Address</p>
+                              <p className="font-medium text-[#0e4132]">{order.shippingAddress.fullName}</p>
+                              <p className="text-[#0e4132] text-sm mt-1">
                                 {order.shippingAddress.address}
                               </p>
-                              <p className="text-gray-300 text-sm">
+                              <p className=" text-[#0e4132] text-sm">
                                 {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
                               </p>
                             </div>
@@ -361,8 +355,8 @@ const Account = () => {
                           >
                             <Phone className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-gray-400">Contact Phone</p>
-                              <p className="font-medium text-gray-200">{order.shippingAddress.phone}</p>
+                              <p className="text-sm text-[#988f7e]">Contact Phone</p>
+                              <p className="font-medium text-[#0e4132]">{order.shippingAddress.phone}</p>
                             </div>
                           </motion.div>
 
@@ -373,8 +367,8 @@ const Account = () => {
                             >
                               <Truck className="w-5 h-5 text-[#c4a68f] mt-0.5 flex-shrink-0" />
                               <div>
-                                <p className="text-sm text-gray-400">Tracking Number</p>
-                                <p className="font-mono font-medium text-gray-200">{order.trackingNumber}</p>
+                                <p className="text-sm text-[#0e4132]">Tracking Number</p>
+                                <p className="font-mono font-medium text-[#0e4132]">{order.trackingNumber}</p>
                               </div>
                             </motion.div>
                           )}
@@ -384,7 +378,7 @@ const Account = () => {
                       {/* Products */}
                       {order.items && order.items.length > 0 && (
                         <div className="border-t border-[#254331]/40 pt-6">
-                          <h3 className="font-semibold text-gray-200 mb-4 flex items-center gap-2">
+                          <h3 className="font-semibold text-[#0e4132] mb-4 flex items-center gap-2">
                             <ShoppingBag className="w-4 h-4 text-[#c4a68f]" />
                             Order Items ({order.items.length})
                           </h3>
@@ -405,14 +399,14 @@ const Account = () => {
                                   className="w-24 h-24 object-cover rounded-lg border-2 border-[#c4a68f]/30 shadow-lg"
                                 />
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-semibold text-gray-100 truncate">{product.productName}</p>
+                                  <p className="font-semibold text-[#0e4132] truncate">{product.productName}</p>
                                   {product.variant && (
-                                    <p className="text-sm text-gray-400 mt-1">Variant: {product.variant}</p>
+                                    <p className="text-sm text-[#0e4132] mt-1">Variant: {product.variant}</p>
                                   )}
                                   <div className="mt-2 space-y-1 text-sm">
-                                    <p className="text-gray-300">Qty: <span className="font-medium text-[#c4a68f]">{product.quantity}</span></p>
+                                    <p className="text-gray-300">Qty: <span className="font-medium text-[#0e4132]">{product.quantity}</span></p>
                                     <p className="text-gray-300">Unit: <span className="font-medium">₦{product.unitPrice?.toLocaleString()}</span></p>
-                                    <p className="text-[#c4a68f] font-bold">Total: ₦{product.totalPrice?.toLocaleString()}</p>
+                                    <p className="text-[#0e4132] font-bold">Total: ₦{product.totalPrice?.toLocaleString()}</p>
                                   </div>
                                 </div>
                               </motion.div>
@@ -435,7 +429,7 @@ const Account = () => {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <Package className="w-16 h-16 text-[#c4a68f]/50 mx-auto mb-4" />
+                <Package className="w-16 h-16 text-[#0e4132]/50 mx-auto mb-4" />
               </motion.div>
               <p className="text-gray-300 text-lg">You haven't placed any orders yet.</p>
               <p className="text-gray-400 text-sm mt-2">Start shopping to see your orders here!</p>

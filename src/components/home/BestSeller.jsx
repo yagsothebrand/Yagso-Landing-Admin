@@ -58,8 +58,8 @@ const BestSeller = () => {
       >
         <div className="w-full">
           <SectionTitle
-            title="Our Best Sellers"
-            see={true}
+            title="Our Best Sellers" 
+            see={true} 
             onSeeAll={() => setShowShopAll(true)}
           />
         </div>

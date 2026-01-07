@@ -96,7 +96,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#debfad] text-[#133827] overflow-hidden">
+    <footer className="bg-[#bda290]/30 text-[#133827] overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-12 py-20">
         <motion.div
           variants={containerVariants}
@@ -179,7 +179,7 @@ const Footer = () => {
                 href="/return-refund"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
-                className="text-sm hover:underline transition-all"
+                className="text-sm hover:underline transition-all text-[#0e4132] hover:text-[#133827]"
               >
                 Return & Refund Policy
               </motion.a>
@@ -187,7 +187,7 @@ const Footer = () => {
                 href="/terms"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
-                className="text-sm hover:underline transition-all"
+                className="text-sm hover:underline transition-all text-[#0e4132] hover:text-[#133827]"
               >
                 Terms of Service
               </motion.a>
@@ -200,7 +200,7 @@ const Footer = () => {
                 href="tel:09153480722"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
-                className="text-sm hover:underline transition-all"
+                className="text-sm hover:underline transition-all text-[#0e4132] hover:text-[#133827]"
               >
                 0915 348 0722
               </motion.a>
@@ -208,7 +208,7 @@ const Footer = () => {
                 href="mailto:support@yagso.com"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
-                className="text-sm hover:underline transition-all"
+                className="text-sm hover:underline transition-all text-[#0e4132] hover:text-[#133827]"
               >
                 support@yagso.com
               </motion.a>
@@ -263,7 +263,7 @@ const Footer = () => {
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className="py-3 rounded-lg text-sm font-medium transition-colors shadow-lg flex items-center justify-center gap-2"
                   style={{
-                    backgroundColor: isValid && !isLoading ? "#133827" : "#9ca3af",
+                    backgroundColor: isValid && !isLoading ? "#133827" : "#0e4132",
                     color: "#debfad",
                     cursor: isValid && !isLoading ? "pointer" : "not-allowed",
                   }}

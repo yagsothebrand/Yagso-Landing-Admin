@@ -22,7 +22,7 @@ export default function TermsOfService() {
       variants={container}
       initial="hidden"
       animate="visible"
-      className="max-w-4xl mx-auto px-4 py-16 text-[#c4a68f]"
+      className=" mx-auto p-20 text-[#0e4132] border  bg-[#ffffff]/50"
     >
       {/* Header */}
       <motion.div variants={item} className="mb-12">
@@ -166,7 +166,7 @@ export default function TermsOfService() {
           </li>
           <li>
             <strong>Direct Bank Transfer</strong> — Zenith Bank
-            <div className="mt-1 text-[#c4a68f]/80">
+            <div className="mt-1 text-[#0e4132]/80">
               Account Number: <strong>1310626056</strong>
               <br />
               Bank Name: <strong>Zenith Bank</strong>
@@ -174,7 +174,7 @@ export default function TermsOfService() {
           </li>
         </ul>
 
-        <p className="text-sm text-[#c4a68f]/80">
+        <p className="text-sm text-[#0e4132]/80">
           Orders paid via bank transfer will be processed only after payment has
           been confirmed. Customers are responsible for ensuring accurate
           payment details and reference information. Send an email to info@yagso.com
@@ -189,7 +189,7 @@ export default function TermsOfService() {
             Email:{" "}
             <a
               href="mailto:support@yagso.com"
-              className="underline hover:opacity-80"
+              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
             >
               support@yagso.com
             </a>
@@ -200,7 +200,7 @@ export default function TermsOfService() {
               href="https://yagso.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:opacity-80"
+              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
             >
               yagso.com
             </a>

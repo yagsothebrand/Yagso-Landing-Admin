@@ -8,6 +8,7 @@ import NewCollections from "@/components/home/NewCollections";
 import GuidedTour from "@/components/home/GuidedTour";
 import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
 import { useProducts } from "@/components/products/ProductsProvider";
+import NewArrivals from "@/components/home/NewArrivals";
 
 const Home = () => {
   const carouselRef = useRef();
@@ -27,7 +28,7 @@ const Home = () => {
       <div>
         <GetInspired />
       </div>
-      <div>
+      <div className="py-3">
         <YagsoTicker />
       </div>
       <div ref={carouselRef}>
@@ -41,9 +42,13 @@ const Home = () => {
       </div>
       <div>
         <NewCollections />
-      </div>
 
-      <GuidedTour refs={refs} />
+      </div>
+  {/* <div>
+        <NewArrivals />       
+      </div> */}
+
+  
       <div>
         <YagsoTicker />
       </div>

@@ -87,7 +87,7 @@ const NewCollections = () => {
   return (
     <section
       ref={containerRef}
-      className="w-full  px-[1rem] md:px-[2rem] lg:px-[4rem] z-10 bg-[#dfbfae] overflow-hidden  mx-auto"
+      className="w-full  px-[1rem] md:px-[2rem] lg:px-[4rem] z-10  overflow-hidden  mx-auto"
     >
       <div className="mb-[4rem] text-center">
         <h4

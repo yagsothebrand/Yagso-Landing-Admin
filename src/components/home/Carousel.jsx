@@ -76,7 +76,7 @@ const Carousel = () => {
       >
         <h6
           ref={textRef}
-          className="text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#debfad] via-[#fff4ec] to-[#debfad] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
+          className="text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#0e4132] via-[#fff4ec] to-[#0e4132] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
           style={{
             display: "inline-block",
           }}
@@ -86,7 +86,7 @@ const Carousel = () => {
 
         <p 
           ref={descRef}
-          className="text-[16px] text-[#a1a1a1ef] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
+          className="text-[16px] text-[#0e4132] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
         >
           At Yagso, every piece is shaped with meticulous detail and passion.
           Our designs reflect more than just adornment—they are crafted to
@@ -99,7 +99,7 @@ const Carousel = () => {
             boxShadow: "0 15px 30px rgba(222, 191, 173, 0.25)",
           }}
           whileTap={{ scale: 0.95 }}
-          className="mt-8 border-2 rounded-full py-3 px-[3.5rem] border-[#debfad] text-[#debfad] font-semibold hover:bg-[#debfad] hover:text-[#1a1a1a] transition-all duration-300 shadow-md"
+          className="mt-8 border-2 rounded-full py-3 px-[3.5rem] border-[#0e4132] text-[#0e4132] font-semibold hover:bg-[#debfad] hover:text-[#1a1a1a] transition-all duration-300 shadow-md"
         >
           Shop Now
         </motion.button>
