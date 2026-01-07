@@ -534,7 +534,7 @@ const CheckoutPage = () => {
               </div>
             )}
 
-            {!user && (
+            {!user.billingInfo && (
               <div className="bg-blue-50 rounded-xl p-4">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
@@ -544,11 +544,11 @@ const CheckoutPage = () => {
                     className="w-4 h-4 mt-0.5 text-[#8b6f5c]"
                   />
                   <div>
-                    <span className="text-sm font-medium">
+                    {/* <span className="text-sm font-medium">
                       Create a Yagso account
-                    </span>
+                    </span> */}
                     <p className="text-xs text-gray-600 mt-1">
-                      Save your information for faster checkout next time
+                      Save your billing information for faster checkout next time
                     </p>
                   </div>
                 </label>
