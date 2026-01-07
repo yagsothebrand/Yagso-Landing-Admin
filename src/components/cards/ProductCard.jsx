@@ -72,9 +72,7 @@ const ProductCard = ({
     }
   };
 
-  const handleAddWishlist = () => {
-    triggerToast("Wishlisted! 💚");
-  };
+
 
   const handleNavigate = () => {
     navigate(`/product/${id}`);
@@ -167,16 +165,7 @@ const ProductCard = ({
               >
                 <Menu size={20} />
               </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddWishlist();
-                }}
-                className="bg-white/80 p-2"
-              >
-                <Heart size={20} />
-              </motion.button>
+             
             </div>
           )}
         </div>
@@ -235,18 +224,18 @@ const ProductCard = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShowPreview(false)}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4"
+                className="fixed inset-0 bg-[#debfad]/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4"
               >
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
                   onClick={(e) => e.stopPropagation()}
-                  className="bg-[#133827] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
+                  className="bg-[#ffffff]/80 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
                 >
                   <div className="grid md:grid-cols-2 gap-6 p-6">
                     {/* Image Section */}
-                    <div className="bg-[#debfad]/20 rounded-xl p-6 flex flex-col gap-4">
+                    <div className="bg-[#bda290]/70 rounded-xl p-6 flex flex-col gap-4">
                       <div className="flex items-center justify-center min-h-[300px]">
                         {images && images[currentImageIndex] && (
                           <img
@@ -328,14 +317,7 @@ const ProductCard = ({
                           {isOutOfStock ? "Out of Stock" : "Add to Cart"}
                         </motion.button>
                         
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={handleAddWishlist}
-                          className="p-3 bg-[#debfad]/20 text-[#debfad] rounded-xl hover:bg-[#debfad]/30"
-                        >
-                          <Heart size={24} />
-                        </motion.button>
+                     
                       </div>
 
                       <motion.button

@@ -3,6 +3,7 @@
 import { useCart } from "@/components/cart/CartProvider";
 import { useCheckout } from "@/components/cart/CheckoutProvider";
 import { useLandingAuth } from "@/components/landingauth/LandingAuthProvider";
+import { Sparkles } from "@/components/Sparkles";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,9 +54,7 @@ const CartDrawer = () => {
               stiffness: 300,
             }}
           >
-            {/* Decorative gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from- to-transparent pointer-events-none" />
-
+       
             {/* Header */}
             <motion.div
               className="relative flex justify-between items-center p-6 border-b border-[#254331]/20"
