@@ -309,7 +309,7 @@ const CheckoutPage = () => {
   // Order complete UI
   if (orderComplete && orderDetails) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#f5f1ed]/80 flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -324,11 +324,11 @@ const CheckoutPage = () => {
               <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6 " />
             </motion.div>
 
-            <h1 className="text-3xl font-bold text-[#e8dfd7] mb-3">
+            <h1 className="text-3xl font-bold text-[#254331] mb-3">
               Order Placed Successfully! 🎉
             </h1>
 
-            <p className="text-[#f5f1ed] mb-6">
+            <p className="text-[#254331] mb-6">
               Thank you for your purchase! Your order has been confirmed.
             </p>
 
@@ -381,11 +381,11 @@ const CheckoutPage = () => {
 
   // Main checkout page
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#d4c4b8] via-[#254331] to-[#d4c4b8] py-8">
+    <div className="min-h-screen bg-white/40 py-8">
       <div className="max-w-[1200px] mx-auto px-4">
         <button
           onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-white mb-8 hover:text-[#d4c4b8] font-medium transition-colors"
+          className="flex items-center gap-2 text-[#254331] mb-8 hover:text-[#d4c4b8] font-medium transition-colors"
         >
           <ChevronLeft size={20} />
           <span>Continue Shopping</span>
@@ -393,7 +393,7 @@ const CheckoutPage = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* ORDER SUMMARY */}
-          <div className="bg-gradient-to-br from-[#c4a68f] via-[#b89780] to-[#ad8877] rounded-2xl shadow-xl p-6 lg:sticky lg:top-8 h-fit">
+          <div className="bg-gradient-to-br from-[#ffffff]/40 via-[#b89780]/30 to-[#ad8877]/60 rounded-2xl shadow-xl p-6 lg:sticky lg:top-8 h-fit">
             <div className="flex items-center gap-2 mb-6">
               <ShoppingBag className="w-6 h-6 text-[#254331]" />
               <h2 className="text-2xl font-bold text-[#254331]">
