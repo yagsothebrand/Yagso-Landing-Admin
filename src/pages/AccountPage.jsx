@@ -242,7 +242,7 @@ const Account = () => {
           </div>
 
           {orders.length > 0 ? (
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence >
               <div className="space-y-6">
                 {orders.map((order, index) => (
                   <motion.div
