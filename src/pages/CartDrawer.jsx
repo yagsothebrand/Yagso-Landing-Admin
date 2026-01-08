@@ -44,7 +44,7 @@ const CartDrawer = () => {
 
           {/* Drawer */}
           <motion.div
-            className="fixed right-0 top-0 h-full w-full max-w-[440px]  bg-gradient-to-br from-[#c4a68f]/80 via-[#ffffff] to-[#ffffff]/90 shadow-2xl z-[99999] flex flex-col"
+            className="fixed right-0 top-0 h-full w-[440px] max-w-full  bg-gradient-to-br from-[#c4a68f]/80 via-[#ffffff] to-[#ffffff]/90 shadow-2xl z-[99999] flex flex-col"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -103,14 +103,14 @@ const CartDrawer = () => {
                   </p>
                 </motion.div>
               ) : (
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence >
                   {cart.map((item, index) => (
                     <motion.div
                       key={`${item.id}-${item.variant}`}
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      layout
+                      
                       className="relative bg-white text-gray-900 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow"
                     >
                       {/* Discount Badge */}
@@ -129,7 +129,7 @@ const CartDrawer = () => {
                       <div className="flex gap-4">
                         {/* Image */}
                         <motion.div
-                          whileHover={{ scale: 1.05 }}
+                          whileHover={{ scale: 1.02 }}
                           className="relative"
                         >
                           <img
