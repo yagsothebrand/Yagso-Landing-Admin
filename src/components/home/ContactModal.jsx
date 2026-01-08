@@ -101,9 +101,9 @@ const ContactModal = ({ setShowContact }) => {
   const contactInfo = [
     {
       label: "Email",
-      value: "contact@example.com",
+      value: "support@yagso.com",
       icon: Mail,
-      link: "mailto:contact@example.com",
+      link: "mailto:support@yagso.com",
     },
     {
       label: "Phone",
@@ -133,7 +133,7 @@ const ContactModal = ({ setShowContact }) => {
         aria-modal="true"
       >
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-black/30 via-[#254331]/40 to-black/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-white/20 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -145,7 +145,7 @@ const ContactModal = ({ setShowContact }) => {
           {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-[#c4a68f]/30 rounded-full"
+              className="absolute w-1 h-1 bg-[#254331]/30 rounded-full"
               initial={{
                 x: Math.random() * 1200,
                 y: Math.random() * 800,
@@ -164,23 +164,23 @@ const ContactModal = ({ setShowContact }) => {
         </div>
 
         <motion.div
-          className="relative w-[90vw] sm:w-[540px] bg-gradient-to-br from-[#c4a68f]/95 via-[#b89780]/95 to-[#ad8877]/95 backdrop-blur-2xl shadow-2xl overflow-hidden border-l-2 border-[#254331]/30"
+          className="relative w-[90vw] sm:w-[540px]  backdrop-blur-2xl shadow-2xl overflow-hidden border-l-2 border-[#c4a68f]/30"
           initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 70, damping: 20, mass: 1 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#254331]/10 via-transparent to-[#254331]/20 pointer-events-none" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#254331]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#c4a68f]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#c4a68f]/10 via-transparent to-[#c4a68f]/20 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c4a68f]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#254331]/20 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative h-64 bg-gradient-to-br from-[#254331] via-[#1e3527] to-[#254331] overflow-hidden p-8 pt-12">
+          <div className="relative h-64 bg-white/50 overflow-hidden p-8 pt-12">
             <div className="absolute inset-0 opacity-10">
               {[...Array(6)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-32 h-32 border border-[#c4a68f]/30 rounded-full"
+                  className="absolute w-32 h-32 border border-[#254331]/30 rounded-full"
                   style={{
                     left: `${Math.random() * 100}%`,
                     top: `${Math.random() * 100}%`,
@@ -199,7 +199,7 @@ const ContactModal = ({ setShowContact }) => {
             </div>
 
             <motion.button
-              className="absolute top-6 right-6 z-10 text-[#c4a68f]/70 hover:text-[#c4a68f] bg-[#254331]/40 hover:bg-[#254331]/60 rounded-full p-2.5 backdrop-blur-sm transition-all border border-[#c4a68f]/20 shadow-lg"
+              className="absolute top-6 right-6 z-10 text-[#254331]/70 hover:text-[#254331] rounded-full p-2.5 backdrop-blur-sm transition-all border  shadow-lg"
               onClick={() => setShowContact(false)}
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
@@ -218,15 +218,15 @@ const ContactModal = ({ setShowContact }) => {
                 variants={floatingVariants}
                 animate="animate"
               >
-                <Sparkles className="text-[#c4a68f]" size={20} />
-                <span className="text-[#c4a68f]/80 text-sm font-medium tracking-wider">
+                <Sparkles className="text-[#254331]" size={20} />
+                <span className="text-[#254331]/80 text-sm font-medium tracking-wider">
                   CONNECT WITH US
                 </span>
               </motion.div>
-              <h2 className="text-5xl font-bold mb-3 text-gray-100 tracking-tight">
+              <h2 className="text-5xl font-bold mb-3 text-[#254331] tracking-tight">
                 Get In Touch
               </h2>
-              <p className="text-gray-300 text-base font-light leading-relaxed">
+              <p className="text-[#254331] text-base font-light leading-relaxed">
                 We'd love to hear from you. Send us a message and we'll respond
                 as soon as possible.
               </p>
@@ -253,20 +253,20 @@ const ContactModal = ({ setShowContact }) => {
                       item.link ? { y: -6, scale: 1.02 } : { scale: 1.02 }
                     }
                   >
-                    <div className="relative bg-[#254331]/90 backdrop-blur-sm rounded-xl p-5 border border-[#254331]/40 group-hover:border-[#c4a68f]/50 transition-all h-full shadow-lg group-hover:shadow-xl">
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#c4a68f]/0 to-[#c4a68f]/0 group-hover:from-[#c4a68f]/10 group-hover:to-transparent rounded-xl transition-all duration-300" />
+                    <div className="relative bg-[#ffffff]/60 backdrop-blur-sm rounded-xl p-5 border border-[#c4a68f]/40 group-hover:border-[#254331]/50 transition-all h-full shadow-lg group-hover:shadow-xl">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#254331]/0 to-[#254331]/0 group-hover:from-[#254331]/10 group-hover:to-transparent rounded-xl transition-all duration-300" />
 
                       <motion.div
-                        className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-[#c4a68f]/30 to-[#c4a68f]/10 flex items-center justify-center mb-3 text-[#c4a68f] group-hover:from-[#c4a68f]/50 group-hover:to-[#c4a68f]/20 transition-all border border-[#c4a68f]/20"
+                        className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-[#254331]/30 to-[#254331]/10 flex items-center justify-center mb-3 text-[#254331] group-hover:from-[#254331]/50 group-hover:to-[#254331]/20 transition-all border border-[#254331]/20"
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
                       >
                         <IconComponent size={20} />
                       </motion.div>
-                      <p className="relative text-xs text-[#c4a68f]/70 font-semibold tracking-wider uppercase">
+                      <p className="relative text-xs text-[#254331]/70 font-semibold tracking-wider uppercase">
                         {item.label}
                       </p>
-                      <p className="relative text-sm text-gray-200 mt-1.5 font-medium">
+                      <p className="relative text-sm text-[#254331] mt-1.5 font-medium">
                         {item.value}
                       </p>
                     </div>
@@ -300,7 +300,7 @@ const ContactModal = ({ setShowContact }) => {
                       onFocus={handleFocus} // <-- add this
                       rows="5"
                       whileFocus={{ scale: 1.01 }}
-                      className="w-full px-5 py-4 border-2 border-[#254331]/30 rounded-xl bg-white/80 backdrop-blur-sm text-[#254331] placeholder:text-[#254331]/40 focus:border-[#254331]/60 focus:bg-white focus:outline-none transition-all shadow-sm hover:shadow-md font-medium resize-none"
+                      className="w-full px-5 py-4 border-2 border-[#c4a68f]/30 rounded-xl bg-white/80 backdrop-blur-sm text-[#254331] placeholder:text-[#254331]/40 focus:border-[#c4a68f]/60 focus:bg-white focus:outline-none transition-all shadow-sm hover:shadow-md font-medium resize-none"
                       placeholder={suggestions[suggestionIndex]} // dynamic placeholder
                     />
                   ) : (
@@ -310,7 +310,7 @@ const ContactModal = ({ setShowContact }) => {
                       value={formData[field]}
                       onChange={handleChange}
                       whileFocus={{ scale: 1.01 }}
-                      className="w-full px-5 py-4 border-2 border-[#254331]/30 rounded-xl bg-white/80 backdrop-blur-sm text-[#254331] placeholder:text-[#254331]/40 focus:border-[#254331]/60 focus:bg-white focus:outline-none transition-all shadow-sm hover:shadow-md font-medium"
+                      className="w-full px-5 py-4 border-2 border-[#c4a68f]/30 rounded-xl bg-white/80 backdrop-blur-sm text-[#254331] placeholder:text-[#254331]/40 focus:border-[#c4a68f]/60 focus:bg-white focus:outline-none transition-all shadow-sm hover:shadow-md font-medium"
                       placeholder={
                         field === "name"
                           ? "Your full name"
@@ -329,10 +329,10 @@ const ContactModal = ({ setShowContact }) => {
                 transition={{ delay: 0.45, duration: 0.5 }}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative w-full bg-gradient-to-r from-[#254331] via-[#1e3527] to-[#254331] text-[#c4a68f] py-4 px-6 rounded-xl font-bold text-sm tracking-wide shadow-xl hover:shadow-2xl transition-all overflow-hidden border border-[#254331]/50 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="relative w-full bg-[#254331] text-[#debfad] py-4 px-6 rounded-xl font-bold text-sm tracking-wide shadow-xl hover:shadow-2xl transition-all overflow-hidden border border-[#c4a68f]/50 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  className="absolute inset-0 "
                   animate={{ x: ["-100%", "200%"] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
                 />
@@ -340,7 +340,7 @@ const ContactModal = ({ setShowContact }) => {
                   {isLoading ? (
                     <>
                       <motion.div
-                        className="w-5 h-5 border-2 border-[#c4a68f]/30 border-t-[#c4a68f] rounded-full"
+                        className="w-5 h-5 border-2 border-[#254331]/30 border-t-[#254331] rounded-full"
                         animate={{ rotate: 360 }}
                         transition={{
                           duration: 1,
