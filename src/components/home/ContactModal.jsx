@@ -234,46 +234,47 @@ const ContactModal = ({ setShowContact }) => {
           </div>
 
           <div className="relative p-8 overflow-y-auto max-h-[calc(100vh-256px)]">
-            <motion.div
-              className="grid grid-cols-2 gap-4 mb-8"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {contactInfo.map((item, index) => {
-                const IconComponent = item.icon;
-                return (
-                  <motion.a
-                    key={index}
-                    href={item.link || "#"}
-                    onClick={(e) => !item.link && e.preventDefault()}
-                    className="group relative overflow-hidden block"
-                    variants={itemVariants}
-                    whileHover={
-                      item.link ? { y: -6, scale: 1.02 } : { scale: 1.02 }
-                    }
-                  >
-                    <div className="relative bg-[#ffffff]/60 backdrop-blur-sm rounded-xl p-5 border border-[#c4a68f]/40 group-hover:border-[#254331]/50 transition-all h-full shadow-lg group-hover:shadow-xl">
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#254331]/0 to-[#254331]/0 group-hover:from-[#254331]/10 group-hover:to-transparent rounded-xl transition-all duration-300" />
+         <motion.div
+  className="grid grid-cols-2 gap-3 mb-4"
+  variants={containerVariants}
+  initial="hidden"
+  animate="visible"
+>
+  {contactInfo.map((item, index) => {
+    const Icon = item.icon;
 
-                      <motion.div
-                        className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-[#254331]/30 to-[#254331]/10 flex items-center justify-center mb-3 text-[#254331] group-hover:from-[#254331]/50 group-hover:to-[#254331]/20 transition-all border border-[#254331]/20"
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <IconComponent size={20} />
-                      </motion.div>
-                      <p className="relative text-xs text-[#254331]/70 font-semibold tracking-wider uppercase">
-                        {item.label}
-                      </p>
-                      <p className="relative text-sm text-[#254331] mt-1.5 font-medium">
-                        {item.value}
-                      </p>
-                    </div>
-                  </motion.a>
-                );
-              })}
-            </motion.div>
+    return (
+      <motion.a
+        key={index}
+        href={item.link || "#"}
+        onClick={(e) => !item.link && e.preventDefault()}
+        variants={itemVariants}
+        whileHover={{ y: -2, scale: 1.02 }}
+        className="flex items-center gap-3 px-3 py-2 rounded-lg border border-[#c4a68f]/40 bg-white/70 backdrop-blur-sm text-[#254331] transition-all"
+      >
+        {/* Icon */}
+        <motion.div
+          className="w-8 h-8 flex items-center justify-center rounded-md bg-[#254331]/10 text-[#254331]"
+          whileHover={{ rotate: 180 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Icon size={16} />
+        </motion.div>
+
+        {/* Text */}
+        <div className="leading-tight">
+          <p className="text-[10px] uppercase tracking-wider text-[#254331]/60 font-semibold">
+            {item.label}
+          </p>
+          <p className="text-xs font-medium text-[#254331]">
+            {item.value}
+          </p>
+        </div>
+      </motion.a>
+    );
+  })}
+</motion.div>
+
 
             <div className="space-y-5">
               {["name", "email", "message"].map((field, idx) => (

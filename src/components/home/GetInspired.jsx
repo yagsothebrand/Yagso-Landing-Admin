@@ -76,12 +76,12 @@ const GetInspired = () => {
       <div className="absolute left-0 top-0 h-full w-[80px] bg-gradient-to-r from-[#133827] via-[#133827]/60 to-transparent z-10 pointer-events-none"></div>
       <div className="absolute right-0 top-0 h-full w-[80px] bg-gradient-to-l from-[#133827] via-[#133827]/60 to-transparent z-10 pointer-events-none"></div>
 
-      {/* 🎥 Smooth infinite video ticker */}
-      <motion.div animate={controls} className="flex">
+{/* 🎥 Smooth infinite video ticker */}
+      <motion.div animate={controls} className="flex gap-2 md:gap-3">
         {[...videos, ...videos].map((video, i) => (
           <div
             key={i}
-            className="flex-shrink-0 w-[300px] md:w-[340px] h-[260px] md:h-[300px] mx-3 rounded-xl overflow-hidden shadow-lg hover:scale-[1.03] transition-transform duration-500"
+            className="flex-shrink-0 w-[22vw] sm:w-[20vw] md:w-[340px] h-[280px] sm:h-[290px] md:h-[300px] rounded-lg sm:rounded-xl overflow-hidden shadow-lg hover:scale-[1.03] transition-transform duration-500"
           >
             <video
               src={video}

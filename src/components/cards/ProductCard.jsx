@@ -20,7 +20,6 @@ const ProductCard = ({
   placement,
   ...props
 }) => {
-  console.log("ProductCard props:", { id, images, category, name, price, stock, placement, ...props });
   const [showPreview, setShowPreview] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
@@ -32,7 +31,6 @@ const ProductCard = ({
 
   const isProductInCart = cart?.some((item) => item.id === id);
 
-  // Format price with comma separators
   const formatPrice = (amount) => {
     return new Intl.NumberFormat('en-NG').format(amount);
   };
@@ -71,8 +69,6 @@ const ProductCard = ({
       setIsAddingToCart(false);
     }
   };
-
-
 
   const handleNavigate = () => {
     navigate(`/product/${id}`);
@@ -114,10 +110,10 @@ const ProductCard = ({
   return (
     <>
       <motion.div className="w-full p-1 transition-all duration-200 overflow-hidden bg-transparent">
-        <div className="relative w-full h-[18rem] bg-[#debfad]/80 flex items-center justify-center rounded-xl cursor-pointer overflow-hidden">
+        <div className="relative w-full h-[16rem] sm:h-[17rem] md:h-[18rem] bg-[#debfad]/80 flex items-center justify-center rounded-xl cursor-pointer overflow-hidden">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/50 z-10 flex items-center justify-center">
-              <p className="text-white font-bold text-lg">Out of Stock</p>
+              <p className="text-white font-bold text-base md:text-lg">Out of Stock</p>
             </div>
           )}
 
@@ -131,29 +127,27 @@ const ProductCard = ({
             />
           )}
 
-          {/* Placement Badge */}
           {getBadgeLabel() && (
             <div
               className={cn(
-                `absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-bold ${getBadgeColor()}`
+                `absolute top-2 left-2 md:top-3 md:left-3 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-white text-[10px] md:text-xs font-bold ${getBadgeColor()}`
               )}
             >
               {getBadgeLabel()}
             </div>
           )}
 
-          {/* Floating buttons */}
           {!isOutOfStock && (
-            <div className="absolute text-[#133827] top-3 right-2 flex flex-col border border-gray-200 rounded-md overflow-hidden">
+            <div className="absolute text-[#133827] top-2 right-2 md:top-3 md:right-2 flex flex-col border border-gray-200 rounded-md overflow-hidden">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowPreview(true);
                 }}
-                className="bg-white/80 border-b p-2"
+                className="bg-white/80 border-b p-1.5 md:p-2"
               >
-                <Eye size={20} />
+                <Eye size={18} className="md:w-5 md:h-5" />
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.9 }}
@@ -161,23 +155,19 @@ const ProductCard = ({
                   e.stopPropagation();
                   handleNavigate();
                 }}
-                className="bg-white/80 border-b p-2"
+                className="bg-white/80 border-b p-1.5 md:p-2"
               >
-                <Menu size={20} />
+                <Menu size={18} className="md:w-5 md:h-5" />
               </motion.button>
-             
             </div>
           )}
         </div>
 
-        {/* Text */}
         <div className="mt-2">
-          <p className="text-gray-200 text-[12px]">{category}</p>
-          <h4 className="text-[18px] text-[#0e4132] font-[600]">{name}</h4>
-
-          <p className="text-[16px] text-[#0e4132]  font-[600]">₦{formatPrice(price)}</p>
-
-          <p className="text-[12px] text-[#0e4132]  mb-2">Stock: {stock || 0}</p>
+          <p className="text-gray-200 text-[11px] md:text-[12px]">{category}</p>
+          <h4 className="text-[16px] md:text-[18px] text-[#0e4132] font-[600]">{name}</h4>
+          <p className="text-[14px] md:text-[16px] text-[#0e4132] font-[600]">₦{formatPrice(price)}</p>
+          <p className="text-[11px] md:text-[12px] text-[#0e4132] mb-2">Stock: {stock || 0}</p>
 
           <motion.button
             whileHover={!isOutOfStock ? { scale: 1.03 } : {}}
@@ -185,7 +175,7 @@ const ProductCard = ({
             onClick={handleAddCart}
             disabled={isOutOfStock || isAddingToCart}
             className={cn(
-              "py-2 mt-[1rem] text-[#133827] w-full rounded-xl font-semibold transition flex items-center justify-center gap-2",
+              "py-2 mt-[1rem] text-[#133827] w-full rounded-xl text-sm md:text-base font-semibold transition flex items-center justify-center gap-2",
               isOutOfStock
                 ? "bg-gray-400 cursor-not-allowed opacity-60"
                 : "bg-[#debfad] hover:bg-[#debfad]/90"
@@ -201,22 +191,19 @@ const ProductCard = ({
         </div>
       </motion.div>
 
-      {/* Quick Preview Modal */}
-      {createPortal(
+      {typeof document !== 'undefined' && createPortal(
         <>
-          {/* Toast Notification */}
           {toastVisible && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed top-4 right-4 bg-[#133827] text-[#debfad] px-4 py-3 rounded-lg shadow-lg z-[100000]"
+              className="fixed top-4 right-4 bg-[#133827] text-[#debfad] px-4 py-3 rounded-lg shadow-lg z-[100000] text-sm md:text-base"
             >
               {toastMsg}
             </motion.div>
           )}
 
-          {/* Preview Modal */}
           <AnimatePresence>
             {showPreview && (
               <motion.div
@@ -224,7 +211,7 @@ const ProductCard = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShowPreview(false)}
-                className="fixed inset-0 bg-[#debfad]/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4"
+                className="fixed inset-0 bg-[#debfad]/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-3 md:p-4"
               >
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
@@ -233,20 +220,18 @@ const ProductCard = ({
                   onClick={(e) => e.stopPropagation()}
                   className="bg-[#ffffff]/80 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
                 >
-                  <div className="grid md:grid-cols-2 gap-6 p-6">
-                    {/* Image Section */}
-                    <div className="bg-[#bda290]/70 rounded-xl p-6 flex flex-col gap-4">
-                      <div className="flex items-center justify-center min-h-[300px]">
+                  <div className="grid md:grid-cols-2 gap-4 md:gap-6 p-4 md:p-6">
+                    <div className="bg-[#bda290]/70 rounded-xl p-4 md:p-6 flex flex-col gap-3 md:gap-4">
+                      <div className="flex items-center justify-center min-h-[250px] md:min-h-[300px]">
                         {images && images[currentImageIndex] && (
                           <img
                             src={images[currentImageIndex]}
                             alt={name}
-                            className="max-h-[400px] object-contain rounded-lg"
+                            className="max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
                           />
                         )}
                       </div>
                       
-                      {/* Image Thumbnails */}
                       {images && images.length > 1 && (
                         <div className="flex gap-2 justify-center">
                           {images.map((img, idx) => (
@@ -254,7 +239,7 @@ const ProductCard = ({
                               key={idx}
                               onClick={() => setCurrentImageIndex(idx)}
                               className={cn(
-                                "w-16 h-16 rounded-lg overflow-hidden border-2 transition",
+                                "w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition",
                                 currentImageIndex === idx
                                   ? "border-[#debfad]"
                                   : "border-transparent opacity-60 hover:opacity-100"
@@ -271,18 +256,17 @@ const ProductCard = ({
                       )}
                     </div>
 
-                    {/* Product Details */}
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3 md:gap-4">
                       <div>
-                        <p className="text-[#debfad]/70 text-sm mb-1">{category}</p>
-                        <h2 className="text-2xl font-bold text-[#debfad] mb-2">{name}</h2>
-                        <p className="text-3xl font-bold text-[#debfad]">₦{formatPrice(price)}</p>
+                        <p className="text-[#debfad]/70 text-xs md:text-sm mb-1">{category}</p>
+                        <h2 className="text-xl md:text-2xl font-bold text-[#debfad] mb-2">{name}</h2>
+                        <p className="text-2xl md:text-3xl font-bold text-[#debfad]">₦{formatPrice(price)}</p>
                       </div>
 
-                      <div className="flex items-center gap-4 py-3 border-y border-[#debfad]/20">
-                        <span className="text-gray-300 text-sm">Stock:</span>
+                      <div className="flex items-center gap-4 py-2 md:py-3 border-y border-[#debfad]/20">
+                        <span className="text-gray-300 text-xs md:text-sm">Stock:</span>
                         <span className={cn(
-                          "font-semibold",
+                          "font-semibold text-sm md:text-base",
                           isOutOfStock ? "text-red-400" : "text-green-400"
                         )}>
                           {isOutOfStock ? "Out of Stock" : `${stock} available`}
@@ -292,7 +276,7 @@ const ProductCard = ({
                       {getBadgeLabel() && (
                         <div className="flex gap-2">
                           <span className={cn(
-                            "px-3 py-1 rounded-full text-white text-xs font-bold",
+                            "px-2 py-0.5 md:px-3 md:py-1 rounded-full text-white text-[10px] md:text-xs font-bold",
                             getBadgeColor()
                           )}>
                             {getBadgeLabel()}
@@ -307,7 +291,7 @@ const ProductCard = ({
                           onClick={handleAddCart}
                           disabled={isOutOfStock || isAddingToCart}
                           className={cn(
-                            "flex-1 py-3 rounded-xl font-semibold flex items-center justify-center gap-2",
+                            "flex-1 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold flex items-center justify-center gap-2",
                             isOutOfStock
                               ? "bg-gray-600 text-gray-400 cursor-not-allowed"
                               : "bg-[#debfad] text-[#133827] hover:bg-[#debfad]/90"
@@ -316,21 +300,19 @@ const ProductCard = ({
                           {isAddingToCart && <Loader2 size={18} className="animate-spin" />}
                           {isOutOfStock ? "Out of Stock" : "Add to Cart"}
                         </motion.button>
-                        
-                     
                       </div>
 
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         onClick={handleNavigate}
-                        className="w-full py-2 text-[#debfad] border border-[#debfad]/30 rounded-xl hover:bg-[#debfad]/10"
+                        className="w-full py-2 text-sm md:text-base text-[#debfad] border border-[#debfad]/30 rounded-xl hover:bg-[#debfad]/10"
                       >
                         View Full Details
                       </motion.button>
 
                       <button
                         onClick={() => setShowPreview(false)}
-                        className="text-gray-400 hover:text-[#debfad] text-sm mt-2"
+                        className="text-gray-400 hover:text-[#debfad] text-xs md:text-sm mt-2"
                       >
                         Close Preview
                       </button>

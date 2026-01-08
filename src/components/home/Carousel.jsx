@@ -45,7 +45,7 @@ const Carousel = () => {
             descRef.current.textContent = descText.substring(0, charsToShow);
           },
         },
-        "+=0.2" // Small delay after title finishes
+        "+=0.2"
       );
 
       // Title glow effect (repeating)
@@ -66,7 +66,7 @@ const Carousel = () => {
   return (
     <div
       id="about-section"
-      className="w-full lg:max-w-[1200px] mx-auto px-4 md:px-8 lg:px-[4rem] py-[1rem] grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+      className="w-full lg:max-w-[1200px] mx-auto px-4 md:px-8 lg:px-[4rem] py-[1rem] grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center"
     >
       <motion.div
         ref={ref}
@@ -76,17 +76,15 @@ const Carousel = () => {
       >
         <h6
           ref={textRef}
-          className="text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#0e4132] via-[#fff4ec] to-[#0e4132] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
+          className="text-[28px] sm:text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#0e4132] via-[#fff4ec] to-[#0e4132] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
           style={{
             display: "inline-block",
           }}
-        >
-         
-        </h6>
+        ></h6>
 
-        <p 
+        <p
           ref={descRef}
-          className="text-[16px] text-[#0e4132] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
+          className="text-[14px] sm:text-[16px] text-[#0e4132] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
         >
           At Yagso, every piece is shaped with meticulous detail and passion.
           Our designs reflect more than just adornment—they are crafted to

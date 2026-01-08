@@ -23,12 +23,12 @@ const EarringCarousel = () => {
   }, []);
 
   return (
-    <div className="relative w-full lg:w-[80%] h-[440px] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full lg:w-[80%] h-[320px] sm:h-[380px] md:h-[440px] flex items-center justify-center overflow-hidden">
       {/* Ear image */}
       <img
         src="/earr.png"
         alt="ear"
-        className="w-[250px] h-[250px] object-center object-cover z-[5]"
+        className="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[250px] md:h-[250px] object-center object-cover z-[5]"
       />
 
       {earrings.map((src, i) => (
@@ -36,7 +36,7 @@ const EarringCarousel = () => {
           key={i}
           src={src}
           alt={`earring-${i}`}
-          className="absolute top-[40%] w-[220px] h-[220px] object-contain z-10"
+          className="absolute top-[40%] w-[160px] h-[160px] sm:w-[190px] sm:h-[190px] md:w-[220px] md:h-[220px] object-contain z-10"
           initial={{ opacity: 0, x: 300, y: -120, scale: 0.7 }}
           animate={
             i === activeIndex
