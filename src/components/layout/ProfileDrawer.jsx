@@ -233,7 +233,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full sm:max-w-md bg-white shadow-2xl z-[101] flex flex-col"
+            className="fixed right-0 top-0 h-full w-[420px] max-w-full bg-white shadow-2xl z-[101] flex flex-col"
           >
             {/* Header with Gradient */}
             <motion.div
@@ -252,7 +252,7 @@ const ProfileDrawer = ({ isOpen, onClose, user, onUpdate }) => {
                   <div className="flex gap-2">
                     {!isEditing ? (
                       <motion.button
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsEditing(true)}
                         className="p-2 hover:bg-white/20 rounded-lg transition-colors backdrop-blur-sm"
