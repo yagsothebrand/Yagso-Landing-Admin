@@ -187,7 +187,17 @@ export default function AddJewelry({ isOpen, onClose }) {
           setImagePreviews((prev) => [...prev, ...newPreviews]);
         }
       };
-      reader.readAsDataURL(file);
+      if (file.type.startsWith("video/")) {
+        const videoUrl = URL.createObjectURL(file);
+        newPreviews.push(videoUrl);
+        loadedCount++;
+
+        if (loadedCount === files.length) {
+          setImagePreviews((prev) => [...prev, ...newPreviews]);
+        }
+      } else {
+        reader.readAsDataURL(file);
+      }
     });
   };
 
@@ -257,7 +267,7 @@ export default function AddJewelry({ isOpen, onClose }) {
     }
 
     if (!formData.images || formData.images.length === 0) {
-      newErrors.images = "Please upload at least one image";
+      newErrors.images = "Please upload at least one image or video";
     }
 
     setErrors(newErrors);
@@ -904,7 +914,7 @@ export default function AddJewelry({ isOpen, onClose }) {
                           id="images"
                           type="file"
                           multiple
-                          accept="image/*"
+                          accept="image/*,video/mp4"
                           onChange={handleImageUpload}
                           className="hidden"
                         />
@@ -936,11 +946,21 @@ export default function AddJewelry({ isOpen, onClose }) {
                           >
                             <Card className="relative group">
                               <CardContent className="p-2">
-                                <img
-                                  src={preview || "/placeholder.svg"}
-                                  alt={`Preview ${index + 1}`}
-                                  className="w-full h-24 object-cover rounded"
-                                />
+                                {preview?.includes("video") ? (
+                                  <video
+                                    src={preview}
+                                    className="w-full h-24 object-cover rounded"
+                                    controls
+                                    muted
+                                  />
+                                ) : (
+                                  <img
+                                    src={preview || "/placeholder.svg"}
+                                    alt={`Preview ${index + 1}`}
+                                    className="w-full h-24 object-cover rounded"
+                                  />
+                                )}
+
                                 <Button
                                   type="button"
                                   variant="destructive"
