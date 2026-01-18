@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import {
   getDoc,
   getDocs,
@@ -97,28 +97,28 @@ export const LandingAuthProvider = ({ children }) => {
   // Keep cookies in sync
   useEffect(() => {
     if (token) {
-      Cookies.set("token", token, { 
-        expires: 7, 
-        secure: true, 
-        sameSite: 'strict' 
+      Cookies.set("token", token, {
+        expires: 30,
+        secure: true,
+        sameSite: "strict",
       });
     } else {
       Cookies.remove("token");
     }
 
     if (userId) {
-      Cookies.set("userId", userId, { 
-        expires: 7, 
-        secure: true, 
-        sameSite: 'strict' 
+      Cookies.set("userId", userId, {
+        expires: 30,
+        secure: true,
+        sameSite: "strict",
       });
     } else {
       Cookies.remove("userId");
     }
 
-    Cookies.set("accessGranted", accessGranted ? "true" : "false", { 
-      expires: 7, 
-      sameSite: 'strict' 
+    Cookies.set("accessGranted", accessGranted ? "true" : "false", {
+      expires: 30,
+      sameSite: "strict",
     });
   }, [token, accessGranted, userId]);
 
