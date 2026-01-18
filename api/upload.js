@@ -25,7 +25,8 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "yagso", // folder in your Cloudinary account
-    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+    resource_type: "auto",
+    allowed_formats: ["jpg", "png", "jpeg", "webp", "mp4"],
   },
 });
 
@@ -35,7 +36,9 @@ const upload = multer({ storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded." });
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded." });
     }
 
     res.json({
@@ -44,15 +47,18 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     });
   } catch (err) {
     console.error("Upload error:", err);
-    res.status(500).json({ success: false, message: "Server error during upload." });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error during upload." });
   }
 });
 
 app.use((err, req, res, next) => {
   console.error("Global error:", err);
-  res.status(500).json({ success: false, message: "Something went wrong on the server." });
+  res
+    .status(500)
+    .json({ success: false, message: "Something went wrong on the server." });
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
