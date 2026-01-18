@@ -23,28 +23,36 @@ const EarringCarousel = () => {
   }, []);
 
   return (
-    <div className="relative w-full lg:w-[80%] h-[320px] sm:h-[380px] md:h-[440px] flex items-center justify-center overflow-hidden">
-      {/* Ear image */}
-      <img
-        src="/earr.png"
-        alt="ear"
-        className="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[250px] md:h-[250px] object-center object-cover z-[5]"
-      />
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+      {/* Model portrait - Replace /earr.png with your uploaded portrait image path */}
+      <div className="relative z-[5]">
+        <img
+          src="/woman.png"
+          alt="model"
+          className="w-full h-full object-cover object-top rounded-2xl"
+        />
+      </div>
 
+      {/* Animated earrings - positioned near the ear area */}
       {earrings.map((src, i) => (
         <motion.img
           key={i}
           src={src}
           alt={`earring-${i}`}
-          className="absolute top-[40%] w-[160px] h-[160px] sm:w-[190px] sm:h-[190px] md:w-[220px] md:h-[220px] object-contain z-10"
-          initial={{ opacity: 0, x: 300, y: -120, scale: 0.7 }}
+          className="absolute w-[140px] h-[140px] sm:w-[170px] sm:h-[170px] md:w-[200px] md:h-[200px] object-contain z-10"
+          style={{
+            left: "55%", // Position near the right ear
+            top: "35%", // Adjust vertical position for ear level
+          }}
+          initial={{ opacity: 0, x: 200, y: -80, scale: 0.6, rotate: -15 }}
           animate={
             i === activeIndex
               ? {
                   opacity: [0, 1, 1, 0],
-                  x: [300, 0, -300],
-                  y: [-120, 60, -120], // curved arc motion
-                  scale: [0.7, 1, 0.85],
+                  x: [200, 0, -200],
+                  y: [-80, 40, -80],
+                  scale: [0.6, 1, 0.7],
+                  rotate: [-15, 0, 15],
                   transition: {
                     duration: EARRING_DURATION,
                     ease: [0.42, 0, 0.58, 1],
@@ -56,7 +64,7 @@ const EarringCarousel = () => {
       ))}
 
       {/* Soft fade edges */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#556c58]/40 via-transparent to-[#556c58]/40 z-[20]" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-white/20 via-transparent to-white/20 z-[20]" />
     </div>
   );
 };
