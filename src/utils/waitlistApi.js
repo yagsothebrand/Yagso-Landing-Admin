@@ -51,7 +51,7 @@ export async function createWaitlistEntry(email) {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     lastLogin: null,
-    loginAttempt: 0, // ✅ will become 1 after link click
+    loginAttempt: 0,
     emailSendCount: 0,
     lastEmailSentAt: null,
   });
@@ -67,13 +67,13 @@ export async function touchWaitlist(tokenId, updates = {}) {
   });
 }
 
-// ✅ called when link is clicked (grant access forever)
+// Called when link is clicked (grant access forever)
 export async function markWaitlistLogin(tokenId) {
   if (!tokenId) return;
   await updateDoc(doc(db, WAITLIST_COL, tokenId), {
     updatedAt: serverTimestamp(),
     lastLogin: serverTimestamp(),
-    loginAttempt: 1, // ✅ forever access rule
+    loginAttempt: 1,
   });
 }
 
@@ -84,9 +84,8 @@ export async function sendWaitlistEmail({
   magicLink,
   isResend,
 }) {
-  // Replace later with backend call
-  // await fetch("/api/waitlist", { ... })
-  if (isResend) {
+  try {
+    // ✅ ALWAYS call the API to send email (both first-time and resends)
     const emailRes = await fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -94,18 +93,22 @@ export async function sendWaitlistEmail({
     });
 
     if (!emailRes.ok) {
-      throw new Error("Failed to send email");
+      const errorData = await emailRes.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to send email");
     }
 
-    return emailRes.json();
-  }
-  await updateDoc(doc(db, WAITLIST_COL, tokenId), {
-    updatedAt: serverTimestamp(),
-    lastEmailSentAt: serverTimestamp(),
-    emailSendCount: increment(1),
-  });
+    // ✅ Update Firestore to track email sends
+    await updateDoc(doc(db, WAITLIST_COL, tokenId), {
+      updatedAt: serverTimestamp(),
+      lastEmailSentAt: serverTimestamp(),
+      emailSendCount: increment(1),
+    });
 
-  return { success: true };
+    return await emailRes.json();
+  } catch (error) {
+    console.error("Error sending waitlist email:", error);
+    throw error;
+  }
 }
 
 /**

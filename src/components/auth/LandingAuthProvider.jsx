@@ -13,20 +13,45 @@ const LandingAuthContext = createContext(null);
 
 const COOKIE_TOKEN = "waitlist_token";
 const COOKIE_ACCESS = "waitlist_access";
+const COOKIE_USER = "waitlist_user"; // ✅ NEW: Cache user data
 
 export const LandingAuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // waitlist record
+  // ✅ Try to load cached user from cookie first
+  const [user, setUser] = useState(() => {
+    try {
+      const cached = Cookies.get(COOKIE_USER);
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [token, setToken] = useState(() => Cookies.get(COOKIE_TOKEN) || null);
   const [accessGranted, setAccessGranted] = useState(
     () => Cookies.get(COOKIE_ACCESS) === "true",
   );
-  const [loading, setLoading] = useState(true);
+  
+  // ✅ Only show loading if we have token/access BUT no cached user
+  const [loading, setLoading] = useState(() => {
+    const hasToken = Cookies.get(COOKIE_TOKEN);
+    const hasAccess = Cookies.get(COOKIE_ACCESS) === "true";
+    const hasCachedUser = Cookies.get(COOKIE_USER);
+    
+    // Only load if we need to fetch (have access but no cached data)
+    return Boolean(hasToken && hasAccess && !hasCachedUser);
+  });
 
-  // Fetch waitlist doc if access is granted
+  // ✅ Only fetch from Firebase if we don't have cached user data
   useEffect(() => {
     const run = async () => {
       if (!token || !accessGranted) {
         setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // ✅ If we already have user data from cache, don't fetch again
+      if (user) {
         setLoading(false);
         return;
       }
@@ -40,6 +65,7 @@ export const LandingAuthProvider = ({ children }) => {
           // invalid token → clear cookies
           Cookies.remove(COOKIE_TOKEN, { path: "/" });
           Cookies.remove(COOKIE_ACCESS, { path: "/" });
+          Cookies.remove(COOKIE_USER, { path: "/" });
 
           setToken(null);
           setAccessGranted(false);
@@ -48,13 +74,23 @@ export const LandingAuthProvider = ({ children }) => {
           return;
         }
 
-        setUser({ id: snap.id, ...snap.data() });
+        const userData = { id: snap.id, ...snap.data() };
+        setUser(userData);
 
-        // update stats in waitlist doc
-        await updateDoc(ref, {
+        // ✅ Cache user data in cookie
+        Cookies.set(COOKIE_USER, JSON.stringify(userData), {
+          expires: 365,
+          secure: true,
+          sameSite: "strict",
+          path: "/",
+        });
+
+        // ✅ Update stats in background (don't await)
+        updateDoc(ref, {
           lastLogin: serverTimestamp(),
           loginAttempt: increment(1),
-        });
+        }).catch((e) => console.error("Failed to update login stats:", e));
+
       } catch (e) {
         console.error("LandingAuthProvider error:", e);
         setUser(null);
@@ -64,13 +100,13 @@ export const LandingAuthProvider = ({ children }) => {
     };
 
     run();
-  }, [token, accessGranted]);
+  }, [token, accessGranted]); // ✅ Removed 'user' from deps to avoid re-fetching
 
   // Keep cookies synced (long-lived device access)
   useEffect(() => {
     if (token) {
       Cookies.set(COOKIE_TOKEN, token, {
-        expires: 365, // ✅ “whole phone fr”
+        expires: 365,
         secure: true,
         sameSite: "strict",
         path: "/",
@@ -85,7 +121,19 @@ export const LandingAuthProvider = ({ children }) => {
       sameSite: "strict",
       path: "/",
     });
-  }, [token, accessGranted]);
+
+    // ✅ Sync user cache
+    if (user) {
+      Cookies.set(COOKIE_USER, JSON.stringify(user), {
+        expires: 365,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+    } else {
+      Cookies.remove(COOKIE_USER, { path: "/" });
+    }
+  }, [token, accessGranted, user]);
 
   return (
     <LandingAuthContext.Provider

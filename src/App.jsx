@@ -18,6 +18,7 @@ import UsersPage from "./components/UsersPage";
 import HeroWaitlist from "./components/HeroWaitlist";
 import Index from "./pages/Index";
 import TokenGate from "./pages/TokenGate";
+import CheckYourEmailPage from "./pages/CheckYourEmailPage";
 import RequireWaitlistAccess from "./components/RequireWaitlistAccess";
 // import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ function App() {
         {/* public */}
         <Route path="waitlist" element={<HeroWaitlist />} />
         <Route path=":tokenId" element={<TokenGate />} />
+        <Route path="check-your-email" element={<CheckYourEmailPage />} />
 
         {/* protected */}
         <Route element={<RequireWaitlistAccess />}>
@@ -40,6 +42,7 @@ function App() {
           <Route path="terms-and-conditions" element={<TermsOfService />} />
           <Route path="about" element={<About />} />
           <Route path="profile" element={<Profile />} />
+
           <Route path="users" element={<UsersPage />} />
           <Route path="orders" element={<Orders />} />
           <Route path="blog/:id" element={<BlogDetailPage />} />

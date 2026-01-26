@@ -18,18 +18,9 @@ export default function Login() {
   };
 
   return (
-    <main className="pt-24">
+    <main className="bg-white/10">
       <Header />
-      {/* <BlogBanner /> */}
-
-      {cartOpen && (
-        <Cart
-          items={cart}
-          onClose={() => setCartOpen(false)}
-          onRemove={removeFromCart}
-        />
-      )}
-
+     
       <LoginPage />
       {/* <Footer /> */}
     </main>

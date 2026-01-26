@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Mail, Lock, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+
+const BRAND = "#948179";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, refreshUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +30,10 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      
+      // ✅ CRITICAL FIX: Wait for user state to be refreshed
+      await refreshUser();
+      
       toast.success("Welcome back!");
       navigate("/profile");
     } catch (error) {
@@ -47,89 +53,165 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#f7fbff] to-[#fff5f7] flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-[#fbfaf8]">
+      {/* Top navigation bar */}
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-900"
+          >
+            <ArrowLeft className="w-4 h-4" style={{ color: BRAND }} />
+            Back
+          </button>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-md mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="mb-6">
+          <p className="text-[12px] tracking-[0.18em] uppercase" style={{ color: BRAND }}>
+            Account Access
+          </p>
+          <h1 className="text-3xl font-extrabold text-slate-900 mt-2">Welcome Back</h1>
+          <p className="text-slate-600 mt-2">Log in to your YAGSO account</p>
+        </div>
+
+        {/* Login Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-8 shadow-xl"
+          transition={{ duration: 0.4 }}
+          className="bg-white/80 backdrop-blur border border-slate-200 rounded-none overflow-hidden"
         >
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2b6f99] to-[#4a8ab8] flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-white" />
+          {/* Card Header */}
+          <div className="px-6 py-4 border-b border-slate-200 bg-white/70">
+            <div className="flex items-center justify-between">
+              <p className="text-sm tracking-[0.18em] uppercase font-bold text-slate-700">
+                Login
+              </p>
+              <span className="text-[11px] tracking-[0.18em] uppercase text-slate-400">
+                Secure Access
+              </span>
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2b6f99] to-[#fc7182] bg-clip-text text-transparent">
-              Welcome Back
-            </h1>
-            <p className="text-slate-600 mt-2">Log in to your account</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <Label htmlFor="email">
-                Email Address <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative mt-1">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="pl-10 placeholder:text-gray-200"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="password">
-                Password <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative mt-1">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="pl-10 pr-10 placeholder:text-gray-300"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+          {/* Card Body */}
+          <div className="p-6">
+            <form onSubmit={handleLogin} className="space-y-5">
+              {/* Email Field */}
+              <div>
+                <Label 
+                  htmlFor="email"
+                  className="text-slate-700 text-xs tracking-wide uppercase"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
+                  Email Address <span className="text-red-500">*</span>
+                </Label>
+                <div className="relative mt-1.5">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="pl-10 h-11 rounded-none border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-0 focus-visible:border-slate-400"
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-[#2b6f99] hover:underline"
+              {/* Password Field */}
+              <div>
+                <Label 
+                  htmlFor="password"
+                  className="text-slate-700 text-xs tracking-wide uppercase"
+                >
+                  Password <span className="text-red-500">*</span>
+                </Label>
+                <div className="relative mt-1.5">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="pl-10 pr-10 h-11 rounded-none border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-0 focus-visible:border-slate-400"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password */}
+              <div className="flex items-center justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-semibold hover:underline"
+                  style={{ color: BRAND }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 rounded-none text-white font-semibold tracking-wide hover:opacity-90 disabled:opacity-60"
+                style={{ backgroundColor: BRAND }}
               >
-                Forgot password?
-              </Link>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-[#2b6f99] to-[#4a8ab8] text-white h-12 text-lg font-bold"
-            >
-              {loading ? "Logging in..." : "Log In"}
-            </Button>
-          </form>
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Logging in...
+                  </span>
+                ) : (
+                  "Log In"
+                )}
+              </Button>
+            </form>
+          </div>
         </motion.div>
+
+        {/* Sign Up Link */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-slate-600">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-bold hover:underline"
+              style={{ color: BRAND }}
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-2 text-xs tracking-wider px-4 py-2 border border-slate-200 bg-white rounded-none">
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: BRAND }}
+            />
+            <span className="text-slate-500 font-medium">
+              © 2025 YAGSO • Timeless luxury
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
