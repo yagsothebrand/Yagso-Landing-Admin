@@ -1,70 +1,71 @@
-import { motion } from "framer";
 import React from "react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 
-function CTAFooter() {
+const BRAND = "#fffdfb";
+const BORDER = `${BRAND}26`;
+
+export default function CTAFooter() {
   const navigate = useNavigate();
+
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1, duration: 0.8 }}
-      className="max-w-3xl mx-auto px-6 mt-10 pb-20"
-    >
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2b6f99] via-gray-700/50 to-[#fc7182] p-12 text-center shadow-2xl">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-0 right-0 w-64 h-64 bg-[#fc7182] rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-0 left-0 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl"
-        />
+    <footer className="max-w-4xl mx-auto px-4 mt-20 pb-20">
+      <div
+        className="relative overflow-hidden border bg-[#948179]/50 shadow-sm"
+        style={{ borderColor: BORDER }}
+      >
+        {/* subtle taupe wash */}
+        <div className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute -top-24 -right-24 h-[340px] w-[340px] rounded-full blur-3xl opacity-25"
+            style={{
+              background:
+                "radial-gradient(circle at 30% 30%, rgba(148,129,121,0.25), transparent 65%)",
+            }}
+          />
+          <div
+            className="absolute -bottom-28 -left-28 h-[360px] w-[360px] rounded-full blur-3xl opacity-20"
+            style={{
+              background:
+                "radial-gradient(circle at 70% 70%, rgba(148,129,121,0.18), transparent 65%)",
+            }}
+          />
+        </div>
 
-        <div className="relative z-10">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to Experience Discreet Care?
-          </h3>
-          <p className="text-white mb-8 text-lg">
-            Explore our thoughtfully curated collection of aftercare solutions
-          </p>
+        <div className="relative z-10 p-6 sm:p-10 md:p-12">
+          {/* top label */}
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => navigate("/shop")}
-              className="px-8 py-6 bg-white text-gray-900 hover:bg-gray-100 text-lg font-semibold rounded-full shadow-xl"
-            >
-              Visit the Shop
-              <motion.span
-                animate={{ x: [0, 4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="ml-2 inline-block"
+          <div className="mt-4 grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">
+                Ready for your next drop?
+              </h3>
+              <p className="mt-2 text-[#fffdfb] text-[15px] md:text-[16px] leading-relaxed max-w-2xl">
+                Shop timeless essentials, limited releases, and premium finish
+                pieces — curated for everyday elegance.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2 md:justify-end">
+              <Button
+                onClick={() => navigate("/shop")}
+                className="h-11 text-[#948179] font-semibold"
+                style={{ backgroundColor: BRAND }}
               >
-                →
-              </motion.span>
-            </Button>
-          </motion.div>
+                Visit the Shop →
+              </Button>
+            </div>
+          </div>
+
+          {/* bottom fine print */}
+          <div
+            className="my-2 border-t text-xs text-slate-500"
+            style={{ borderColor: BORDER }}
+          >
+         
+          </div>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 }
-
-export default CTAFooter;

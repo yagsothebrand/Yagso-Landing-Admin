@@ -3,14 +3,14 @@ import { motion, useAnimation, useInView } from "framer-motion";
 import gsap from "gsap";
 
 const videos = [
-  "/GetInspired1.mp4",
-    // "/mediah.mp4",
+  "/animate.mp4",
   "/lady.mp4",
-  // "/GetInspired2.mp4",
-    "/pinterestVideo.mp4",
+  "/get.mp4",
+  "/animate.mp4",
+  "/pinterestVideo.mp4",
   "/GetInspired4.mp4",
 
-    // "/yello.mp4",
+  // "/yello.mp4",
 ];
 
 const GetInspired = () => {
@@ -64,7 +64,7 @@ const GetInspired = () => {
         repeat: -1,
         yoyo: true,
       },
-      "-=1"
+      "-=1",
     );
   }, [inView, controls]);
 
@@ -73,10 +73,10 @@ const GetInspired = () => {
       {/* ✨ Add your animated header */}
 
       {/* 🩶 Fade edges */}
-      <div className="absolute left-0 top-0 h-full w-[80px] bg-gradient-to-r from-[#133827] via-[#133827]/60 to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute right-0 top-0 h-full w-[80px] bg-gradient-to-l from-[#133827] via-[#133827]/60 to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute left-0 top-0 h-full w-[80px] bg-gradient-to-r from-[#fffdfb] via-[#fffdfb]/60 to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute right-0 top-0 h-full w-[80px] bg-gradient-to-l from-[#fffdfb] via-[#fffdfb]/60 to-transparent z-10 pointer-events-none"></div>
 
-{/* 🎥 Smooth infinite video ticker */}
+      {/* 🎥 Smooth infinite video ticker */}
       <motion.div animate={controls} className="flex gap-2 md:gap-3">
         {[...videos, ...videos].map((video, i) => (
           <div

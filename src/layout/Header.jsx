@@ -38,6 +38,7 @@ export default function HeaderDesign() {
       { label: "About", path: "/about" },
       { label: "Shop", path: "/shop" },
       { label: "Contact", path: "/contact" },
+      { label: "Blog", path: "/blog" },
     ],
     bottom: [
       { label: "Men", path: "/shop?cat=men" },
@@ -74,7 +75,10 @@ export default function HeaderDesign() {
   return (
     <header className="sticky top-0 z-[9999]">
       {/* Top bar (taupe on white) */}
-      <div className="bg-white/65 border-b" style={{ borderColor: `${BRAND}33` }}>
+      <div
+        className="bg-white/25 border-b"
+        style={{ borderColor: `${BRAND}33` }}
+      >
         <div className="h-[76px] max-w-[1200px] mx-auto px-4 lg:px-10 flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-3">
@@ -225,7 +229,7 @@ export default function HeaderDesign() {
 
       {/* Category bar (white, taupe links) */}
       <nav
-        className="hidden md:block bg-white border-b"
+        className="hidden md:block bg-white/50 border-b"
         style={{ borderColor: `${BRAND}26` }}
       >
         <div className="max-w-[1200px] mx-auto px-4 lg:px-10 h-[46px] flex items-center justify-center">

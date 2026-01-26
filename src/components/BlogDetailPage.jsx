@@ -22,7 +22,7 @@ export default function BlogDetailPage() {
   };
 
   return (
-    <main className="pt-24">
+    <main className="bg-white/10">
       <Header />
 
       {cartOpen && (

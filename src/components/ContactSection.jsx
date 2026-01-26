@@ -1,80 +1,150 @@
-import { useState } from "react";
+// ContactSection.jsx (collapsible + clean success handling)
+// Requires shadcn: Card, Button, Collapsible, CollapsibleTrigger, CollapsibleContent, Separator
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import ContactDetails from "./ContactDetails";
 import ContactInlineForm from "./ContactInlineForm";
 import CTAFooter from "./CTAFooter";
+import { Mail, Phone, Clock, Zap, ChevronDown } from "lucide-react";
+
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
+
+const BRAND = "#948179";
+const BORDER = `${BRAND}26`;
+const cx = (...c) => c.filter(Boolean).join(" ");
 
 export default function ContactSection() {
-  const [showForm, setShowForm] = useState(true);
+  const options = useMemo(
+    () => [
+      {
+        id: "email",
+        label: "Email",
+        value: "support@yagso.com",
+        icon: Mail,
+        href: "mailto:support@yagso.com",
+      },
+      {
+        id: "phone",
+        label: "Phone",
+        value: "+234 812 345 6789",
+        icon: Phone,
+        href: "tel:+2348123456789",
+      },
+      { id: "hours", label: "Hours", value: "Mon–Fri • 9–6", icon: Clock },
+      { id: "response", label: "Response", value: "24–48h", icon: Zap },
+    ],
+    [],
+  );
+
+  const [active, setActive] = useState("email");
+  const [open, setOpen] = useState(true); // collapsible whole contact module
+
+  const selected = options.find((o) => o.id === active) || options[0];
 
   return (
-    <section
-      id="contact"
-      className="
-        relative pt-24 pb-28 overflow-hidden
-        bg-gradient-to-br from-[#f7fbff] via-white to-[#fff5f7]
-      "
-    >
-      {/* soft blobs */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#2b6f99]/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#fc7182]/10 blur-3xl" />
+    <section id="contact" className="bg-[#fbfaf8]/90 pt-14 pb-16">
+      <div className="max-w-5xl mx-auto px-4">
+        {/* compact header */}
+        <div className="flex items-end justify-between gap-3 mb-4">
+          <div className="min-w-0">
+            <div
+              className="inline-flex items-center gap-2 border bg-white px-2.5 py-1"
+              style={{ borderColor: BORDER }}
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: BRAND }}
+              />
+              <span className="text-[10px] tracking-[0.22em] uppercase font-semibold text-slate-600">
+                Contact
+              </span>
+            </div>
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-6">
-        {/* header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-14"
-        >
-          <div className="bg-gradient-to-r from-[#fc7182] to-[#2b6f99] bg-clip-text text-transparent text-sm font-semibold tracking-wider uppercase">
-            Contact Us
+            <h2 className="mt-2 text-xl md:text-2xl font-extrabold text-slate-900 leading-tight">
+              We’re here for you
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Products, delivery, privacy.
+            </p>
           </div>
-
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold text-gray-900">
-            We’re here for you.
-          </h2>
-
-          <p className="mt-3 text-gray-600 max-w-xl mx-auto">
-            Questions about products, delivery, or privacy? Reach out anytime.
-          </p>
-        </motion.div>
-
-        {/* content */}
-        <div className="grid lg:grid-cols-12 gap-10 items-start">
-          {/* LEFT */}
-          <motion.div
-            layout
-            className={showForm ? "lg:col-span-5" : "lg:col-span-12"}
-            transition={{ layout: { duration: 0.35, ease: "easeOut" } }}
-          >
-            <ContactDetails
-              showForm={showForm}
-              onToggle={() => setShowForm((s) => !s)}
-            />
-          </motion.div>
-
-          {/* RIGHT */}
-          <AnimatePresence mode="wait">
-            {showForm && (
-              <motion.div
-                key="contact-form"
-                layout
-                className="lg:col-span-7"
-                initial={{ opacity: 0, x: 32 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 32 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-              >
-                <ContactInlineForm />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
-        {/* CTA */}
-        <div className="mt-24">
+        <Collapsible open={open} onOpenChange={setOpen}>
+          <Card className="rounded-sm bg-white" style={{ borderColor: BORDER }}>
+            <CardHeader className="py-4 px-4 md:px-5">
+              {/* Options - compact row */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {options.map((o) => {
+                  const Icon = o.icon;
+                  const isActive = o.id === active;
+
+                  const tile = (
+                    <motion.button
+                      type="button"
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setActive(o.id)}
+                      className={cx(
+                        "w-full text-left border bg-white px-3 py-2.5 rounded-sm transition hover:bg-[#fffdfb]",
+                        isActive ? "shadow-sm" : "",
+                      )}
+                      style={{ borderColor: isActive ? BRAND : BORDER }}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[10px] tracking-[0.18em] uppercase font-semibold text-slate-500">
+                            {o.label}
+                          </p>
+
+                          <p className="mt-0.5 text-sm font-extrabold text-slate-900 truncate">
+                            <a
+                              href={o.href}
+                              onClick={(e) => e.stopPropagation()}
+                              className=""
+                            
+                            >
+                              {o.value}
+                            </a>
+                          </p>
+                        </div>
+
+                        <div
+                          className="w-9 h-9 flex items-center justify-center border bg-[#fffdfb] rounded-sm"
+                          style={{ borderColor: BORDER }}
+                        >
+                          <Icon className="w-4 h-4" style={{ color: BRAND }} />
+                        </div>
+                      </div>
+                    </motion.button>
+                  );
+
+                  return <div key={o.id}>{tile}</div>;
+                })}
+              </div>
+            </CardHeader>
+
+            <Separator style={{ backgroundColor: BORDER }} />
+
+            <CollapsibleContent asChild>
+              <CardContent className="px-4 md:px-5 pb-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                >
+                  <ContactInlineForm selected={selected} />
+                </motion.div>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
+        <div className="mt-10">
           <CTAFooter />
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function VideoLayout({ children }) {
         preload="auto"
         className="fixed top-0 left-0 w-full h-full object-cover -z-10"
       >
-        <source src="/jeee.mp4" type="video/mp4" />
+        <source src="/for.mp4" type="video/mp4" />
       </video>
 
       <div className="fixed inset-0 bg-black/30 -z-10" />

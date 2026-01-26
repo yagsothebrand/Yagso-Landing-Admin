@@ -1,25 +1,43 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+// ContactInlineForm.jsx (collapsible form body + better success UX)
+// Requires shadcn: Card, Button, Input, Textarea, Collapsible, CollapsibleTrigger, CollapsibleContent, Separator
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import emailjs from "emailjs-com";
-import {
-  Mail,
-  Phone,
-  Clock,
-  Zap,
-  CheckCircle,
-  AlertCircle,
-  Send,
-} from "lucide-react";
+import { Send, CheckCircle2, AlertCircle, ChevronDown, Copy } from "lucide-react";
 import { useAuth } from "./auth/AuthProvider";
+
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
+
+const BRAND = "#948179";
+const BORDER = `${BRAND}26`;
 
 /* ✅ EmailJS ENV */
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-export default function ContactInlineForm() {
+function starterFor(id) {
+  if (id === "phone") return "Hi YAGSO, I have a quick question:\n";
+  if (id === "hours") return "Hi YAGSO, please confirm your working hours:\n";
+  if (id === "response") return "Hi YAGSO, I want to ask about response time:\n";
+  return "Hi YAGSO, I need help with:\n";
+}
+
+export default function ContactInlineForm({ selected }) {
   const { user } = useAuth();
 
+  const starter = useMemo(() => starterFor(selected?.id), [selected?.id]);
+
+  const [formOpen, setFormOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: user?.email || "",
@@ -27,33 +45,41 @@ export default function ContactInlineForm() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const [submitStatus, setSubmitStatus] = useState(null); // null | success | error
+  const [successMeta, setSuccessMeta] = useState(null); // { email, ts }
 
-  const suggestions = [
-    "Share your amazing ideas with us…",
-    "Tell us how we can make your experience even better…",
-    "We’d love to hear your feedback!",
-    "Ask us anything—you’re in good hands!",
-    "Send a message and brighten someone’s day here!",
-  ];
+  useEffect(() => {
+    if (user?.email) setFormData((p) => ({ ...p, email: user.email }));
+  }, [user?.email]);
 
-  const [suggestionIndex, setSuggestionIndex] = useState(0);
+  // inject starter only if message empty
+  useEffect(() => {
+    setFormData((p) => {
+      if (p.message?.trim()) return p;
+      return { ...p, message: starter };
+    });
+  }, [starter]);
 
-  const handleFocus = () => {
-    setSuggestionIndex((prev) => (prev + 1) % suggestions.length);
-  };
-
-  const handleChange = (e) => {
+  const onChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  /* ✅ REAL EMAIL SEND */
+  const resetStatusSoon = () => {
+    // auto-clear success after a bit (keeps UI tidy)
+    window.clearTimeout(resetStatusSoon._t);
+    resetStatusSoon._t = window.setTimeout(() => {
+      setSubmitStatus(null);
+      setSuccessMeta(null);
+    }, 6000);
+  };
+
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.message) return;
 
     setIsLoading(true);
     setSubmitStatus(null);
+    setSuccessMeta(null);
 
     try {
       await emailjs.send(
@@ -68,151 +94,228 @@ export default function ContactInlineForm() {
       );
 
       setSubmitStatus("success");
-      setFormData({ name: "", email: user?.email || "", message: "" });
-    } catch (error) {
-      console.error("EmailJS error:", error);
+      setSuccessMeta({
+        email: formData.email,
+        ts: new Date().toLocaleString(),
+      });
+
+      // collapse form after success to save space
+      setFormOpen(false);
+
+      // keep message starter, clear name only
+      setFormData((p) => ({ ...p, name: "", message: starter }));
+      resetStatusSoon();
+    } catch (err) {
+      console.error("EmailJS error:", err);
       setSubmitStatus("error");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const contactInfo = [
-    {
-      label: "Email",
-      value: "support@yagso.com",
-      icon: Mail,
-      link: "mailto:support@yagso.com",
-    },
-    {
-      label: "Phone",
-      value: "+234 812 345 6789",
-      icon: Phone,
-      link: "tel:+2348123456789",
-    },
-    {
-      label: "Hours",
-      value: "Mon - Fri, 9am - 6pm",
-      icon: Clock,
-    },
-    {
-      label: "Response",
-      value: "24-48 hours",
-      icon: Zap,
-    },
-  ];
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("support@yagso.com");
+    } catch {}
+  };
 
   return (
-    <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-black/5 p-8">
-      {/* contact info */}
-      {/* <div className="grid grid-cols-2 gap-3 mb-8">
-        {contactInfo.map((item, index) => {
-          const Icon = item.icon;
+    <Card className="rounded-sm border bg-white" style={{ borderColor: BORDER }}>
+      {/* Header row */}
+      <div className="p-4 md:p-5 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] tracking-[0.18em] uppercase font-semibold text-slate-500">
+            Send a message
+          </p>
+          <p className="text-sm text-slate-600 mt-1">
+            Topic:{" "}
+            <span className="font-semibold text-slate-900">
+              {selected?.label || "Email"}
+            </span>
+          </p>
+        </div>
 
-          return (
-            <motion.a
-              key={index}
-              href={item.link || "#"}
-              onClick={(e) => !item.link && e.preventDefault()}
-              whileHover={{ y: -2 }}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg border bg-white text-gray-800"
+        <Collapsible open={formOpen} onOpenChange={setFormOpen}>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="outline"
+              className="h-9 rounded-sm bg-white"
+              style={{ borderColor: BORDER }}
+              type="button"
             >
-              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-100">
-                <Icon size={16} />
-              </div>
-
-              <div className="leading-tight">
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
-                  {item.label}
-                </p>
-                <p className="text-xs font-medium">{item.value}</p>
-              </div>
-            </motion.a>
-          );
-        })}
-      </div> */}
-
-      {/* form */}
-      <div className="space-y-5">
-        {["name", "email", "message"].map((field) => (
-          <motion.div key={field}>
-            <label className="block text-sm font-semibold mb-2">
-              {field === "name"
-                ? "Full Name"
-                : field === "email"
-                  ? "Email Address"
-                  : "Your Message"}
-            </label>
-
-            {field === "message" ? (
-              <motion.textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                rows="5"
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none"
-                placeholder={suggestions[suggestionIndex]}
+              <span className="text-xs font-semibold">
+                {formOpen ? "Hide" : "Write"}
+              </span>
+              <ChevronDown
+                className={cx(
+                  "w-4 h-4 ml-2 transition-transform",
+                  formOpen ? "rotate-180" : "",
+                )}
+                style={{ color: BRAND }}
               />
-            ) : (
-              <motion.input
-                type={field === "email" ? "email" : "text"}
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none"
-                placeholder={
-                  field === "name" ? "Your full name" : "your.email@example.com"
-                }
-              />
-            )}
-          </motion.div>
-        ))}
-
-        <motion.button
-          onClick={handleSubmit}
-          disabled={isLoading}
-          whileHover={{ scale: 1.02 }}
-          className="w-full bg-black text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
-        >
-          {isLoading ? (
-            "Sending..."
-          ) : (
-            <>
-              <Send size={18} />
-              Send Message
-            </>
-          )}
-        </motion.button>
+            </Button>
+          </CollapsibleTrigger>
+        </Collapsible>
       </div>
 
-      {/* status */}
+      {/* Status banner (stays visible even when form is collapsed) */}
       <AnimatePresence>
-        {submitStatus && (
+        {submitStatus === "success" && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className={`mt-4 p-4 rounded-xl text-sm font-semibold flex items-center gap-2 ${
-              submitStatus === "success"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
+            exit={{ opacity: 0, y: 8 }}
+            className="px-4 md:px-5 pb-4"
           >
-            {submitStatus === "success" ? (
-              <>
-                <CheckCircle size={18} />
-                Message sent successfully!
-              </>
-            ) : (
-              <>
-                <AlertCircle size={18} />
-                Failed to send message.
-              </>
-            )}
+            <div
+              className="border bg-[#fffdfb] rounded-sm p-3 flex items-start justify-between gap-3"
+              style={{ borderColor: BORDER }}
+            >
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: BRAND }} />
+                <div className="text-sm">
+                  <p className="font-semibold text-slate-900">Message sent.</p>
+                  <p className="text-slate-600 text-xs mt-1">
+                    We’ll reply to{" "}
+                    <span className="font-semibold text-slate-900">
+                      {successMeta?.email}
+                    </span>{" "}
+                    within{" "}
+                    <span className="font-semibold text-slate-900">24–48h</span>.
+                  </p>
+                  <p className="text-slate-500 text-[11px] mt-1">
+                    Sent: {successMeta?.ts}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  variant="outline"
+                  className="h-9 rounded-sm bg-white"
+                  style={{ borderColor: BORDER }}
+                  onClick={copyEmail}
+                  type="button"
+                >
+                  <Copy className="w-4 h-4 mr-2" style={{ color: BRAND }} />
+                  <span className="text-xs font-semibold">Copy email</span>
+                </Button>
+
+                <Button
+                  className="h-9 rounded-sm text-white"
+                  style={{ backgroundColor: BRAND }}
+                  onClick={() => {
+                    setSubmitStatus(null);
+                    setSuccessMeta(null);
+                    setFormOpen(true);
+                  }}
+                  type="button"
+                >
+                  <span className="text-xs font-semibold">New message</span>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {submitStatus === "error" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            className="px-4 md:px-5 pb-4"
+          >
+            <div className="border border-red-200 bg-red-50 rounded-sm p-3 flex items-center gap-2 text-sm font-semibold text-red-700">
+              <AlertCircle className="w-4 h-4" />
+              Failed to send. Please try again.
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+
+      <Separator style={{ backgroundColor: BORDER }} />
+
+      {/* Collapsible form body */}
+      <Collapsible open={formOpen} onOpenChange={setFormOpen}>
+        <CollapsibleContent asChild>
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="p-4 md:p-5 grid gap-3">
+              <div className="grid md:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] tracking-[0.18em] uppercase font-semibold text-slate-500 mb-1.5">
+                    Full name
+                  </label>
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={onChange}
+                    className="h-10 rounded-sm bg-[#fffdfb]"
+                    style={{ borderColor: BORDER }}
+                    placeholder="Your full name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] tracking-[0.18em] uppercase font-semibold text-slate-500 mb-1.5">
+                    Email
+                  </label>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={onChange}
+                    className="h-10 rounded-sm bg-[#fffdfb]"
+                    style={{ borderColor: BORDER }}
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] tracking-[0.18em] uppercase font-semibold text-slate-500 mb-1.5">
+                  Message
+                </label>
+                <Textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={onChange}
+                  rows={6}
+                  className="rounded-sm bg-[#fffdfb] leading-relaxed"
+                  style={{ borderColor: BORDER }}
+                  placeholder="Tell us how we can help…"
+                />
+                <p className="mt-2 text-xs text-slate-500">
+                  Add your <span className="font-semibold">Order ID</span> (if any) for faster help.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end">
+                <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.99 }}>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    className="h-10 rounded-sm text-white font-semibold"
+                    style={{ backgroundColor: BRAND }}
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {isLoading ? "Sending..." : "Send"}
+                  </Button>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
   );
+}
+
+function cx(...c) {
+  return c.filter(Boolean).join(" ");
 }
