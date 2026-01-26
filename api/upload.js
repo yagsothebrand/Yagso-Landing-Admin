@@ -1,30 +1,18 @@
-import express from "express";
-import cors from "cors";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../cloudinary.js"; // import config
+import { v2 as cloudinary } from "cloudinary";
 
-const app = express();
-const port = process.env.PORT || 5000;
+// Configure Cloudinary directly in this file for Vercel
+cloudinary.config({
+  cloud_name: "dohrvryxg",
+  api_key: "359942423228932",
+  api_secret: "ryNBYJ6UY62FDtMbGVUv3H3mSf0",
+});
 
-// CORS for your frontend
-// app.use(cors({ origin: "https://yagso.vercel.app" }));
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5174",
-      "http://localhost:5173",
-      "https://yagso.com",
-      "https://www.yagso.com",
-    ],
-  })
-);
-
-// Cloudinary storage config
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "yagso", // folder in your Cloudinary account
+    folder: "yagso-products",
     resource_type: "auto",
     allowed_formats: ["jpg", "png", "jpeg", "webp", "mp4"],
   },
@@ -32,34 +20,68 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// Upload endpoint
-app.post("/api/upload", upload.single("file"), (req, res) => {
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}
+
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  );
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).json({ success: false, message: "Method not allowed" });
+    return;
+  }
+
   try {
+    await runMiddleware(req, res, upload.single("file"));
+
     if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded." });
+      res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+      return;
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       imageUrl: req.file.path,
+      publicId: req.file.filename,
     });
-  } catch (err) {
-    console.error("Upload error:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Server error during upload." });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Upload failed",
+      error: error.message,
+    });
   }
-});
+}
 
-app.use((err, req, res, next) => {
-  console.error("Global error:", err);
-  res
-    .status(500)
-    .json({ success: false, message: "Something went wrong on the server." });
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

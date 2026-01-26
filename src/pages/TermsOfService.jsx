@@ -1,212 +1,217 @@
-"use client";
-
-import React from "react";
 import { motion } from "framer-motion";
-
-const container = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0 },
-};
+import { useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  FileText,
+  Shield,
+  ShoppingCart,
+  Package,
+  CreditCard,
+  AlertTriangle,
+  Scale,
+} from "lucide-react";
+import Header from "@/layout/Header";
+import { Footer } from "react-day-picker";
 
 export default function TermsOfService() {
+  const navigate = useNavigate();
+
+  const sections = [
+    {
+      icon: FileText,
+      title: "Acceptance of Terms",
+      content: [
+        "By accessing and using JustPill, you accept and agree to be bound by these Terms of Service",
+        "If you do not agree to these terms, please do not use our services",
+        "We reserve the right to modify these terms at any time",
+        "Continued use of the service constitutes acceptance of updated terms",
+      ],
+    },
+    {
+      icon: ShoppingCart,
+      title: "Use of Service",
+      content: [
+        "You must be at least 18 years old to make purchases",
+        "You are responsible for maintaining the confidentiality of your account",
+        "You agree to provide accurate and complete information",
+        "You may not use the service for any illegal or unauthorized purpose",
+        "We reserve the right to refuse service to anyone for any reason",
+      ],
+    },
+    {
+      icon: Package,
+      title: "Orders & Products",
+      content: [
+        "All product descriptions and prices are subject to change without notice",
+        "We reserve the right to limit quantities or refuse orders",
+        "Product images are for illustration purposes and may vary from actual items",
+        "We strive to display accurate colors, but cannot guarantee exact color representation",
+        "Custom/personalized items may have longer processing times",
+      ],
+    },
+    {
+      icon: CreditCard,
+      title: "Pricing & Payment",
+      content: [
+        "All prices are in Nigerian Naira (NGN) unless otherwise stated",
+        "Prices include applicable taxes where required",
+        "Payment is processed securely through Paystack",
+        "We do not store your credit card information",
+        "Failed payments may result in order cancellation",
+        "Promotional codes and discounts cannot be combined unless stated",
+      ],
+    },
+    {
+      icon: Package,
+      title: "Shipping & Delivery",
+      content: [
+        "We offer free delivery on all orders nationwide",
+        "Delivery times are estimates and not guaranteed",
+        "You are responsible for providing accurate shipping information",
+        "We are not liable for delays caused by courier services or unforeseen circumstances",
+        "Risk of loss transfers to you upon delivery to the specified address",
+      ],
+    },
+    {
+      icon: AlertTriangle,
+      title: "Returns & Refunds",
+      content: [
+        "Returns are accepted within 7 days of delivery for unopened items",
+        "Custom/personalized items cannot be returned unless defective",
+        "Refunds will be processed to the original payment method",
+        "Shipping costs are non-refundable unless the return is due to our error",
+        "Please contact customer support to initiate a return",
+      ],
+    },
+    {
+      icon: Scale,
+      title: "Limitation of Liability",
+      content: [
+        "We are not liable for any indirect, incidental, or consequential damages",
+        "Our total liability shall not exceed the amount paid for the product",
+        "We do not guarantee uninterrupted or error-free service",
+        "You use the service at your own risk",
+        "Some jurisdictions do not allow limitation of liability, so these may not apply to you",
+      ],
+    },
+    {
+      icon: Shield,
+      title: "Intellectual Property",
+      content: [
+        "All content on this site is owned by JustPill or its licensors",
+        "You may not copy, reproduce, or distribute our content without permission",
+        "Product names and logos are trademarks of their respective owners",
+        "User-generated content (reviews, photos) grants us license to use",
+      ],
+    },
+  ];
+
   return (
-    <motion.section
-      variants={container}
-      initial="hidden"
-      animate="visible"
-      className=" mx-auto p-20 text-[#0e4132] border  bg-[#ffffff]/50"
-    >
-      {/* Header */}
-      <motion.div variants={item} className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-wide mb-2">
-          Terms of Service
-        </h1>
-        <p className="text-sm text-[#c4a68f]/70">
-          Last updated: 2nd November 2025
-        </p>
-        <div className="mt-4 h-px w-24 bg-[#c4a68f]/40" />
-      </motion.div>
+    <>
+      <Header />
+      <div className="min-h-screen pt-28 md:pt-44 pb-16 bg-gradient-to-br from-white via-[#f7fbff] to-[#fff5f7]">
+        <div className="max-w-4xl mx-auto px-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-slate-700 hover:text-[#fc7182] font-semibold mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
 
-      {/* Shipping */}
-      <motion.div
-        variants={item}
-        className="border border-[#c4a68f]/20 rounded-2xl p-6 mb-12"
-      >
-        <h2 className="text-xl font-semibold mb-4">Shipping & Deliveries</h2>
-
-        <p className="mb-4">
-          YAGSO aims to dispatch most orders within{" "}
-          <strong>7–15 working days</strong>, subject to item availability,
-          stock levels, and customer specifications.
-        </p>
-
-        <p className="mb-4">
-          A valid contact phone number and email address are required for all
-          shipments. Missing or incorrect details may cause delays.
-        </p>
-
-        <ul className="list-disc pl-6 space-y-2 mb-4 text-sm">
-          <li>
-            <strong>Lagos:</strong> Same-day delivery after courier pickup,
-            subject to confirmation.
-          </li>
-          <li>
-            <strong>Outside Lagos:</strong> 1–3 working days via DHL or similar
-            courier.
-          </li>
-          <li>
-            <strong>International:</strong> 3–5 working days via DHL, depending
-            on destination.
-          </li>
-        </ul>
-
-        <p className="text-sm mb-3">
-          Some international orders are shipped on a{" "}
-          <strong>DDU (Delivery Duties Unpaid)</strong> basis. Any customs
-          duties or taxes are the customer’s responsibility.
-        </p>
-
-        <p className="text-sm text-[#c4a68f]/80">
-          Refused or unsuccessful deliveries due to customer unavailability will
-          be returned to YAGSO, and additional charges may apply.
-        </p>
-      </motion.div>
-
-      {/* Returns */}
-      <motion.div variants={item} className="mb-12">
-        <h2 className="text-xl font-semibold mb-4">
-          Exchanges, Returns & Refunds
-        </h2>
-
-        <p className="mb-4">
-          YAGSO does not offer refunds except for damaged or faulty merchandise.
-          Customers are encouraged to review all product details carefully
-          before purchasing.
-        </p>
-
-        <p className="mb-4">
-          Exchanges are available for <strong>full-price items only</strong>{" "}
-          within <strong>7 days</strong> of delivery, subject to availability.
-        </p>
-
-        <p className="mb-4">
-          Custom-made or personalized jewelry pieces are{" "}
-          <strong>not eligible</strong> for returns or exchanges.
-        </p>
-
-        <p className="text-sm text-[#c4a68f]/80">
-          Sale and promotional items are final sale.
-        </p>
-      </motion.div>
-
-      {/* Exchange Conditions */}
-      <motion.div
-        variants={item}
-        className="border border-[#c4a68f]/20 rounded-2xl p-6 mb-12 bg-[#c4a68f]/5"
-      >
-        <h3 className="text-lg font-medium mb-3">Exchange Conditions</h3>
-        <ul className="list-disc pl-6 space-y-2 text-sm">
-          <li>Items must be returned within 7 working days.</li>
-          <li>Items must be unworn, unused, and unaltered.</li>
-          <li>Original packaging and tags must be intact.</li>
-          <li>Return shipping costs are the customer’s responsibility.</li>
-        </ul>
-      </motion.div>
-
-      {/* Damaged Goods */}
-      <motion.div variants={item} className="mb-12">
-        <h2 className="text-xl font-semibold mb-4">Damaged Goods</h2>
-        <p className="mb-4">
-          If a damaged or faulty item is received, please notify us within{" "}
-          <strong>2 business days</strong> of delivery with your order number
-          and images.
-        </p>
-        <p className="text-sm text-[#c4a68f]/80">
-          Approved replacements will be shipped at no extra cost. If
-          unavailable, a credit note or refund may be issued.
-        </p>
-      </motion.div>
-
-      {/* Sales & Cancellation */}
-      <motion.div variants={item} className="mb-12">
-        <h2 className="text-xl font-semibold mb-4">Sales & Cancellations</h2>
-        <p className="mb-4">
-          During sale periods, processing may take{" "}
-          <strong>10–21 working days</strong>.
-        </p>
-        <p className="mb-4">
-          Sale items are final sale and not eligible for returns, exchanges, or
-          alterations.
-        </p>
-        <p className="text-sm text-[#c4a68f]/80">
-          Once an order is placed on yagso.com, it is final and cannot be
-          cancelled.
-        </p>
-      </motion.div>
-      {/* Payment Methods */}
-      <motion.div variants={item} className="mb-12">
-        <h2 className="text-xl font-semibold mb-4">Payment Methods</h2>
-
-        <p className="mb-4">
-          YAGSO currently accepts payments through the following methods only:
-        </p>
-
-        <ul className="list-disc pl-6 space-y-2 text-sm mb-4">
-          <li>
-            <strong>Paystack</strong> — secure online payments via debit or
-            credit card.
-          </li>
-          <li>
-            <strong>Direct Bank Transfer</strong> — Zenith Bank
-            <div className="mt-1 text-[#0e4132]/80">
-              Account Number: <strong>1310626056</strong>
-              <br />
-              Bank Name: <strong>Zenith Bank</strong>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl p-8 shadow-lg"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2b6f99] to-[#4a8ab8] flex items-center justify-center">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2b6f99] to-[#fc7182] bg-clip-text text-transparent">
+                  Terms of Service
+                </h1>
+                <p className="text-sm text-slate-600">
+                  Last updated: January 24, 2026
+                </p>
+              </div>
             </div>
-          </li>
-        </ul>
 
-        <p className="text-sm text-[#0e4132]/80">
-          Orders paid via bank transfer will be processed only after payment has
-          been confirmed. Customers are responsible for ensuring accurate
-          payment details and reference information. Send an email to info@yagso.com
-        </p>
-      </motion.div>
+            <div className="prose prose-slate max-w-none">
+              <p className="text-slate-700 mb-8">
+                Welcome to JustPill. These Terms of Service govern your use of
+                our website and services. Please read them carefully before
+                making a purchase or using our platform.
+              </p>
 
-      {/* Contact */}
-      <motion.div variants={item} className="border-t border-[#c4a68f]/30 pt-8">
-        <h2 className="text-xl font-semibold mb-4">Contact Us</h2>
-        <ul className="space-y-2 text-sm">
-          <li>
-            Email:{" "}
-            <a
-              href="mailto:support@yagso.com"
-              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
-            >
-              support@yagso.com
-            </a>
-          </li>
-          <li>
-            Website:{" "}
-            <a
-              href="https://yagso.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline hover:opacity-80 text-[#0e4132] hover:text-[#bda290]"
-            >
-              yagso.com
-            </a>
-          </li>
-        </ul>
-      </motion.div>
-    </motion.section>
+              <div className="space-y-6">
+                {sections.map((section, index) => {
+                  const Icon = section.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="border-l-4 border-[#fc7182] pl-6 py-4"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <Icon className="w-5 h-5 text-[#fc7182]" />
+                        <h2 className="text-xl font-bold text-slate-900 m-0">
+                          {section.title}
+                        </h2>
+                      </div>
+                      <ul className="space-y-2 m-0">
+                        {section.content.map((item, idx) => (
+                          <li key={idx} className="text-slate-700">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 p-6 bg-gradient-to-r from-[#2b6f99]/5 to-[#fc7182]/5 rounded-xl">
+                <h3 className="text-lg font-bold text-slate-900 mb-3">
+                  Governing Law
+                </h3>
+                <p className="text-slate-700">
+                  These Terms shall be governed by and construed in accordance
+                  with the laws of the Federal Republic of Nigeria, without
+                  regard to its conflict of law provisions.
+                </p>
+              </div>
+
+              <div className="mt-6 p-6 bg-gradient-to-r from-[#2b6f99]/5 to-[#fc7182]/5 rounded-xl">
+                <h3 className="text-lg font-bold text-slate-900 mb-3">
+                  Contact Us
+                </h3>
+                <p className="text-slate-700 mb-2">
+                  If you have any questions about these Terms of Service, please
+                  contact us:
+                </p>
+                <ul className="text-slate-700 space-y-1">
+                  <li>📧 Email: support@justpill.com.ng</li>
+                  <li>📱 Phone: +234 800 000 0000</li>
+                  <li>📍 Location: Lagos, Nigeria</li>
+                </ul>
+              </div>
+
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                <p className="text-sm text-blue-800 m-0">
+                  <strong>Agreement:</strong> By using JustPill, you acknowledge
+                  that you have read, understood, and agree to be bound by these
+                  Terms of Service and our Privacy Policy.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }

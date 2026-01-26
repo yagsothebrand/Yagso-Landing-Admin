@@ -1,277 +1,209 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
-import PropTypes from "prop-types";
 import {
-  getAuth,
-  onAuthStateChanged,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
-  updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
 import {
-  getFirestore,
   doc,
-  getDoc,
   setDoc,
+  getDoc,
   updateDoc,
-  collection,
-  getDocs,
+  arrayUnion,
   serverTimestamp,
-  deleteDoc,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "../ui/use-toast";
+import { db, auth } from "../firebase";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [loader, setLoader] = useState(false);
-  const [emailLogs, setEmailLogs] = useState([]);
-  const [waitlistLogs, setWaitlistLogs] = useState([]);
-  const toast = useToast();
-  const [loadingGetUserInformation, setLoadingGetUserInformation] =
-    useState(true);
-  const [allUsers, setAllUsers] = useState([]); // 🔥 for admin list
-
-  const auth = getAuth();
-  const db = getFirestore();
-
-  // ✅ Fetch single user details
-  const getUserInfo = async (authId) => {
-    console.log(authId);
-    if (!authId) return null;
-    setLoadingGetUserInformation(true);
-
-    try {
-      const userRef = doc(db, "staff", authId);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userData = { id: authId, ...userSnap.data() };
-        setUser(userData);
-        getAllUsers();
-        return userData;
-      } else {
-        console.warn("No user found in Firestore with this authId");
-        return null;
-      }
-    } catch (error) {
-      toast({
-        title: "Error fetching user data:",
-        description: error?.message || error,
-      });
-
-      return null;
-    } finally {
-      setLoadingGetUserInformation(false);
-    }
-  };
-  console.log(user);
-
-  // ✅ Fetch all employees (for admin dashboard)
-  const getAllUsers = async () => {
-    setLoading(true);
-    try {
-      const querySnapshot = await getDocs(collection(db, "staff"));
-      const usersList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAllUsers(usersList);
-      setLoading(false);
-    } catch (error) {
-      toast({
-        title: "Error fetching all users:",
-        description: error?.message || error,
-      });
-
-      setLoading(false);
-    }
-  };
-
-  // ✅ Update status (active/inactive)
-  const updateUserField = async (uid, field, newStatus) => {
-    console.log(uid);
-    setLoader(true);
-    try {
-      const userRef = doc(db, "staff", uid);
-      await updateDoc(userRef, { [field]: newStatus });
-
-      await getUserInfo(user.authId);
-      setLoader(false);
-    } catch (error) {
-      setLoader(false);
-      toast({
-        title: "Error fetching all users:",
-        description: error?.message || error,
-      });
-    }
-  };
-
-  const updateUserProfile = async (uid, updates) => {
-    setLoader(true);
-    try {
-      const userRef = doc(db, "staff", uid);
-      await updateDoc(userRef, {
-        ...updates,
-        updatedAt: serverTimestamp(),
-      });
-
-      // Refresh user data
-      await getUserInfo(uid);
-      setLoader(false);
-      return { success: true };
-    } catch (error) {
-      setLoader(false);
-      console.error("Error updating user profile:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update profile",
-        variant: "destructive",
-      });
-      return { success: false, error };
-    }
-  };
-
-  const deleteUpdateUserProfile = async (uid) => {
-    try {
-      setLoader(true);
-      await deleteDoc(doc(db, "staff", uid));
-      await getAllUsers(); // refresh list
-      setLoader(false);
-      return { success: true };
-    } catch (error) {
-      toast({
-        title: "Error fetching all users:",
-        description: error?.message || error,
-      });
-
-      setLoader(false);
-      return { success: false, error: error.message };
-    }
-  };
-
-  const getEmailLogs = async () => {
-    setLoading(true);
-    try {
-      const querySnapshot = await getDocs(collection(db, "sentEmails"));
-      const usersList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log(usersList);
-      setEmailLogs(usersList);
-      setLoading(false);
-    } catch (error) {
-      toast({
-        title: "Error fetching all users:",
-        description: error?.message || error,
-      });
-
-      setLoading(false);
-    }
-  };
-  const getWaitlistLogs = async () => {
-    setLoading(true);
-    try {
-      const querySnapshot = await getDocs(collection(db, "waitlist"));
-      const usersList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log(usersList);
-      setWaitlistLogs(usersList);
-      setLoading(false);
-    } catch (error) {
-      toast({
-        title: "Error fetching all users:",
-        description: error?.message || error,
-      });
-
-      setLoading(false);
-    }
-  };
-  // if (loadingGetUserInformation && !user && !allUsers) {
-  //   return <div> Loading </div>;
-  // }
-  // ✅ Track login and update lastLogin field
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const userRef = doc(db, "staff", firebaseUser.uid);
-        const userSnap = await getDoc(userRef);
-
-        // if (userSnap.exists()) {
-        //   // update lastLogin
-        //   await updateDoc(userRef, { lastLogin: serverTimestamp() });
-        // } else {
-        //   // create doc if missing
-        //   await setDoc(userRef, {
-        //     email: firebaseUser.email,
-        //     role: "Personnel",
-        //     status: "active",
-        //     lastLogin: serverTimestamp(),
-        //   });
-        // }
-
-        await getUserInfo(firebaseUser.uid);
-        await getAllUsers();
-        await getEmailLogs();
-        await getWaitlistLogs();
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
-
-  // ✅ logout
-  const logout = async () => {
-    await signOut(auth);
-
-    setAllUsers(null);
-    localStorage.removeItem("currentPage");
-    setUser(null);
-    navigate("/");
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        allUsers,
-        getAllUsers,
-        updateUserField,
-        getEmailLogs,
-        emailLogs,
-        updateUserProfile, // Add this new function
-        loadingGetUserInformation,
-        deleteUpdateUserProfile,
-        getUserInfo,
-        setLoading,
-        getWaitlistLogs,
-        waitlistLogs,
-        loading,
-        logout,
-        loader,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
+const USER_COOKIE = "jovial_user";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
 
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // ✅ Load from cookie for instant UI
+  useEffect(() => {
+    try {
+      const savedUser = Cookies.get(USER_COOKIE);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        setUser(parsed);
+      }
+    } catch (error) {
+      console.error("Error loading user from cookie:", error);
+      Cookies.remove(USER_COOKIE, { path: "/" });
+    }
+  }, []);
+
+  const persistCookie = useCallback((u) => {
+    if (!u) {
+      Cookies.remove(USER_COOKIE, { path: "/" });
+      return;
+    }
+
+    Cookies.set(USER_COOKIE, JSON.stringify(u), {
+      expires: 30,
+      path: "/",
+      sameSite: "Lax",
+    });
+  }, []);
+
+  // ✅ Internal: refresh with a firebase auth user
+  const refreshUserWithFirebaseUser = useCallback(
+    async (firebaseUser) => {
+      if (!firebaseUser?.uid) return null;
+
+      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      const data = userDoc.exists() ? userDoc.data() : {};
+
+      const merged = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        ...data,
+      };
+
+      setUser(merged);
+      persistCookie(merged);
+      return merged;
+    },
+    [persistCookie],
+  );
+
+  // ✅ Public: refresh using current auth user (call this from anywhere)
+  const refreshUser = useCallback(async () => {
+    const firebaseUser = auth.currentUser;
+    if (!firebaseUser) return null;
+    return refreshUserWithFirebaseUser(firebaseUser);
+  }, [refreshUserWithFirebaseUser]);
+
+  // ✅ Listen to auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (firebaseUser) {
+          await refreshUserWithFirebaseUser(firebaseUser);
+        } else {
+          setUser(null);
+          persistCookie(null);
+        }
+      } catch (err) {
+        console.error("Auth state handler error:", err);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [persistCookie, refreshUserWithFirebaseUser]);
+  // AuthProvider.jsx (inside your provider)
+
+  const register = async (email, password, extra = {}) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+    await setDoc(
+      doc(db, "users", cred.user.uid),
+      {
+        email,
+        ...extra,
+        createdAt: serverTimestamp(), // ✅ better than new Date()
+      },
+      { merge: true },
+    );
+
+    // ✅ Optional but helpful: immediately sync local state/cookie
+    // so UI updates faster even before onAuthStateChanged finishes
+    await refreshUserWithFirebaseUser(cred.user);
+
+    return cred.user;
+  };
+
+  const saveBillingInfo = async (billingData, uidOverride) => {
+    const uid = uidOverride || user?.uid;
+    if (!uid) throw new Error("User not logged in");
+
+    const userRef = doc(db, "users", uid);
+
+    // if we're saving for a UID that isn't the current `user` yet,
+    // we can't safely dedupe from local state — so fetch from Firestore
+    let existingBilling = user?.uid === uid ? user.billingInfo || [] : [];
+
+    if (user?.uid !== uid) {
+      const snap = await getDoc(userRef);
+      const data = snap.exists() ? snap.data() : {};
+      existingBilling = Array.isArray(data.billingInfo) ? data.billingInfo : [];
+    }
+
+    const isDuplicate = existingBilling.some(
+      (saved) =>
+        saved.address === billingData.address &&
+        saved.city === billingData.city &&
+        saved.fullName === billingData.fullName,
+    );
+
+    if (isDuplicate) return;
+
+    await updateDoc(userRef, {
+      billingInfo: arrayUnion(billingData),
+    });
+
+    // ✅ If the local `user` matches this uid, update local state + cookie
+    if (user?.uid === uid) {
+      const updatedUser = {
+        ...user,
+        billingInfo: [...existingBilling, billingData],
+      };
+      setUser(updatedUser);
+      persistCookie(updatedUser);
+    } else {
+      // Otherwise, refresh from firebase auth user if available
+      // (helps the UI become consistent after signup)
+      if (auth.currentUser?.uid === uid) {
+        await refreshUserWithFirebaseUser(auth.currentUser);
+      }
+    }
+  };
+
+  const login = async (email, password) => {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    return cred.user; // ✅ IMPORTANT
+  };
+
+  const logout = async (clearGuestCart) => {
+    await signOut(auth);
+    persistCookie(null);
+
+    if (clearGuestCart) clearGuestCart();
+  };
+
+  const getBillingInfo = () => user?.billingInfo || [];
+  const isAdmin = Boolean(user?.isAdmin);
+
+  const value = {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    saveBillingInfo,
+    getBillingInfo,
+    isAdmin,
+    refreshUser, // ✅ now no-arg, use in ProfilePage after updateDoc
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
