@@ -421,7 +421,9 @@ export default function ShopWithVideo({
     }}
   >
     <span>EXPLORE FULL COLLECTION</span>
+    <div className="hidden group-hover:flex">
     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+  </div>
   </button>
 </motion.div>
       </div>

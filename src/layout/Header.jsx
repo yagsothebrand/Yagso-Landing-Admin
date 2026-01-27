@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, User, X, ChevronDown, LogOut, ShoppingBag } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -21,6 +21,15 @@ import CartSidebar from "@/components/CartDrawer";
 const cx = (...c) => c.filter(Boolean).join(" ");
 const BRAND = "#948179";
 
+function getCatFromSearch(search) {
+  try {
+    const params = new URLSearchParams(search || "");
+    return params.get("cat") || "";
+  } catch {
+    return "";
+  }
+}
+
 export default function HeaderDesign() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
@@ -32,34 +41,63 @@ export default function HeaderDesign() {
   const { user, logout, isAdmin } = useAuth();
   const cartCount = getCartCount();
 
-  const navLinks = {
-    left: [
-      { label: "Home", path: "/" },
-      { label: "About", path: "/about" },
-      { label: "Shop", path: "/shop" },
-      { label: "Contact", path: "/contact" },
-      { label: "Blog", path: "/blog" },
-    ],
-    bottom: [
-      { label: "Rings", path: "/shop?cat=men" },
-      { label: "Necklaces", path: "/shop?cat=women" },
-      { label: "Sets", path: "/shop?cat=kids" },
-      { label: "Earrings", path: "/shop?cat=accessories" },
-        { label: "Bracelets", path: "/shop?cat=accessories" },
-      { label: "New Arrivals", path: "/shop?cat=new" },
-    ],
-  };
+  const navLinks = useMemo(
+    () => ({
+      left: [
+        { label: "Home", path: "/" },
+        // { label: "About", path: "/about" },
+        { label: "Shop", path: "/shop" },
+        { label: "Contact", path: "/contact" },
+        { label: "Blog", path: "/blog" },
+      ],
+      bottom: [
+        { label: "Rings", path: "/shop?cat=rings", cat: "rings" },
+        { label: "Necklaces", path: "/shop?cat=necklaces", cat: "necklaces" },
+        { label: "Sets", path: "/shop?cat=sets", cat: "sets" },
+        { label: "Earrings", path: "/shop?cat=earrings", cat: "earrings" },
+        { label: "Bracelets", path: "/shop?cat=bracelets", cat: "bracelets" },
+        { label: "New Arrivals", path: "/shop?cat=new", cat: "new" },
+      ],
+    }),
+    [],
+  );
+
+  // ✅ close drawer on route change (prevents stuck drawer)
+  useEffect(() => {
+    setMenuOpen(false);
+    setShowCategories(false);
+  }, [location.pathname, location.search]);
+
+  // ✅ lock body scroll when drawer open
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [menuOpen]);
+
+  const activeCat = getCatFromSearch(location.search);
 
   const isActive = (path) => {
-    if (path.includes("?")) return location.pathname + location.search === path;
-    return location.pathname === path;
+    // exact pathname match
+    if (!path.includes("?")) return location.pathname === path;
+
+    // for /shop?cat=... treat active by cat only
+    const [pathname, qs] = path.split("?");
+    if (location.pathname !== pathname) return false;
+
+    const want = getCatFromSearch("?" + (qs || ""));
+    return want && want === activeCat;
   };
 
   const handleLogout = async () => {
     try {
-      await logout(clearGuestCart);
+      // if your logout expects a callback, keep it; if not, harmless.
+      await logout?.(clearGuestCart);
+      clearGuestCart?.(); // ✅ make sure guest cart is cleared
       toast.success("Logged out successfully");
-      setMenuOpen(false);
       navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
@@ -67,20 +105,16 @@ export default function HeaderDesign() {
     }
   };
 
-  const go = (path) => {
-    navigate(path);
-    setMenuOpen(false);
-    setShowCategories(false);
-  };
+  const go = (path) => navigate(path);
 
   return (
-    <header className="fixed left-0 right-0 backdrop-blur-sm top-0 z-[9999]">
-      {/* Top bar (taupe on white) */}
+    <header className="fixed left-0 right-0 top-0 z-[9999]">
+      {/* Top bar */}
       <div
-        className="bg-white/60 border-b"
+        className="backdrop-blur-md bg-white/40 border-b"
         style={{ borderColor: `${BRAND}33` }}
       >
-        <div className=" max-w-[1200px] mx-auto px-4 lg:px-10 flex items-center justify-between">
+        <div className="max-w-[1200px] mx-auto px-4 lg:px-10 h-[64px] flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-3">
             <button
@@ -92,7 +126,7 @@ export default function HeaderDesign() {
               <Menu className="w-5 h-5" style={{ color: BRAND }} />
             </button>
 
-            {/* Desktop Nav */}
+            {/* Desktop nav */}
             <ul className="hidden md:flex items-center gap-6 text-[13px] tracking-[0.14em] uppercase">
               {navLinks.left.map((item) => (
                 <li key={item.path} className="relative group">
@@ -101,14 +135,13 @@ export default function HeaderDesign() {
                     className={cx(
                       "transition",
                       isActive(item.path)
-                        ? "text-slate-400"
+                        ? "text-slate-900"
                         : "text-[#948179] hover:text-slate-900",
                     )}
                   >
                     {item.label}
                   </Link>
 
-                  {/* underline */}
                   <span
                     className={cx(
                       "absolute -bottom-2 left-0 h-[1px] transition-all duration-300",
@@ -123,7 +156,7 @@ export default function HeaderDesign() {
             </ul>
           </div>
 
-          {/* Logo */}
+          {/* Logo (use ONE asset) */}
           <Link to="/" className="shrink-0">
             <img
               src="/logs.png"
@@ -159,10 +192,7 @@ export default function HeaderDesign() {
                   {user && (
                     <span
                       className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border"
-                      style={{
-                        backgroundColor: BRAND,
-                        borderColor: "white",
-                      }}
+                      style={{ backgroundColor: BRAND, borderColor: "white" }}
                     />
                   )}
                 </button>
@@ -171,7 +201,8 @@ export default function HeaderDesign() {
               {!user ? (
                 <DropdownMenuContent
                   align="end"
-                  className="w-56 rounded-sm bg-white"
+                  sideOffset={8}
+                  className="w-56 rounded-sm bg-white z-[10000]"
                 >
                   <DropdownMenuLabel>Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -183,7 +214,8 @@ export default function HeaderDesign() {
               ) : (
                 <DropdownMenuContent
                   align="end"
-                  className="w-56 rounded-sm bg-white/80"
+                  sideOffset={8}
+                  className="w-56 rounded-sm bg-white z-[10000]"
                 >
                   <DropdownMenuLabel>
                     <div className="flex flex-col">
@@ -228,9 +260,9 @@ export default function HeaderDesign() {
         </div>
       </div>
 
-      {/* Category bar (white, taupe links) */}
+      {/* Category bar */}
       <nav
-        className="hidden md:block bg-white/80 border-b"
+        className="hidden md:block backdrop-blur-md bg-white/70 border-b"
         style={{ borderColor: `${BRAND}26` }}
       >
         <div className="max-w-[1200px] mx-auto px-4 lg:px-10 h-[46px] flex items-center justify-center">
@@ -275,14 +307,18 @@ export default function HeaderDesign() {
             >
               {/* Drawer header */}
               <div
-                className="p-1 flex items-center justify-between border-b"
+                className="p-3 flex items-center justify-between border-b"
                 style={{ borderColor: `${BRAND}26` }}
               >
-                <Link to="/" className="shrink-0">
+                <Link
+                  to="/"
+                  className="shrink-0"
+                  onClick={() => setMenuOpen(false)}
+                >
                   <img
-                    src="/logo.png"
+                    src="/logs.png"
                     alt="Yagso"
-                    className="w-[6rem]  object-contain"
+                    className="w-[6rem] object-contain"
                   />
                 </Link>
 
@@ -431,8 +467,6 @@ export default function HeaderDesign() {
                   </div>
                 )}
               </div>
-
-              {/* Drawer footer */}
             </motion.aside>
           </>
         )}
@@ -440,4 +474,3 @@ export default function HeaderDesign() {
     </header>
   );
 }
-

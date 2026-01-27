@@ -11,20 +11,20 @@ export default function CTAFooter() {
   return (
     <footer className="max-w-4xl mx-auto px-4 mt-20 pb-20">
       <div
-        className="relative overflow-hidden border bg-[#948179]/50 shadow-sm"
+        className="relative overflow-hidden border bg-[#948179] shadow-sm"
         style={{ borderColor: BORDER }}
       >
         {/* subtle taupe wash */}
         <div className="pointer-events-none absolute inset-0">
           <div
-            className="absolute -top-24 -right-24 h-[340px] w-[340px] rounded-full blur-3xl opacity-25"
+            className="absolute -top-24 -right-24 h-[340px] w-[340px] rounded-sm blur-3xl opacity-25"
             style={{
               background:
                 "radial-gradient(circle at 30% 30%, rgba(148,129,121,0.25), transparent 65%)",
             }}
           />
           <div
-            className="absolute -bottom-28 -left-28 h-[360px] w-[360px] rounded-full blur-3xl opacity-20"
+            className="absolute -bottom-28 -left-28 h-[360px] w-[360px] rounded-sm blur-3xl opacity-20"
             style={{
               background:
                 "radial-gradient(circle at 70% 70%, rgba(148,129,121,0.18), transparent 65%)",

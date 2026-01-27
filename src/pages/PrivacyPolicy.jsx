@@ -1,7 +1,22 @@
 // PrivacyPolicy.jsx
+"use client";
+
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Shield, Lock, Eye, Database, UserCheck, Mail } from "lucide-react";
+import {
+  ArrowLeft,
+  Shield,
+  Lock,
+  Eye,
+  Database,
+  UserCheck,
+  Mail,
+} from "lucide-react";
+import HeaderDesign from "@/layout/Header";
+import Footer from "@/layout/Footer";
+
+const BRAND = "#948179";
+const DARK = "#0f172a";
 
 export default function PrivacyPolicy() {
   const navigate = useNavigate();
@@ -11,157 +26,184 @@ export default function PrivacyPolicy() {
       icon: Database,
       title: "Information We Collect",
       content: [
-        "Email address and phone number for order processing and communication",
-        "Billing information including name, address, city, state, and postal code",
-        "Order history and shopping cart data",
-        "Device information and browsing activity through cookies",
-        "Payment information processed securely through Paystack (we do not store card details)"
-      ]
+        "Email address and phone number for order processing",
+        "Billing details including name and delivery address",
+        "Order history and cart activity",
+        "Device and browser data via cookies",
+        "Payments are securely processed by Paystack — we do not store card details",
+      ],
     },
     {
       icon: Eye,
       title: "How We Use Your Information",
       content: [
-        "Process and fulfill your orders",
-        "Send order confirmations and shipping updates via email/SMS",
-        "Provide customer support and respond to inquiries",
-        "Improve our products and services",
-        "Personalize your shopping experience",
-        "Send promotional offers (you can opt-out anytime)",
-        "Detect and prevent fraud"
-      ]
+        "To process and deliver your orders",
+        "To communicate order updates and support requests",
+        "To improve our website, collections, and services",
+        "To personalize your shopping experience",
+        "To send curated updates (you can opt out anytime)",
+      ],
     },
     {
       icon: Lock,
       title: "Data Storage & Security",
       content: [
-        "Your data is stored securely using Google Firebase with industry-standard encryption",
-        "Cart data is stored locally in your browser and synced to our secure servers when you log in",
-        "Payment processing is handled by Paystack with PCI-DSS compliance",
-        "We use cookies to remember your cart and preferences",
-        "Guest users are assigned a unique ID to track their cart and orders",
-        "Your password is encrypted and never stored in plain text"
-      ]
+        "Your data is securely stored using Firebase infrastructure",
+        "Passwords are encrypted and never stored in plain text",
+        "Payments are handled via Paystack with PCI compliance",
+        "We take reasonable measures to protect against unauthorized access",
+      ],
     },
     {
       icon: UserCheck,
       title: "Data Sharing",
       content: [
-        "We DO NOT sell your personal information to third parties",
-        "We share data with Paystack for payment processing only",
-        "Shipping information is shared with delivery partners to fulfill orders",
-        "We may share data if required by law or to protect our rights",
-        "Anonymous analytics data may be used to improve our services"
-      ]
+        "We do not sell or rent your personal information",
+        "Shipping data is shared only with delivery partners",
+        "Payment details are shared only with Paystack",
+        "We may disclose information if required by law",
+      ],
     },
     {
       icon: Shield,
       title: "Your Rights",
       content: [
-        "Access your personal data at any time through your account",
-        "Request deletion of your account and associated data",
-        "Update or correct your information",
-        "Opt-out of marketing communications",
-        "Export your order history",
-        "Withdraw consent for data processing (may affect service availability)"
-      ]
+        "Access and update your account information",
+        "Request deletion of your data",
+        "Opt out of marketing communications",
+        "Request a copy of your order history",
+      ],
     },
     {
       icon: Mail,
-      title: "Cookies & Tracking",
+      title: "Cookies",
       content: [
-        "We use cookies to remember your cart items across sessions",
-        "Guest user IDs are stored in cookies for 1 year",
-        "Analytics cookies help us understand how you use our site",
-        "You can disable cookies in your browser, but this may affect functionality"
-      ]
-    }
+        "Cookies help us remember your cart and preferences",
+        "Guest sessions are stored temporarily",
+        "Disabling cookies may affect site functionality",
+      ],
+    },
   ];
 
   return (
-    <div className="min-h-screen pt-20 pb-16 bg-gradient-to-br from-white via-[#f7fbff] to-[#fff5f7]">
-      <div className="max-w-4xl mx-auto px-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-slate-700 hover:text-[#fc7182] font-semibold mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
+    <>
+      <HeaderDesign />
+      <div className="min-h-screen pt-20 md:pt-36 pb-24 bg-[#fbfaf8]">
+        <div className="max-w-[820px] mx-auto px-4">
+          {/* Back */}
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-xs tracking-[0.14em] uppercase mb-10 transition"
+            style={{ color: BRAND }}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-8 shadow-lg"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2b6f99] to-[#4a8ab8] flex items-center justify-center">
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2b6f99] to-[#fc7182] bg-clip-text text-transparent">
+          {/* Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border rounded-sm p-10"
+            style={{ borderColor: `${BRAND}33` }}
+          >
+            {/* Header */}
+            <div className="mb-12">
+              <p
+                className="text-xs tracking-[0.18em] uppercase mb-2"
+                style={{ color: BRAND }}
+              >
+                Legal
+              </p>
+
+              <h1
+                className="text-[32px] md:text-[38px] leading-tight font-serif mb-3"
+                style={{ color: DARK }}
+              >
                 Privacy Policy
               </h1>
-              <p className="text-sm text-slate-600">Last updated: January 24, 2026</p>
-            </div>
-          </div>
 
-          <div className="prose prose-slate max-w-none">
-            <p className="text-slate-700 mb-8">
-              At JustPill, we respect your privacy and are committed to protecting your personal information. 
-              This Privacy Policy explains how we collect, use, store, and protect your data when you use our services.
+              <p className="text-sm text-slate-500">
+                Last updated: January 24, 2026
+              </p>
+            </div>
+
+            {/* Intro */}
+            <p className="text-[15px] leading-relaxed text-slate-700 mb-14 max-w-prose">
+              At YAGSO, your privacy matters. This policy explains how we
+              collect, use, and protect your personal information when you
+              interact with our website and services.
             </p>
 
-            <div className="space-y-6">
+            {/* Sections */}
+            <div className="space-y-14">
               {sections.map((section, index) => {
                 const Icon = section.icon;
+
                 return (
-                  <motion.div
+                  <motion.section
                     key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border-l-4 border-[#2b6f99] pl-6 py-4"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.06 }}
+                    className="space-y-4"
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <Icon className="w-5 h-5 text-[#2b6f99]" />
-                      <h2 className="text-xl font-bold text-slate-900 m-0">
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-4 h-4" style={{ color: BRAND }} />
+                      <h2
+                        className="text-[16px] font-semibold tracking-wide"
+                        style={{ color: DARK }}
+                      >
                         {section.title}
                       </h2>
                     </div>
-                    <ul className="space-y-2 m-0">
+
+                    <ul className="space-y-2 pl-7 list-disc text-[14px] text-slate-700">
                       {section.content.map((item, idx) => (
-                        <li key={idx} className="text-slate-700">
-                          {item}
-                        </li>
+                        <li key={idx}>{item}</li>
                       ))}
                     </ul>
-                  </motion.div>
+
+                    <div
+                      className="pt-6 border-b"
+                      style={{ borderColor: `${BRAND}26` }}
+                    />
+                  </motion.section>
                 );
               })}
             </div>
 
-            <div className="mt-8 p-6 bg-gradient-to-r from-[#2b6f99]/5 to-[#fc7182]/5 rounded-xl">
-              <h3 className="text-lg font-bold text-slate-900 mb-3">Contact Us</h3>
-              <p className="text-slate-700 mb-2">
-                If you have any questions about this Privacy Policy or how we handle your data, please contact us:
+            {/* Contact */}
+            <div className="mt-14">
+              <h3
+                className="text-[14px] font-semibold tracking-wide mb-3"
+                style={{ color: DARK }}
+              >
+                Contact
+              </h3>
+
+              <p className="text-[14px] text-slate-700 max-w-prose">
+                For questions regarding this Privacy Policy or your data, please
+                contact us:
               </p>
-              <ul className="text-slate-700 space-y-1">
-                <li>📧 Email: privacy@justpill.com</li>
-                <li>📱 Phone: +234 800 000 0000</li>
-                <li>📍 Location: Lagos, Nigeria</li>
+
+              <ul className="mt-4 space-y-1 text-[14px] text-slate-700">
+                <li>Email: support@yagso.com</li>
+                <li>Phone: +234 915 348 0722</li>
+                <li>Lagos, Nigeria</li>
               </ul>
             </div>
 
-            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-              <p className="text-sm text-yellow-800 m-0">
-                <strong>Note:</strong> We may update this Privacy Policy from time to time. 
-                We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.
-              </p>
+            {/* Note */}
+            <div className="mt-12 text-xs text-slate-500">
+              This policy may be updated periodically. Continued use of our
+              website constitutes acceptance of any changes.
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

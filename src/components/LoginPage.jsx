@@ -53,14 +53,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfaf8]">
+    <div className="min-h-screen pt-20 bg-[#fbfaf8]">
       {/* Top navigation bar */}
      
 
       {/* Main content */}
-      <div className="max-w-md mx-auto px-4 py-12">
+      <div className="max-w-md mx-auto px-4">
         {/* Header */}
-        <div className="mb-6">
+        <div className="">
           <p className="text-[12px] tracking-[0.18em] uppercase" style={{ color: BRAND }}>
             Account Access
           </p>

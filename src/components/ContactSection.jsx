@@ -19,7 +19,8 @@ const BRAND = "#948179";
 const BORDER = `${BRAND}26`;
 const cx = (...c) => c.filter(Boolean).join(" ");
 
-export default function ContactSection() {
+export default function ContactSection({formOpen, setFormOpen}) {
+
   const options = useMemo(
     () => [
       {
@@ -58,7 +59,7 @@ export default function ContactSection() {
               style={{ borderColor: BORDER }}
             >
               <span
-                className="h-1.5 w-1.5 rounded-full"
+                className="h-1.5 w-1.5 rounded-sm"
                 style={{ backgroundColor: BRAND }}
               />
               <span className="text-[10px] tracking-[0.22em] uppercase font-semibold text-slate-600">
@@ -138,7 +139,7 @@ export default function ContactSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, ease: "easeOut" }}
                 >
-                  <ContactInlineForm selected={selected} />
+                  <ContactInlineForm selected={selected} formOpen={formOpen} setFormOpen={setFormOpen} />
                 </motion.div>
               </CardContent>
             </CollapsibleContent>

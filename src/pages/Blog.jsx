@@ -18,7 +18,7 @@ export default function Blog() {
   };
 
   return (
-    <main className="bg-white/10">
+    <main className="bg-white/10 pt-10 md:pt-24">
       <Header />
       {/* <BlogBanner /> */}
 

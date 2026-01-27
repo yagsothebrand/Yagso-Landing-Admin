@@ -32,12 +32,12 @@ function starterFor(id) {
   return "Hi YAGSO, I need help with:\n";
 }
 
-export default function ContactInlineForm({ selected }) {
+export default function ContactInlineForm({ selected , formOpen, setFormOpen}) {
   const { user } = useAuth();
 
   const starter = useMemo(() => starterFor(selected?.id), [selected?.id]);
 
-  const [formOpen, setFormOpen] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: user?.email || "",

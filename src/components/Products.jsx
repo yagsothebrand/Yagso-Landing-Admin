@@ -57,10 +57,16 @@ const SHOP_PAGE_SIZE = 20;
 const HOME_PREVIEW_COUNT = 6;
 
 // Luxury Product Card Component (from ShopWithVideo)
-function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onView }) {
+function LuxuryProductCard({
+  product,
+  index = 0,
+  isAdmin,
+  onEdit,
+  onDelete,
+  onView,
+}) {
   const { addToCart, formatPrice } = useProducts();
   const navigate = useNavigate();
-  const [hovered, setHovered] = useState(false);
 
   const images = Array.isArray(product?.images) ? product.images : [];
   const mainImage = images?.[0] || "/placeholder.svg";
@@ -74,24 +80,35 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
     .map((v) => Number(v?.price || 0))
     .filter((n) => Number.isFinite(n));
 
-  const minVariantPrice = variantPrices.length ? Math.min(...variantPrices) : basePrice;
+  const minVariantPrice = variantPrices.length
+    ? Math.min(...variantPrices)
+    : basePrice;
   const showFrom = hasVariants && variantPrices.length > 0;
   const displayPrice = showFrom ? minVariantPrice : basePrice;
 
   const baseStock = Number(product?.stock || 0);
-  const variantStockSum = variants.reduce((sum, v) => sum + Number(v?.stock || 0), 0);
+  const variantStockSum = variants.reduce(
+    (sum, v) => sum + Number(v?.stock || 0),
+    0,
+  );
   const displayStock = hasVariants ? variantStockSum : baseStock;
 
   const hasCustomFields = product?.customFields?.length > 0;
-  const hasRequiredCustomFields = product?.customFields?.some((f) => !!f.required) || false;
-  const hasRequiredTextExtra = product?.extras?.some((x) => x?.type === "text" && x?.requiredText) || false;
+  const hasRequiredCustomFields =
+    product?.customFields?.some((f) => !!f.required) || false;
+  const hasRequiredTextExtra =
+    product?.extras?.some((x) => x?.type === "text" && x?.requiredText) ||
+    false;
 
   const isLowStock = displayStock > 0 && displayStock <= 5;
   const isFeatured = product?.isFeatured || false;
   const isDiscounted = product?.isDiscounted && product?.discountPercentage > 0;
   const discountPercent = product?.discountPercentage || 0;
 
-  const originalPrice = isDiscounted && discountPercent > 0 ? displayPrice / (1 - discountPercent / 100) : null;
+  const originalPrice =
+    isDiscounted && discountPercent > 0
+      ? displayPrice / (1 - discountPercent / 100)
+      : null;
 
   const goToDetails = () => navigate(`/product/${product.id}`);
 
@@ -109,15 +126,16 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
       return;
     }
 
-    const selectedVariant = hasVariants && variants[0]
-      ? {
-          id: variants[0].id,
-          name: variants[0].name,
-          price: Number(variants[0].price || 0),
-          stock: Number(variants[0].stock || 0),
-          description: variants[0].description || "",
-        }
-      : null;
+    const selectedVariant =
+      hasVariants && variants[0]
+        ? {
+            id: variants[0].id,
+            name: variants[0].name,
+            price: Number(variants[0].price || 0),
+            stock: Number(variants[0].stock || 0),
+            description: variants[0].description || "",
+          }
+        : null;
 
     addToCart(product, 1, selectedVariant, {}, []);
   };
@@ -125,8 +143,6 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
   return (
     <motion.article
       className="h-full group relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -137,11 +153,11 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
     >
       {/* Glow Effect */}
       <motion.div
-        className="absolute -inset-2 md:-inset-3 rounded-sm opacity-0 blur-xl transition-opacity duration-700"
+        className="absolute -inset-2 md:-inset-3 rounded-sm blur-xl transition-opacity duration-700"
         style={{
           background: `radial-gradient(circle at center, ${BRAND}12, transparent 70%)`,
         }}
-        animate={{ opacity: hovered ? 1 : 0 }}
+        animate={{ opacity: 1 }}
       />
 
       <div className="relative h-full flex flex-col bg-white rounded-sm overflow-hidden transition-all duration-500 border border-slate-100/50 hover:border-slate-200 hover:shadow-lg">
@@ -153,7 +169,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={hovered ? hoverImage : mainImage}
+              key={hoverImage}
               className="absolute inset-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -161,11 +177,11 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
               transition={{ duration: 0.4 }}
             >
               <motion.img
-                src={hovered ? hoverImage : mainImage}
+                src={hoverImage}
                 alt={product?.name || "Product"}
                 className="w-full h-full object-cover"
                 animate={{
-                  scale: hovered ? 1.05 : 1,
+                  scale: 1.05,
                 }}
                 transition={{
                   duration: 0.6,
@@ -180,9 +196,10 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
           <motion.div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.04) 100%)",
+              background:
+                "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.04) 100%)",
             }}
-            animate={{ opacity: hovered ? 1 : 0.6 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           />
 
@@ -231,7 +248,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
 
           {/* Admin Controls */}
           {isAdmin && (
-            <div className="absolute top-1.5 md:top-2 right-1.5 md:right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <div className="absolute top-1.5 md:top-2 right-1.5 md:right-2 flex gap-1 transition-opacity z-10">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -275,9 +292,9 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
 
           {/* Quick Actions - Desktop */}
           <motion.div
-            className="hidden md:block absolute inset-x-0 bottom-0 p-2 md:p-3"
+            className="block absolute inset-x-0 bottom-0 p-2 md:p-3"
             initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 15 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
             <div className="flex gap-1.5">
@@ -291,7 +308,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
                 style={{ color: "#0f172a" }}
               >
                 <Eye className="w-3.5 h-3.5" style={{ color: BRAND }} />
-                <span className="hidden sm:inline">VIEW</span>
+                <span className="inline">VIEW</span>
               </button>
 
               <button
@@ -301,7 +318,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
                 className={cn(
                   "flex-1 h-9 rounded-sm text-[10px] font-bold tracking-wide inline-flex items-center justify-center gap-1 transition-all duration-300 shadow-md hover:shadow-lg",
                   "disabled:opacity-40 disabled:cursor-not-allowed",
-                  "hover:scale-[1.02] active:scale-[0.98]"
+                  "hover:scale-[1.02] active:scale-[0.98]",
                 )}
                 style={{
                   background: displayStock === 0 ? "#cbd5e1" : BRAND,
@@ -309,7 +326,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
                 }}
               >
                 <ShoppingCart className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">ADD</span>
+                <span className="inline">ADD</span>
               </button>
             </div>
           </motion.div>
@@ -328,7 +345,9 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
               </span>
             )}
             {product?.sku && (
-              <span className="text-[8px] text-slate-400 font-semibold">#{product.sku}</span>
+              <span className="text-[8px] text-slate-400 font-semibold">
+                #{product.sku}
+              </span>
             )}
           </div>
 
@@ -383,7 +402,9 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
                 <p
                   className={cn(
                     "font-bold text-slate-900",
-                    isDiscounted ? "text-xs md:text-sm" : "text-[11px] md:text-xs"
+                    isDiscounted
+                      ? "text-xs md:text-sm"
+                      : "text-[11px] md:text-xs",
                   )}
                 >
                   {formatPrice(displayPrice)}
@@ -411,7 +432,7 @@ function LuxuryProductCard({ product, index = 0, isAdmin, onEdit, onDelete, onVi
               className={cn(
                 "flex-1 h-7 rounded-sm text-[9px] font-bold tracking-wide inline-flex items-center justify-center gap-0.5 transition-all duration-300",
                 "disabled:opacity-40 disabled:cursor-not-allowed",
-                "active:scale-95"
+                "active:scale-95",
               )}
               style={{
                 background: displayStock === 0 ? "#cbd5e1" : BRAND,
@@ -459,7 +480,7 @@ export default function ShopPage() {
         (p) =>
           p.name?.toLowerCase().includes(q) ||
           p.description?.toLowerCase().includes(q) ||
-          p.category?.toLowerCase().includes(q)
+          p.category?.toLowerCase().includes(q),
       );
     }
 
@@ -468,10 +489,14 @@ export default function ShopPage() {
     }
 
     if (priceRange.min) {
-      filtered = filtered.filter((p) => Number(p.price) >= Number(priceRange.min));
+      filtered = filtered.filter(
+        (p) => Number(p.price) >= Number(priceRange.min),
+      );
     }
     if (priceRange.max) {
-      filtered = filtered.filter((p) => Number(p.price) <= Number(priceRange.max));
+      filtered = filtered.filter(
+        (p) => Number(p.price) <= Number(priceRange.max),
+      );
     }
 
     switch (sortBy) {
@@ -539,7 +564,12 @@ export default function ShopPage() {
 
   return (
     <>
-      <div className="min-h-screen" style={{ background: `linear-gradient(to bottom, ${WARM_CREAM}, #ffffff)` }}>
+      <div
+        className="min-h-screen"
+        style={{
+          background: `linear-gradient(to bottom, ${WARM_CREAM}, #ffffff)`,
+        }}
+      >
         {/* Subtle decorative elements */}
         <div className="pointer-events-none fixed inset-0 opacity-[0.015]">
           <div
@@ -554,7 +584,11 @@ export default function ShopPage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-6 pb-8 md:pb-12">
           {/* Premium Header */}
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6 md:mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 md:mb-8"
+          >
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 md:gap-4">
               <div>
                 <motion.div
@@ -564,7 +598,10 @@ export default function ShopPage() {
                   className="inline-flex items-center gap-2 mb-2 md:mb-3"
                 >
                   <div className="h-[1px] w-8 md:w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
-                  <span className="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-bold" style={{ color: BRAND }}>
+                  <span
+                    className="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-bold"
+                    style={{ color: BRAND }}
+                  >
                     Discover
                   </span>
                   <div className="h-[1px] w-8 md:w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
@@ -594,8 +631,12 @@ export default function ShopPage() {
                 )}
 
                 <div className="text-xs md:text-sm">
-                  <span className="font-semibold text-slate-900">{filteredProducts.length}</span>
-                  <span className="text-slate-500 ml-1">{filteredProducts.length === 1 ? "item" : "items"}</span>
+                  <span className="font-semibold text-slate-900">
+                    {filteredProducts.length}
+                  </span>
+                  <span className="text-slate-500 ml-1">
+                    {filteredProducts.length === 1 ? "item" : "items"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -603,8 +644,16 @@ export default function ShopPage() {
 
           {/* Advanced Filter Bar */}
           {!isPreviewMode && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-4 md:mb-6">
-              <div className="bg-white/80 backdrop-blur-lg border rounded-sm md:rounded-sm shadow-lg p-3 md:p-4 lg:p-5" style={{ borderColor: `${BRAND}20` }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-4 md:mb-6"
+            >
+              <div
+                className="bg-white/80 backdrop-blur-lg border rounded-sm md:rounded-sm shadow-lg p-3 md:p-4 lg:p-5"
+                style={{ borderColor: `${BRAND}20` }}
+              >
                 {/* Top Row: Search + Sort */}
                 <div className="flex flex-col sm:flex-row gap-2 md:gap-3 mb-3 md:mb-4">
                   {/* Search */}
@@ -677,7 +726,9 @@ export default function ShopPage() {
                         onClick={() => setSelectedCategory(cat.id)}
                         className={cn(
                           "inline-flex items-center gap-1 md:gap-1.5 px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-sm text-[10px] md:text-xs font-bold tracking-wide border transition-all duration-300",
-                          active ? "text-white shadow-lg" : "text-slate-700 bg-white/50 hover:bg-white hover:shadow-md"
+                          active
+                            ? "text-white shadow-lg"
+                            : "text-slate-700 bg-white/50 hover:bg-white hover:shadow-md",
                         )}
                         style={{
                           backgroundColor: active ? BRAND : undefined,
@@ -686,7 +737,9 @@ export default function ShopPage() {
                       >
                         <Icon className="w-3 md:w-3.5 h-3 md:h-3.5" />
                         <span className="hidden sm:inline">{cat.label}</span>
-                        <span className="sm:hidden">{cat.label.split(" ")[0]}</span>
+                        <span className="sm:hidden">
+                          {cat.label.split(" ")[0]}
+                        </span>
                       </motion.button>
                     );
                   })}
@@ -694,19 +747,27 @@ export default function ShopPage() {
 
                 {/* Price Range Pills */}
                 <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
-                  <span className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider">Price:</span>
+                  <span className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Price:
+                  </span>
                   {PRICE_RANGES.map((range) => {
-                    const active = range.min === priceRange.min && range.max === priceRange.max;
+                    const active =
+                      range.min === priceRange.min &&
+                      range.max === priceRange.max;
 
                     return (
                       <motion.button
                         key={range.label}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => setPriceRange({ min: range.min, max: range.max })}
+                        onClick={() =>
+                          setPriceRange({ min: range.min, max: range.max })
+                        }
                         className={cn(
                           "px-2 md:px-3 py-1 md:py-1.5 rounded-sm text-[10px] md:text-xs font-semibold border transition-all duration-300",
-                          active ? "text-white shadow-md" : "text-slate-600 bg-white/50 hover:bg-white hover:shadow-sm"
+                          active
+                            ? "text-white shadow-md"
+                            : "text-slate-600 bg-white/50 hover:bg-white hover:shadow-sm",
                         )}
                         style={{
                           backgroundColor: active ? BRAND : undefined,
@@ -725,26 +786,41 @@ export default function ShopPage() {
           {/* Products Grid */}
           <main>
             {!loading && !isPreviewMode && isShopRoute && totalPages > 1 && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-3 md:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs md:text-sm">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mb-3 md:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs md:text-sm"
+              >
                 <div className="text-slate-600">
                   Showing{" "}
                   <span className="font-semibold text-slate-900">
-                    {(page - 1) * SHOP_PAGE_SIZE + 1}–{Math.min(page * SHOP_PAGE_SIZE, filteredProducts.length)}
+                    {(page - 1) * SHOP_PAGE_SIZE + 1}–
+                    {Math.min(page * SHOP_PAGE_SIZE, filteredProducts.length)}
                   </span>{" "}
-                  of <span className="font-semibold text-slate-900">{filteredProducts.length}</span>
+                  of{" "}
+                  <span className="font-semibold text-slate-900">
+                    {filteredProducts.length}
+                  </span>
                 </div>
 
                 <div className="text-slate-600">
-                  Page <span className="font-semibold text-slate-900">{page}</span> of{" "}
-                  <span className="font-semibold text-slate-900">{totalPages}</span>
+                  Page{" "}
+                  <span className="font-semibold text-slate-900">{page}</span>{" "}
+                  of{" "}
+                  <span className="font-semibold text-slate-900">
+                    {totalPages}
+                  </span>
                 </div>
               </motion.div>
             )}
 
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
                 {Array.from({ length: 12 }).map((_, i) => (
-                  <div key={i} className="aspect-[3/4] bg-slate-100 rounded-sm animate-pulse" />
+                  <div
+                    key={i}
+                    className="aspect-[3/4] bg-slate-100 rounded-sm animate-pulse"
+                  />
                 ))}
               </div>
             ) : visibleProducts.length === 0 ? (
@@ -756,12 +832,22 @@ export default function ShopPage() {
               >
                 <div
                   className="w-12 md:w-16 h-12 md:h-16 mx-auto rounded-sm md:rounded-sm border-2 flex items-center justify-center mb-3 md:mb-4"
-                  style={{ borderColor: `${BRAND}30`, backgroundColor: `${BRAND}08` }}
+                  style={{
+                    borderColor: `${BRAND}30`,
+                    backgroundColor: `${BRAND}08`,
+                  }}
                 >
-                  <Package className="w-6 md:w-8 h-6 md:h-8" style={{ color: BRAND }} />
+                  <Package
+                    className="w-6 md:w-8 h-6 md:h-8"
+                    style={{ color: BRAND }}
+                  />
                 </div>
-                <h3 className="text-lg md:text-xl font-semibold text-slate-900 mb-2">No products found</h3>
-                <p className="text-xs md:text-sm text-slate-600 mb-4 md:mb-6">Try adjusting your filters or search terms</p>
+                <h3 className="text-lg md:text-xl font-semibold text-slate-900 mb-2">
+                  No products found
+                </h3>
+                <p className="text-xs md:text-sm text-slate-600 mb-4 md:mb-6">
+                  Try adjusting your filters or search terms
+                </p>
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
@@ -781,8 +867,8 @@ export default function ShopPage() {
                   transition={{ delay: 0.3 }}
                   className={
                     isPreviewMode
-                      ? "grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4"
-                      : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4"
+                      ? "grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
+                      : "grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
                   }
                 >
                   {visibleProducts.map((product, index) => (
@@ -803,7 +889,12 @@ export default function ShopPage() {
 
                 {/* Preview CTA */}
                 {isPreviewMode && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex justify-center mt-6 md:mt-10">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="flex justify-center mt-6 md:mt-10"
+                  >
                     <a
                       href="/shop"
                       className="group inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-sm text-xs md:text-sm font-bold tracking-wide border-2 transition-all duration-300 hover:shadow-xl"
@@ -830,7 +921,11 @@ export default function ShopPage() {
 
                 {/* Premium Pagination */}
                 {isShopRoute && totalPages > 1 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 md:mt-12 flex items-center justify-center gap-1.5 md:gap-2">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-8 md:mt-12 flex items-center justify-center gap-1.5 md:gap-2"
+                  >
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -846,11 +941,17 @@ export default function ShopPage() {
                     <div className="flex items-center gap-1 md:gap-1.5">
                       {Array.from({ length: totalPages }).map((_, idx) => {
                         const p = idx + 1;
-                        const show = p === 1 || p === totalPages || Math.abs(p - page) <= 1;
+                        const show =
+                          p === 1 ||
+                          p === totalPages ||
+                          Math.abs(p - page) <= 1;
 
                         if (!show && Math.abs(p - page) === 2) {
                           return (
-                            <span key={p} className="px-1 md:px-2 text-slate-400 text-xs md:text-sm">
+                            <span
+                              key={p}
+                              className="px-1 md:px-2 text-slate-400 text-xs md:text-sm"
+                            >
                               •••
                             </span>
                           );
@@ -869,7 +970,10 @@ export default function ShopPage() {
                               backgroundColor: p === page ? BRAND : "white",
                               color: p === page ? "white" : "#334155",
                               borderColor: p === page ? BRAND : `${BRAND}20`,
-                              boxShadow: p === page ? "0 4px 12px rgba(148, 129, 121, 0.3)" : undefined,
+                              boxShadow:
+                                p === page
+                                  ? "0 4px 12px rgba(148, 129, 121, 0.3)"
+                                  : undefined,
                             }}
                           >
                             {p}
@@ -896,7 +1000,13 @@ export default function ShopPage() {
         </div>
       </div>
 
-      {!isPreviewMode && <ProductFormModal isOpen={modalOpen} onClose={() => setModalOpen(false)} product={editProduct} />}
+      {!isPreviewMode && (
+        <ProductFormModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          product={editProduct}
+        />
+      )}
     </>
   );
 }

@@ -5,10 +5,12 @@ import Footer from "../layout/Footer";
 import Cart from "../components/Cart";
 import ContactSection from "@/components/ContactSection";
 import { useNavigate } from "react-router-dom";
+import { set } from "date-fns";
 
 export default function Contact() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState([]);
+  const [formOpen, setFormOpen] = useState(true);
   const navigate = useNavigate();
   const addToCart = (item) => {
     setCart([...cart, { ...item, id: Math.random() }]);
@@ -31,7 +33,7 @@ export default function Contact() {
         />
       )}
 
-      <ContactSection />
+      <ContactSection formOpen={formOpen} setFormOpen={setFormOpen} />
       <Footer />
     </main>
   );

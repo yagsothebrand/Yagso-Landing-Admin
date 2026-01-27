@@ -69,7 +69,7 @@ function InfoRow({ label, value, mono }) {
 function Section({ title, children }) {
   return (
     <div
-      className="rounded-2xl border bg-white p-4 space-y-3"
+      className="rounded-sm border bg-white p-4 space-y-3"
       style={{ borderColor: BORDER }}
     >
       <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ function StatusBadge({ status = "pending" }) {
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-white"
+      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-semibold border bg-white"
       style={{ borderColor: BORDER }}
     >
       <Icon className="w-3.5 h-3.5" style={{ color: BRAND }} />
@@ -163,7 +163,7 @@ function ConfettiBurst({ show }) {
             delay: i * 0.03,
             ease: "easeOut",
           }}
-          className="absolute left-1/2 top-1/2 w-2.5 h-2.5 rounded-full"
+          className="absolute left-1/2 top-1/2 w-2.5 h-2.5 rounded-sm"
           style={{ background: colors[i % colors.length] }}
         />
       ))}
@@ -179,7 +179,7 @@ function MapEmbed({ billingInfo }) {
   );
   return (
     <div
-      className="mt-3 overflow-hidden rounded-2xl border bg-white"
+      className="mt-3 overflow-hidden rounded-sm border bg-white"
       style={{ borderColor: BORDER }}
     >
       <iframe
@@ -312,7 +312,7 @@ export default function OrdersPage() {
       <div className="min-h-screen bg-[#fbfaf8] flex items-center justify-center">
         <div className="text-center">
           <div
-            className="w-14 h-14 border-4 border-t-transparent rounded-full mx-auto mb-4"
+            className="w-14 h-14 border-4 border-t-transparent rounded-sm mx-auto mb-4"
             style={{ borderColor: BRAND, borderTopColor: "transparent" }}
           />
           <p className="text-slate-600">Loading...</p>
@@ -328,14 +328,14 @@ export default function OrdersPage() {
     <div className="min-h-screen pb-16 bg-[#fbfaf8] relative overflow-hidden">
       {/* taupe glow */}
       <div
-        className="absolute -top-20 -right-20 w-[520px] h-[520px] rounded-full blur-3xl"
+        className="absolute -top-20 -right-20 w-[520px] h-[520px] rounded-sm blur-3xl"
         style={{
           background:
             "radial-gradient(circle at 30% 30%, rgba(148,129,121,0.16), transparent 60%)",
         }}
       />
       <div
-        className="absolute -bottom-20 -left-20 w-[520px] h-[520px] rounded-full blur-3xl"
+        className="absolute -bottom-20 -left-20 w-[520px] h-[520px] rounded-sm blur-3xl"
         style={{
           background:
             "radial-gradient(circle at 70% 70%, rgba(148,129,121,0.12), transparent 60%)",
@@ -381,13 +381,13 @@ export default function OrdersPage() {
           <div className="flex flex-wrap items-center gap-2">
             {isAdmin && (
               <div
-                className="flex items-center rounded-2xl shadow-sm border p-1 bg-white"
+                className="flex items-center rounded-sm shadow-sm border p-1 bg-white"
                 style={{ borderColor: BORDER }}
               >
                 <button
                   onClick={() => setTab("all")}
                   className={cx(
-                    "px-3 py-2 rounded-xl text-sm font-semibold transition",
+                    "px-3 py-2 rounded-sm text-sm font-semibold transition",
                     tab === "all"
                       ? "text-white"
                       : "text-slate-700 hover:bg-[#f6f3ef]",
@@ -404,7 +404,7 @@ export default function OrdersPage() {
                 <button
                   onClick={() => setTab("mine")}
                   className={cx(
-                    "px-3 py-2 rounded-xl text-sm font-semibold transition",
+                    "px-3 py-2 rounded-sm text-sm font-semibold transition",
                     tab === "mine"
                       ? "text-white"
                       : "text-slate-700 hover:bg-[#f6f3ef]",
@@ -446,124 +446,128 @@ export default function OrdersPage() {
             )}
           </div>
         </div>
-        <div
-          className="mt-4 mb-5 rounded-lg border bg-white p-3 shadow-sm"
-          style={{ borderColor: BORDER }}
-        >
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
-            {/* Search */}
-            <div className="flex-1">
-              <div className="relative">
-                <input
-                  value={filters.q}
-                  onChange={(e) =>
-                    setFilters((p) => ({ ...p, q: e.target.value }))
-                  }
-                  placeholder="Search: order id, email, phone, product, pay ref…"
-                  className="w-full h-11 rounded-2xl border bg-[#fffdfb] px-4 pr-10 text-sm outline-none"
-                  style={{ borderColor: BORDER }}
-                />
-                {filters.q?.trim() && (
-                  <button
-                    onClick={() => setFilters((p) => ({ ...p, q: "" }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl hover:bg-[#f6f3ef]"
-                    aria-label="Clear search"
-                  >
-                    <X className="w-4 h-4 text-slate-600" />
-                  </button>
-                )}
+        {isAdmin && (
+          <div
+            className="mt-4 mb-5 rounded-sm border bg-white p-3 shadow-sm"
+            style={{ borderColor: BORDER }}
+          >
+            <div className="flex flex-col md:flex-row md:items-center gap-2">
+              {/* Search */}
+              <div className="flex-1">
+                <div className="relative">
+                  <input
+                    value={filters.q}
+                    onChange={(e) =>
+                      setFilters((p) => ({ ...p, q: e.target.value }))
+                    }
+                    placeholder="Search: order id, email, phone, product, pay ref…"
+                    className="w-full h-11 rounded-sm border bg-[#fffdfb] px-4 pr-10 text-sm outline-none"
+                    style={{ borderColor: BORDER }}
+                  />
+                  {filters.q?.trim() && (
+                    <button
+                      onClick={() => setFilters((p) => ({ ...p, q: "" }))}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-sm hover:bg-[#f6f3ef]"
+                      aria-label="Clear search"
+                    >
+                      <X className="w-4 h-4 text-slate-600" />
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {/* Status */}
+              <select
+                value={filters.status}
+                onChange={(e) =>
+                  setFilters((p) => ({ ...p, status: e.target.value }))
+                }
+                className="h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
+                style={{ borderColor: BORDER }}
+                title="Filter status"
+              >
+                <option value="all">All status ({stats.all})</option>
+                <option value="pending">Pending ({stats.pending})</option>
+                <option value="paid">Paid ({stats.paid})</option>
+                <option value="processing">
+                  Processing ({stats.processing})
+                </option>
+                <option value="shipped">Shipped ({stats.shipped})</option>
+                <option value="delivered">Delivered ({stats.delivered})</option>
+                <option value="cancelled">Cancelled ({stats.cancelled})</option>
+              </select>
+
+              {/* Date range */}
+              <select
+                value={filters.dateRange}
+                onChange={(e) =>
+                  setFilters((p) => ({ ...p, dateRange: e.target.value }))
+                }
+                className="h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
+                style={{ borderColor: BORDER }}
+                title="Date range"
+              >
+                <option value="all">Any time</option>
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+                <option value="90d">Last 90 days</option>
+                <option value="365d">Last 12 months</option>
+              </select>
+
+              {/* Sort */}
+              <select
+                value={filters.sort}
+                onChange={(e) =>
+                  setFilters((p) => ({ ...p, sort: e.target.value }))
+                }
+                className="h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
+                style={{ borderColor: BORDER }}
+                title="Sort"
+              >
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="totalHigh">Total: High → Low</option>
+                <option value="totalLow">Total: Low → High</option>
+              </select>
+
+              {/* Clear */}
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="h-11 rounded-sm bg-white"
+                style={{ borderColor: BORDER }}
+              >
+                Clear
+              </Button>
             </div>
 
-            {/* Status */}
-            <select
-              value={filters.status}
-              onChange={(e) =>
-                setFilters((p) => ({ ...p, status: e.target.value }))
-              }
-              className="h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
-              style={{ borderColor: BORDER }}
-              title="Filter status"
-            >
-              <option value="all">All status ({stats.all})</option>
-              <option value="pending">Pending ({stats.pending})</option>
-              <option value="paid">Paid ({stats.paid})</option>
-              <option value="processing">
-                Processing ({stats.processing})
-              </option>
-              <option value="shipped">Shipped ({stats.shipped})</option>
-              <option value="delivered">Delivered ({stats.delivered})</option>
-              <option value="cancelled">Cancelled ({stats.cancelled})</option>
-            </select>
-
-            {/* Date range */}
-            <select
-              value={filters.dateRange}
-              onChange={(e) =>
-                setFilters((p) => ({ ...p, dateRange: e.target.value }))
-              }
-              className="h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
-              style={{ borderColor: BORDER }}
-              title="Date range"
-            >
-              <option value="all">Any time</option>
-              <option value="7d">Last 7 days</option>
-              <option value="30d">Last 30 days</option>
-              <option value="90d">Last 90 days</option>
-              <option value="365d">Last 12 months</option>
-            </select>
-
-            {/* Sort */}
-            <select
-              value={filters.sort}
-              onChange={(e) =>
-                setFilters((p) => ({ ...p, sort: e.target.value }))
-              }
-              className="h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
-              style={{ borderColor: BORDER }}
-              title="Sort"
-            >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="totalHigh">Total: High → Low</option>
-              <option value="totalLow">Total: Low → High</option>
-            </select>
-
-            {/* Clear */}
-            <Button
-              variant="outline"
-              onClick={clearFilters}
-              className="h-11 rounded-2xl bg-white"
-              style={{ borderColor: BORDER }}
-            >
-              Clear
-            </Button>
+            {/* tiny result line (space-conscious) */}
+            <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
+              <span>
+                Showing{" "}
+                <span className="font-semibold text-slate-800">
+                  {stats.all}
+                </span>{" "}
+                order{stats.all === 1 ? "" : "s"}
+              </span>
+              <button
+                onClick={refreshOrders}
+                className="text-xs font-semibold hover:underline"
+                style={{ color: BRAND }}
+              >
+                Refresh
+              </button>
+            </div>
           </div>
+        )}
 
-          {/* tiny result line (space-conscious) */}
-          <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
-            <span>
-              Showing{" "}
-              <span className="font-semibold text-slate-800">{stats.all}</span>{" "}
-              order{stats.all === 1 ? "" : "s"}
-            </span>
-            <button
-              onClick={refreshOrders}
-              className="text-xs font-semibold hover:underline"
-              style={{ color: BRAND }}
-            >
-              Refresh
-            </button>
-          </div>
-        </div>
-        {/* Loading */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="w-16 h-16 border-4 border-t-transparent rounded-full mx-auto mb-4"
+                className="w-16 h-16 border-4 border-t-transparent rounded-sm mx-auto mb-4"
                 style={{ borderColor: BRAND, borderTopColor: "transparent" }}
               />
               <p className="text-slate-600">Loading orders...</p>
@@ -573,7 +577,7 @@ export default function OrdersPage() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg p-12 shadow-xl text-center border bg-[#fffdfb]"
+            className="rounded-sm p-12 shadow-xl text-center border bg-[#fffdfb]"
             style={{ borderColor: BORDER }}
           >
             <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-slate-300" />
@@ -608,7 +612,7 @@ export default function OrdersPage() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(index * 0.05, 0.35) }}
-                  className="rounded-lg p-6 shadow-xl border bg-[#fffdfb]"
+                  className="rounded-sm p-6 shadow-xl border bg-[#fffdfb]"
                   style={{ borderColor: BORDER }}
                 >
                   {/* Top row */}
@@ -641,7 +645,7 @@ export default function OrdersPage() {
 
                         {isAdmin && (
                           <span
-                            className="text-xs px-2 py-1 rounded-lg border bg-white text-slate-700"
+                            className="text-xs px-2 py-1 rounded-sm border bg-white text-slate-700"
                             style={{ borderColor: BORDER }}
                           >
                             {order.userId
@@ -735,7 +739,7 @@ export default function OrdersPage() {
                               Items Ordered
                             </h4>
                             <span
-                              className="text-xs font-semibold px-2 py-1 rounded-lg border bg-white text-slate-700"
+                              className="text-xs font-semibold px-2 py-1 rounded-sm border bg-white text-slate-700"
                               style={{ borderColor: BORDER }}
                             >
                               {order.cart?.length || 0} item(s)
@@ -755,12 +759,12 @@ export default function OrdersPage() {
                               return (
                                 <div
                                   key={idx}
-                                  className="p-3 rounded-2xl border bg-white"
+                                  className="p-3 rounded-sm border bg-white"
                                   style={{ borderColor: BORDER }}
                                 >
                                   <div className="flex gap-3">
                                     <div
-                                      className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 border bg-[#f6f3ef]"
+                                      className="w-16 h-16 rounded-sm overflow-hidden flex-shrink-0 border bg-[#f6f3ef]"
                                       style={{ borderColor: BORDER }}
                                     >
                                       <img
@@ -836,7 +840,7 @@ export default function OrdersPage() {
                                               return (
                                                 <div
                                                   key={ex.id || exIdx}
-                                                  className="flex items-start justify-between gap-3 rounded-xl border bg-[#fffdfb] px-3 py-2"
+                                                  className="flex items-start justify-between gap-3 rounded-sm border bg-[#fffdfb] px-3 py-2"
                                                   style={{
                                                     borderColor: BORDER,
                                                   }}
@@ -891,7 +895,7 @@ export default function OrdersPage() {
                         {/* Contact & Billing */}
                         <div className="grid md:grid-cols-2 gap-4">
                           <div
-                            className="p-4 rounded-2xl border bg-white"
+                            className="p-4 rounded-sm border bg-white"
                             style={{ borderColor: BORDER }}
                           >
                             <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
@@ -938,7 +942,7 @@ export default function OrdersPage() {
                           </div>
 
                           <div
-                            className="p-4 rounded-2xl border bg-white"
+                            className="p-4 rounded-sm border bg-white"
                             style={{ borderColor: BORDER }}
                           >
                             <div className="flex items-start justify-between gap-3">
@@ -995,7 +999,7 @@ export default function OrdersPage() {
         {isAdmin && editingOrder && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
             <div
-              className="w-full max-w-2xl rounded-2xl border bg-white shadow-xl"
+              className="w-full max-w-2xl rounded-sm border bg-white shadow-xl"
               style={{ borderColor: BORDER }}
             >
               <div
@@ -1008,7 +1012,7 @@ export default function OrdersPage() {
 
                 <button
                   onClick={closeEdit}
-                  className="p-2 rounded-xl border bg-white hover:bg-[#f6f3ef]"
+                  className="p-2 rounded-sm border bg-white hover:bg-[#f6f3ef]"
                   style={{ borderColor: BORDER }}
                   aria-label="Close"
                 >
@@ -1027,7 +1031,7 @@ export default function OrdersPage() {
                     onChange={(e) =>
                       setEditingOrder((p) => ({ ...p, status: e.target.value }))
                     }
-                    className="w-full h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
+                    className="w-full h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
                     style={{ borderColor: BORDER }}
                   >
                     {STATUS_OPTIONS.map((s) => (
@@ -1055,7 +1059,7 @@ export default function OrdersPage() {
                           },
                         }))
                       }
-                      className="w-full h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
+                      className="w-full h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
                       style={{ borderColor: BORDER }}
                     />
                   </div>
@@ -1075,7 +1079,7 @@ export default function OrdersPage() {
                           },
                         }))
                       }
-                      className="w-full h-11 rounded-2xl border bg-[#fffdfb] px-3 text-sm outline-none"
+                      className="w-full h-11 rounded-sm border bg-[#fffdfb] px-3 text-sm outline-none"
                       style={{ borderColor: BORDER }}
                     />
                   </div>
@@ -1096,7 +1100,7 @@ export default function OrdersPage() {
                           },
                         }))
                       }
-                      className="w-full rounded-2xl border bg-[#fffdfb] px-3 py-2 text-sm outline-none"
+                      className="w-full rounded-sm border bg-[#fffdfb] px-3 py-2 text-sm outline-none"
                       style={{ borderColor: BORDER }}
                     />
                   </div>

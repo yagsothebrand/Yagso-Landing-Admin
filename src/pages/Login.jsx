@@ -18,7 +18,7 @@ export default function Login() {
   };
 
   return (
-    <main className="bg-white/10">
+    <main className="bg-white/10 pt-20 md:pt-28">
       <Header />
      
       <LoginPage />
