@@ -229,7 +229,7 @@ export default function HeaderDesign() {
                         Account
                       </span>
                       <span className="text-xs text-slate-500 mt-1">
-                        Sign in to track orders and checkout faster.
+                        Log in to track orders and checkout faster.
                       </span>
                     </div>
                   </DropdownMenuLabel>
