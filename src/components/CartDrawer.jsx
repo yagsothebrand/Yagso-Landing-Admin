@@ -15,7 +15,6 @@ import {
   X,
   Package,
   ArrowRight,
-  Gift,
 } from "lucide-react";
 import { useProducts } from "./auth/ProductsProvider";
 import { Link } from "react-router-dom";
@@ -37,11 +36,9 @@ export default function CartSidebar() {
   const cartTotal = getCartTotal();
 
   const getItemTotal = (item) => {
-    const basePrice =
-      (item.selectedVariant?.price || item.price) * item.quantity;
+    const basePrice = (item.selectedVariant?.price || item.price) * item.quantity;
 
-    if (!item.selectedExtras || item.selectedExtras.length === 0)
-      return basePrice;
+    if (!item.selectedExtras || item.selectedExtras.length === 0) return basePrice;
 
     const extrasTotal = item.selectedExtras.reduce((sum, extra) => {
       const extraPrice = extra.selectedVariant?.price ?? extra.price ?? 0;
@@ -65,7 +62,7 @@ export default function CartSidebar() {
               "bg-[#948179] hover:bg-white",
               "border border-[#948179]/25 hover:border-[#948179]/45",
               "shadow-none",
-              "group", // Add group class for child hover styles
+              "group",
             )}
           >
             <ShoppingCart className="w-5 h-5 text-white group-hover:text-[#948179]" />
@@ -94,7 +91,8 @@ export default function CartSidebar() {
       </SheetTrigger>
 
       {/* Panel */}
-      <SheetContent className="w-full sm:max-w-lg p-2 md:p-5 bg-white text-slate-900 border-l border-[#948179]/15">
+      {/* ✅ z-index here is important */}
+      <SheetContent className="z-[10060] w-full sm:max-w-lg p-2 md:p-5 bg-white text-slate-900 border-l border-[#948179]/15">
         {/* Header */}
         <SheetHeader className="px-5 py-4 border-b border-[#948179]/15">
           <SheetTitle className="flex items-center justify-between">
@@ -218,94 +216,12 @@ export default function CartSidebar() {
                         </button>
                       </div>
 
-                      {/* Custom fields */}
-                      {item.customFields &&
-                        Object.keys(item.customFields).length > 0 && (
-                          <div className="mt-2 border border-[#948179]/15 bg-[#948179]/[0.04] rounded-sm p-2">
-                            <p className="text-[11px] tracking-wide uppercase text-[#948179]">
-                              Personalization
-                            </p>
-                            <div className="mt-1 space-y-0.5">
-                              {Object.entries(item.customFields).map(
-                                ([key, value]) => (
-                                  <p
-                                    key={key}
-                                    className="text-[12px] text-slate-600 truncate"
-                                  >
-                                    <span className="text-slate-500">
-                                      {key}:
-                                    </span>{" "}
-                                    {value}
-                                  </p>
-                                ),
-                              )}
-                            </div>
-                          </div>
-                        )}
-
-                      {/* Extras */}
-                      {item.selectedExtras &&
-                        item.selectedExtras.length > 0 && (
-                          <div className="mt-2 border border-[#948179]/15 bg-[#948179]/[0.04] rounded-sm p-2">
-                            <p className="text-[11px] tracking-wide uppercase text-[#948179] flex items-center gap-1">
-                              <Package className="w-3 h-3" />
-                              Extras
-                            </p>
-
-                            <div className="mt-1 space-y-1">
-                              {item.selectedExtras.map((extra, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-start justify-between gap-2"
-                                >
-                                  <div className="min-w-0">
-                                    <p className="text-[12px] text-slate-700 truncate">
-                                      {extra.name}
-                                      {extra.selectedVariant?.name ? (
-                                        <span className="text-slate-500">
-                                          {" "}
-                                          — {extra.selectedVariant.name}
-                                        </span>
-                                      ) : null}
-                                      {extra.qty > 1 ? (
-                                        <span className="text-slate-500">
-                                          {" "}
-                                          × {extra.qty}
-                                        </span>
-                                      ) : null}
-                                    </p>
-
-                                    {extra.type === "text" &&
-                                    extra.textValue ? (
-                                      <p className="text-[11px] text-slate-500 italic truncate">
-                                        “{extra.textValue}”
-                                      </p>
-                                    ) : null}
-                                  </div>
-
-                                  <p className="text-[12px] text-[#948179] font-semibold whitespace-nowrap">
-                                    +
-                                    {formatPrice(
-                                      (extra.selectedVariant?.price ??
-                                        extra.price ??
-                                        0) * (extra.qty || 1),
-                                    )}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
                       {/* Controls + Total */}
                       <div className="mt-3 flex items-center justify-between">
                         <div className="flex items-center border border-[#948179]/20 rounded-sm overflow-hidden">
                           <button
                             onClick={() =>
-                              updateCartQuantity(
-                                item.cartId,
-                                clampQty(item.quantity - 1),
-                              )
+                              updateCartQuantity(item.cartId, clampQty(item.quantity - 1))
                             }
                             className="w-9 h-9 flex items-center justify-center hover:bg-[#948179]/[0.06] transition"
                             aria-label="Decrease quantity"
@@ -319,10 +235,7 @@ export default function CartSidebar() {
 
                           <button
                             onClick={() =>
-                              updateCartQuantity(
-                                item.cartId,
-                                clampQty(item.quantity + 1),
-                              )
+                              updateCartQuantity(item.cartId, clampQty(item.quantity + 1))
                             }
                             className="w-9 h-9 flex items-center justify-center hover:bg-[#948179]/[0.06] transition"
                             aria-label="Increase quantity"
@@ -361,10 +274,7 @@ export default function CartSidebar() {
 
               <div className="mt-4 space-y-2">
                 <Link to="/checkout" className="block">
-                  <motion.div
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                  >
+                  <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                     <Button className="w-full h-11 rounded-sm bg-[#948179] text-white hover:opacity-90 font-semibold tracking-wide">
                       Proceed to Checkout
                     </Button>
