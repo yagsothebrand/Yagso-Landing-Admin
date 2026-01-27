@@ -184,13 +184,29 @@ export default function HeaderDesign() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="p-2 border rounded-sm transition relative border-[#948179]/20 hover:bg-[#948179] hover:border-[#948179]/40"
+                  className="
+        group relative
+        p-2.5 rounded-sm
+        border border-[#948179]/25
+        bg-white/70 backdrop-blur
+        transition
+        hover:bg-[#948179]/10 hover:border-[#948179]/45
+        focus:outline-none focus:ring-2 focus:ring-[#948179]/25
+      "
                   aria-label="Account"
                 >
-                  <User className="w-5 h-5 text-[#948179] hover:text-[#ffffff]" />
+                  <User className="w-5 h-5 text-[#948179] transition group-hover:text-[#6f5f59]" />
 
                   {user && (
-                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border border-white bg-[#948179]" />
+                    <span
+                      className="
+            absolute -top-1 -right-1
+            w-2.5 h-2.5 rounded-full
+            border border-white
+            bg-[#948179]
+            shadow-[0_6px_16px_rgba(148,129,121,0.35)]
+          "
+                    />
                   )}
                 </button>
               </DropdownMenuTrigger>
@@ -198,58 +214,141 @@ export default function HeaderDesign() {
               {!user ? (
                 <DropdownMenuContent
                   align="end"
-                  sideOffset={8}
-                  className="w-56 rounded-sm bg-white z-[10000]"
+                  sideOffset={10}
+                  className="
+        z-[10000] w-64 rounded-sm
+        border border-[#948179]/20
+        bg-white/90 backdrop-blur
+        shadow-[0_18px_60px_rgba(15,23,42,0.18)]
+        p-2
+      "
                 >
-                  <DropdownMenuLabel>Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/login")}>
-                    <User className="w-4 h-4 mr-2" />
-                    Log In
+                  <DropdownMenuLabel className="px-2 py-2">
+                    <div className="flex flex-col">
+                      <span className="text-[11px] tracking-[0.22em] uppercase text-[#948179]">
+                        Account
+                      </span>
+                      <span className="text-xs text-slate-500 mt-1">
+                        Sign in to track orders and checkout faster.
+                      </span>
+                    </div>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator className="bg-[#948179]/15" />
+
+                  <DropdownMenuItem
+                    onClick={() => navigate("/login")}
+                    className="
+          cursor-pointer rounded-sm
+          px-3 py-2.5
+          focus:bg-[#948179]/10 focus:text-slate-900
+        "
+                  >
+                    <User className="w-4 h-4 mr-2 text-[#948179]" />
+                    <span className="text-sm font-medium">Log In</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               ) : (
                 <DropdownMenuContent
                   align="end"
-                  sideOffset={8}
-                  className="w-56 rounded-sm bg-white z-[10000]"
+                  sideOffset={10}
+                  className="
+        z-[10000] w-64 rounded-sm
+        border border-[#948179]/20
+        bg-white/90 backdrop-blur
+        shadow-[0_18px_60px_rgba(15,23,42,0.18)]
+        p-2
+      "
                 >
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col">
-                      <span className="font-semibold">My Account</span>
-                      <span className="text-xs text-slate-500 truncate">
-                        {user.email}
+                  <DropdownMenuLabel className="px-2 py-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <span className="text-[11px] tracking-[0.22em] uppercase text-[#948179]">
+                          My Account
+                        </span>
+                        <span className="block text-xs text-slate-500 truncate mt-1">
+                          {user.email}
+                        </span>
+                      </div>
+
+                      {/* tiny status pill */}
+                      <span
+                        className="
+              shrink-0
+              text-[10px] tracking-[0.18em] uppercase
+              px-2 py-1 rounded-full
+              border border-[#948179]/25
+              bg-[#948179]/[0.06]
+              text-[#948179]
+            "
+                      >
+                        {isAdmin ? "Admin" : "User"}
                       </span>
                     </div>
                   </DropdownMenuLabel>
 
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-[#948179]/15" />
 
-                  <DropdownMenuItem onClick={() => navigate("/profile")}>
-                    <User className="w-4 h-4 mr-2" />
-                    Profile
+                  <DropdownMenuItem
+                    onClick={() => navigate("/profile")}
+                    className="
+          cursor-pointer rounded-sm
+          px-3 py-2.5
+          focus:bg-[#948179]/10 focus:text-slate-900
+        "
+                  >
+                    <User className="w-4 h-4 mr-2 text-[#948179]" />
+                    <span className="text-sm font-medium">Profile</span>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem onClick={() => navigate("/orders")}>
-                    <ShoppingBag className="w-4 h-4 mr-2" />
-                    My Orders
+                  <DropdownMenuItem
+                    onClick={() => navigate("/orders")}
+                    className="
+          cursor-pointer rounded-sm
+          px-3 py-2.5
+          focus:bg-[#948179]/10 focus:text-slate-900
+        "
+                  >
+                    <ShoppingBag className="w-4 h-4 mr-2 text-[#948179]" />
+                    <span className="text-sm font-medium">My Orders</span>
                   </DropdownMenuItem>
 
                   {isAdmin && (
-                    <DropdownMenuItem onClick={() => navigate("/users")}>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Manage Users
+                    <DropdownMenuItem
+                      onClick={() => navigate("/users")}
+                      className="
+            cursor-pointer rounded-sm
+            px-3 py-2.5
+            focus:bg-[#948179]/10 focus:text-slate-900
+          "
+                    >
+                      <ShoppingBag className="w-4 h-4 mr-2 text-[#948179]" />
+                      <span className="text-sm font-medium">Manage Users</span>
                     </DropdownMenuItem>
                   )}
 
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-[#948179]/15" />
+
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="text-red-600 focus:text-red-600"
+                    className="
+          cursor-pointer rounded-sm
+          px-3 py-2.5
+          text-red-600
+          focus:bg-red-50 focus:text-red-700
+        "
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Log Out
+                    <span className="text-sm font-semibold">Log Out</span>
                   </DropdownMenuItem>
+
+                  {/* subtle footer line (very Yagso) */}
+                  <div className="px-2 pt-2">
+                    <div className="h-px bg-[#948179]/10" />
+                    <p className="mt-2 text-[10px] tracking-[0.22em] uppercase text-slate-400 text-center">
+                      Yagso • Minimal • Modern
+                    </p>
+                  </div>
                 </DropdownMenuContent>
               )}
             </DropdownMenu>
