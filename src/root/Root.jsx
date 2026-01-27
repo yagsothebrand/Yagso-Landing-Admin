@@ -13,9 +13,9 @@ const Root = () => {
         <ProductsProvider>
           <OrdersProvider>
             <BlogProvider>
-              <VideoLayout>
+              {/* <VideoLayout> */}
                 <Outlet />
-              </VideoLayout>
+              {/* </VideoLayout> */}
             </BlogProvider>
           </OrdersProvider>
         </ProductsProvider>

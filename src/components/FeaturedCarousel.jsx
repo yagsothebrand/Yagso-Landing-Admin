@@ -1,292 +1,239 @@
-import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import ProductCard from "./ProductCard";
+import React, { useEffect, useMemo, useState } from "react";
+import { ShoppingBag, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useProducts } from "./auth/ProductsProvider";
+import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 const BRAND = "#948179";
-const BORDER = `${BRAND}26`;
-const cx = (...c) => c.filter(Boolean).join(" ");
+const cn = (...c) => c.filter(Boolean).join(" ");
 
-export default function FeaturedCarousel({
-  products = [],
-  itemsPerView = 3, // desktop
-  mobileItemsPerView = 2, // mobile
-  autoPlay = true,
-  autoPlayMs = 4800,
+export default function FeaturedWideShowcase({
+  title = "Trending Jewels",
+  subtitle = "Handcrafted pieces. Limited drops. Premium finish.",
+  rotateMs = 4500, // ✅ change speed here
 }) {
-  const featured = useMemo(
-    () => (products || []).filter((p) => p.isFeatured === true),
-    [products],
-  );
+  const navigate = useNavigate();
+  const { products, addToCart } = useProducts();
 
-  const total = featured.length;
+  const featuredList = useMemo(() => {
+    // ✅ stable "shuffle" (so order doesn't change every render)
+    // If you want truly random each visit, keep as-is.
+    const seed = String(products.length);
+    const hash = [...seed].reduce((a, c) => a + c.charCodeAt(0), 0);
+    const sorted = [...products].sort((a, b) => {
+      const av = (String(a?.id || "").charCodeAt(0) || 0) + hash;
+      const bv = (String(b?.id || "").charCodeAt(0) || 0) + hash;
+      return av - bv;
+    });
 
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(max-width: 639px)").matches
-      : false,
-  );
+    return sorted;
+  }, [products]);
 
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  // keep heroIndex valid when list changes
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!featuredList.length) return;
+    setHeroIndex((i) => (i >= featuredList.length ? 0 : i));
+  }, [featuredList.length]);
 
-    const mq = window.matchMedia("(max-width: 639px)");
-    const onChange = (e) => setIsMobile(e.matches);
-
-    if (mq.addEventListener) mq.addEventListener("change", onChange);
-    else mq.addListener(onChange);
-
-    setIsMobile(mq.matches);
-
-    return () => {
-      if (mq.removeEventListener) mq.removeEventListener("change", onChange);
-      else mq.removeListener(onChange);
-    };
-  }, []);
-
-  const perView = Math.max(1, isMobile ? mobileItemsPerView : itemsPerView);
-  const pages = Math.max(1, Math.ceil(total / perView));
-  const canSlide = total > perView;
-
-  const [page, setPage] = useState(0);
-  const clamp = (p) => Math.max(0, Math.min(pages - 1, p));
-  const goPrev = () => setPage((p) => clamp(p - 1));
-  const goNext = () => setPage((p) => clamp(p + 1));
-
+  // ✅ rotation
   useEffect(() => {
-    setPage(0);
-  }, [total, perView]);
-
-  // autoplay only desktop
-  useEffect(() => {
-    if (isMobile) return;
-    if (!autoPlay) return;
-    if (!canSlide) return;
+    if (!featuredList.length) return;
+    if (featuredList.length === 1) return;
 
     const t = setInterval(() => {
-      setPage((p) => (p >= pages - 1 ? 0 : p + 1));
-    }, autoPlayMs);
+      setHeroIndex((i) => (i + 1) % featuredList.length);
+    }, rotateMs);
 
     return () => clearInterval(t);
-  }, [autoPlay, autoPlayMs, canSlide, pages, isMobile]);
+  }, [featuredList.length, rotateMs]);
 
-  if (!featured.length) return null;
+  const hero = featuredList[heroIndex];
 
-  // MOBILE: luxe horizontal rail
-  if (isMobile) {
-    return (
-      <section className="relative">
-        {/* header */}
-        <div className="flex items-end justify-between gap-3 mb-3">
-          <div className="min-w-0">
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1 border bg-white rounded-sm"
-              style={{ borderColor: BORDER }}
-            >
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: BRAND }}
-              />
-              <span className="text-[10px] tracking-[0.22em] uppercase font-semibold text-slate-600">
-                Featured
-              </span>
-            </div>
+  // ✅ MOVED BEFORE EARLY RETURN - show "next" items excluding current hero
+  const rest = useMemo(() => {
+    if (!featuredList.length) return [];
+    const others = featuredList.filter((p) => p?.id !== hero?.id);
+    return others.slice(0, 8);
+  }, [featuredList, hero?.id]);
 
-            <h3 className="mt-2 text-xl font-extrabold text-slate-900">
-              Signature picks
-            </h3>
-            <p className="text-sm text-slate-600 mt-1">
-              Handpicked pieces — limited quantities.
+  // ✅ Early return AFTER all hooks
+  if (!featuredList.length) return null;
+
+  const handleAdd = (p) => {
+    // match your provider signature
+    addToCart?.(p, 1, null, {}, []);
+  };
+
+  const goShop = () => navigate("/shop");
+
+  return (
+    <>
+      {/* HERO WIDE */}
+      <div
+        className="relative overflow-hidden rounded-sm border bg-white"
+        style={{ borderColor: `${BRAND}26` }}
+      >
+        <div className="relative h-[320px] md:h-[420px]">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={hero?.id || hero?.name}
+              src={hero?.images?.[0] || hero?.image || "/placeholder.svg"}
+              alt={hero?.name || "Featured"}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              initial={{ opacity: 0, scale: 1.02 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.01 }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+            />
+          </AnimatePresence>
+
+          {/* overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+
+          {/* left content */}
+          <div className="absolute left-6 bottom-6 md:left-10 md:bottom-10 max-w-xl text-white">
+            <p className="text-[11px] tracking-[0.22em] uppercase text-white/80">
+              {subtitle}
             </p>
+
+            <h2 className="mt-3 text-3xl md:text-5xl font-semibold leading-[1.05]">
+              {title}
+            </h2>
+
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={hero?.id || hero?.name}
+                className="mt-3 text-white/80 text-sm md:text-base line-clamp-2"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+              >
+                {hero?.name}
+                {hero?.description ? ` — ${hero.description}` : ""}
+              </motion.p>
+            </AnimatePresence>
+
+            <div className="mt-5 flex items-center gap-2">
+              {/* ✅ Explore now -> /shop */}
+              <Button
+                onClick={goShop}
+                className="rounded-sm h-11 px-5 text-white font-semibold"
+                style={{ backgroundColor: BRAND }}
+              >
+                Explore Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+
+              <button
+                onClick={() => handleAdd(hero)}
+                className="h-11 px-4 rounded-sm border bg-white/10 text-white text-sm font-semibold backdrop-blur hover:bg-white/15 transition inline-flex items-center gap-2"
+                style={{ borderColor: "rgba(255,255,255,0.25)" }}
+                title="Quick add"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Add
+              </button>
+            </div>
           </div>
 
-          <div className="text-xs font-semibold text-slate-600">
-            <span className="text-slate-900">{total}</span> items
+          {/* right-bottom price chip */}
+          <div
+            className="absolute right-4 bottom-4 md:right-8 md:bottom-8 px-3 py-2 rounded-sm border bg-white/85 backdrop-blur text-slate-900 text-sm font-semibold"
+            style={{ borderColor: `${BRAND}26` }}
+          >
+            {hero?.price != null
+              ? `₦${Number(hero.price).toLocaleString()}`
+              : "Featured"}
           </div>
         </div>
+      </div>
 
-        {/* rail */}
-        <div
-          className="border bg-white rounded-sm overflow-hidden"
-          style={{ borderColor: BORDER }}
-        >
+      {/* MINI FEATURED ROW */}
+      {rest.length > 0 && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs tracking-[0.22em] uppercase text-slate-600">
+              Featured Picks
+            </p>
+            <div className="h-[1px] flex-1 mx-4 bg-slate-200" />
+          </div>
+
           <div className="overflow-x-auto no-scrollbar">
-            <div className="flex gap-4 p-4 pr-6 snap-x snap-mandatory">
-              {featured.map((p) => (
+            <div className="flex gap-4 pr-4">
+              {rest.map((p) => (
                 <div
                   key={p.id}
-                  className="snap-start shrink-0"
-                  style={{
-                    width: `calc((100% - 16px) / ${mobileItemsPerView})`, // gap-4
-                  }}
+                  className="group shrink-0 w-[280px] md:w-[320px]"
                 >
-                  <ProductCard product={p} />
+                  <div
+                    className="relative overflow-hidden rounded-sm border bg-white"
+                    style={{ borderColor: `${BRAND}26` }}
+                  >
+                    <div className="relative h-[170px]">
+                      <img
+                        src={p?.images?.[0] || p?.image || "/placeholder.svg"}
+                        alt={p?.name || "Product"}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+
+                      <button
+                        onClick={() => handleAdd(p)}
+                        className={cn(
+                          "absolute right-3 top-3 h-9 px-3 rounded-sm border text-xs font-semibold backdrop-blur transition",
+                          "bg-white/85 hover:bg-white",
+                        )}
+                        style={{ borderColor: `${BRAND}26` }}
+                        title="Add to cart"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <ShoppingBag
+                            className="w-4 h-4"
+                            style={{ color: BRAND }}
+                          />
+                          Add
+                        </span>
+                      </button>
+
+                      <div className="absolute left-3 right-3 bottom-3 text-white">
+                        <p className="text-sm font-semibold line-clamp-1">
+                          {p?.name || "Untitled"}
+                        </p>
+                        <p className="text-xs text-white/85">
+                          {p?.price != null
+                            ? `₦${Number(p.price).toLocaleString()}`
+                            : ""}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-3">
+                      <p className="text-xs text-slate-600 line-clamp-2">
+                        {p?.description ||
+                          "Minimal. Timeless. Everyday luxury."}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* tiny hint */}
-          <div
-            className="px-4 py-2 border-t text-[11px] text-slate-500 flex items-center justify-between"
-            style={{ borderColor: BORDER }}
-          >
-            <span className="inline-flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: BRAND }} />
-              Swipe to explore
-            </span>
-            <span className="font-semibold" style={{ color: BRAND }}>
-              YAGSO
-            </span>
-          </div>
+          {/* optional: tiny "changing" hint
+          {featuredList.length > 1 && (
+            <p className="mt-3 text-[11px] tracking-[0.18em] uppercase text-slate-400">
+              Rotating featured drops
+            </p>
+          )} */}
         </div>
-      </section>
-    );
-  }
-
-  // DESKTOP/TABLET: editorial grid + simple pagination (no framer)
-  const start = page * perView;
-  const current = featured.slice(start, start + perView);
-
-  return (
-    <section className="relative">
-      {/* soft taupe wash */}
-      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl opacity-30"
-        style={{ backgroundColor: BRAND }}
-      />
-      <div className="pointer-events-none absolute -bottom-28 -left-28 h-80 w-80 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: BRAND }}
-      />
-
-      {/* header */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
-        <div className="min-w-0">
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 border bg-white rounded-sm"
-            style={{ borderColor: BORDER }}
-          >
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: BRAND }}
-            />
-            <span className="text-[10px] tracking-[0.22em] uppercase font-semibold text-slate-600">
-              Featured Collection
-            </span>
-          </div>
-
-          <h3 className="mt-2 text-2xl md:text-3xl font-extrabold text-slate-900">
-            Jewelry that whispers{" "}
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: `linear-gradient(90deg, ${BRAND}, #b9a89a)`,
-              }}
-            >
-              luxury
-            </span>
-            .
-          </h3>
-
-          <p className="text-sm text-slate-600 mt-2 max-w-2xl">
-            A refined edit of our most-loved pieces — designed to layer, gift,
-            and keep.
-          </p>
-        </div>
-
-        {/* controls */}
-        <div className="flex items-center gap-3">
-          <div
-            className="hidden sm:flex items-center gap-2 px-3 py-2 border bg-white rounded-sm text-xs text-slate-600"
-            style={{ borderColor: BORDER }}
-          >
-            <span>
-              Page <span className="font-semibold text-slate-900">{page + 1}</span> /{" "}
-              <span className="font-semibold text-slate-900">{pages}</span>
-            </span>
-            <span className="h-3 w-[1px]" style={{ backgroundColor: BORDER }} />
-            <span>
-              <span className="font-semibold text-slate-900">{total}</span> items
-            </span>
-          </div>
-
-          {canSlide && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={goPrev}
-                disabled={page === 0}
-                className="w-10 h-10 rounded-sm border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#fffdfb] grid place-items-center"
-                style={{ borderColor: BORDER }}
-                aria-label="Previous"
-                title="Previous"
-              >
-                <ChevronLeft className="w-5 h-5" style={{ color: BRAND }} />
-              </button>
-
-              <button
-                onClick={goNext}
-                disabled={page >= pages - 1}
-                className="w-10 h-10 rounded-sm border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#fffdfb] grid place-items-center"
-                style={{ borderColor: BORDER }}
-                aria-label="Next"
-                title="Next"
-              >
-                <ChevronRight className="w-5 h-5" style={{ color: BRAND }} />
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* frame */}
-      <div
-        className="border bg-white rounded-sm overflow-hidden"
-        style={{ borderColor: BORDER }}
-      >
-        {/* grid */}
-        <div className={cx("p-4 md:p-6", perView === 2 ? "grid grid-cols-2 gap-4 md:gap-6" : "grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6")}>
-          {current.map((p) => (
-            <div key={p.id} className="relative">
-              <ProductCard product={p} />
-            </div>
-          ))}
-        </div>
-
-        {/* footer row */}
-        {canSlide && (
-          <div
-            className="px-4 md:px-6 py-3 border-t flex items-center justify-between"
-            style={{ borderColor: BORDER }}
-          >
-            <div className="text-xs text-slate-600">
-              Showing{" "}
-              <span className="font-semibold text-slate-900">{start + 1}</span>
-              {" - "}
-              <span className="font-semibold text-slate-900">
-                {Math.min(start + perView, total)}
-              </span>{" "}
-              of <span className="font-semibold text-slate-900">{total}</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: pages }).map((_, i) => {
-                const active = i === page;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setPage(i)}
-                    className="h-2 w-2 rounded-full transition"
-                    style={{
-                      backgroundColor: active ? BRAND : "#cbd5e1",
-                      opacity: active ? 1 : 0.8,
-                    }}
-                    aria-label={`Go to page ${i + 1}`}
-                    title={`Page ${i + 1}`}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </>
   );
 }

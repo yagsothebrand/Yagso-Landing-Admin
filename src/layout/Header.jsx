@@ -41,10 +41,11 @@ export default function HeaderDesign() {
       { label: "Blog", path: "/blog" },
     ],
     bottom: [
-      { label: "Men", path: "/shop?cat=men" },
-      { label: "Women", path: "/shop?cat=women" },
-      { label: "Kids", path: "/shop?cat=kids" },
-      { label: "Accessories", path: "/shop?cat=accessories" },
+      { label: "Rings", path: "/shop?cat=men" },
+      { label: "Necklaces", path: "/shop?cat=women" },
+      { label: "Sets", path: "/shop?cat=kids" },
+      { label: "Earrings", path: "/shop?cat=accessories" },
+        { label: "Bracelets", path: "/shop?cat=accessories" },
       { label: "New Arrivals", path: "/shop?cat=new" },
     ],
   };
@@ -73,13 +74,13 @@ export default function HeaderDesign() {
   };
 
   return (
-    <header className="sticky top-0 z-[9999]">
+    <header className="fixed left-0 right-0 backdrop-blur-sm top-0 z-[9999]">
       {/* Top bar (taupe on white) */}
       <div
-        className="bg-white/25 border-b"
+        className="bg-white/60 border-b"
         style={{ borderColor: `${BRAND}33` }}
       >
-        <div className="h-[76px] max-w-[1200px] mx-auto px-4 lg:px-10 flex items-center justify-between">
+        <div className=" max-w-[1200px] mx-auto px-4 lg:px-10 flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-3">
             <button
@@ -100,8 +101,8 @@ export default function HeaderDesign() {
                     className={cx(
                       "transition",
                       isActive(item.path)
-                        ? "text-[#948179]/70"
-                        : "text-white hover:text-slate-900",
+                        ? "text-slate-400"
+                        : "text-[#948179] hover:text-slate-900",
                     )}
                   >
                     {item.label}
@@ -229,7 +230,7 @@ export default function HeaderDesign() {
 
       {/* Category bar (white, taupe links) */}
       <nav
-        className="hidden md:block bg-white/50 border-b"
+        className="hidden md:block bg-white/80 border-b"
         style={{ borderColor: `${BRAND}26` }}
       >
         <div className="max-w-[1200px] mx-auto px-4 lg:px-10 h-[46px] flex items-center justify-center">
@@ -439,3 +440,4 @@ export default function HeaderDesign() {
     </header>
   );
 }
+

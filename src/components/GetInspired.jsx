@@ -1,101 +1,230 @@
-import React, { useEffect, useRef } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import gsap from "gsap";
 
 const videos = [
+      "/pinterestVideo.mp4",
   "/animate.mp4",
-  "/lady.mp4",
-  "/get.mp4",
-  "/animate.mp4",
-  "/pinterestVideo.mp4",
-  "/GetInspired4.mp4",
 
-  // "/yello.mp4",
+  "/get.mp4",
+
+  "/GetInspired4.mp4",
+  "/glass.mp4",
+    "/cicart.mp4",
 ];
 
-const GetInspired = () => {
+const BRAND = "#948179";
+const CREAM = "#fbfaf8";
+
+// detect orientation
+function getRatioKey(w, h) {
+  if (!w || !h) return "landscape";
+  const r = w / h;
+  if (r < 0.92) return "portrait";
+  if (r > 1.08) return "landscape";
+  return "square";
+}
+
+function ratioStyle(key) {
+  if (key === "portrait") return { aspectRatio: "9 / 16" };
+  if (key === "square") return { aspectRatio: "1 / 1" };
+  return { aspectRatio: "16 / 9" };
+}
+
+export default function GetInspired() {
   const controls = useAnimation();
-  const ref = useRef(null);
+  const wrapRef = useRef(null);
   const headingRef = useRef(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(wrapRef, { once: true, amount: 0.25 });
+
+  const [aspectBySrc, setAspectBySrc] = useState({});
+  const [badSrcs, setBadSrcs] = useState(() => new Set());
+
+  // duplicate for smooth loop
+  const list = useMemo(() => [...videos, ...videos], []);
+
+  const onMeta = useCallback((src, w, h) => {
+    const key = getRatioKey(w, h);
+    setAspectBySrc((prev) => (prev[src] ? prev : { ...prev, [src]: key }));
+  }, []);
+
+  const onBad = useCallback((src) => {
+    setBadSrcs((prev) => {
+      if (prev.has(src)) return prev;
+      const next = new Set(prev);
+      next.add(src);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!inView) return;
 
-    // Animate ticker
     controls.start({
-      x: ["0%", "-100%"],
-      transition: {
-        duration: 25,
-        ease: "linear",
-        repeat: Infinity,
-      },
+      x: ["0%", "-50%"],
+      transition: { duration: 35, ease: "linear", repeat: Infinity },
     });
 
-    // Split heading text into spans
     const heading = headingRef.current;
-    if (!heading) return; // ← safeguard
+    if (!heading) return;
 
-    const text = heading.textContent;
+    const raw = heading.getAttribute("data-text") || heading.textContent || "";
+    heading.setAttribute("data-text", raw);
     heading.textContent = "";
-    const letters = text.split("");
-    letters.forEach((char) => {
+
+    raw.split("").forEach((char) => {
       const span = document.createElement("span");
       span.textContent = char;
       span.style.display = "inline-block";
       span.style.opacity = "0";
-      if (char === " ") span.style.marginRight = "4px";
+      if (char === " ") span.style.marginRight = "8px";
       heading.appendChild(span);
     });
 
-    // GSAP shimmer animation
-    const tl = gsap.timeline({ delay: 0.3 });
+    const tl = gsap.timeline({ delay: 0.15 });
     tl.to(heading.querySelectorAll("span"), {
       opacity: 1,
       duration: 0.5,
-      stagger: 0.04,
+      stagger: 0.025,
       ease: "power2.out",
-    }).to(
-      heading,
-      {
-        backgroundPositionX: ["0%", "100%"],
-        duration: 2.5,
-        ease: "power1.inOut",
-        repeat: -1,
-        yoyo: true,
-      },
-      "-=1",
-    );
+    });
+
+    return () => tl.kill();
   }, [inView, controls]);
 
   return (
-    <div ref={ref} className="relative w-full overflow-hidden bg-transparent">
-      {/* ✨ Add your animated header */}
+    <section
+      ref={wrapRef}
+      className="relative w-full overflow-hidden backdrop-blur-sm bg-white"
+    >
+      {/* Subtle fade edges */}
+      <div
+        className="absolute left-0 top-0 h-full w-[80px] sm:w-[140px] z-10 pointer-events-none"
+        style={{
+          background: `linear-gradient(to right, ${CREAM} 0%, transparent 100%)`,
+        }}
+      />
+      <div
+        className="absolute right-0 top-0 h-full w-[80px] sm:w-[140px] z-10 pointer-events-none"
+        // style={{
+        //   background: `linear-gradient(to left, ${CREAM} 0%, transparent 100%)`,
+        // }}
+      />
 
-      {/* 🩶 Fade edges */}
-      <div className="absolute left-0 top-0 h-full w-[80px] bg-gradient-to-r from-[#fffdfb] via-[#fffdfb]/60 to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute right-0 top-0 h-full w-[80px] bg-gradient-to-l from-[#fffdfb] via-[#fffdfb]/60 to-transparent z-10 pointer-events-none"></div>
-
-      {/* 🎥 Smooth infinite video ticker */}
-      <motion.div animate={controls} className="flex gap-2 md:gap-3">
-        {[...videos, ...videos].map((video, i) => (
-          <div
-            key={i}
-            className="flex-shrink-0 w-[22vw] sm:w-[20vw] md:w-[340px] h-[280px] sm:h-[290px] md:h-[300px] rounded-lg sm:rounded-xl overflow-hidden shadow-lg hover:scale-[1.03] transition-transform duration-500"
-          >
-            <video
-              src={video}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover"
+      {/* Ticker */}
+      <motion.div
+        animate={controls}
+        className="relative z-10 flex gap-3 px-4 sm:px-6 will-change-transform"
+        style={{ width: "max-content" }}
+      >
+        {list.map((src, i) => {
+          if (badSrcs.has(src)) return null;
+          return (
+            <VideoCard
+              key={`${src}-${i}`}
+              src={src}
+              aspect={aspectBySrc[src]}
+              onMeta={onMeta}
+              onBad={onBad}
             />
-          </div>
-        ))}
+          );
+        })}
       </motion.div>
-    </div>
+    </section>
   );
-};
+}
 
-export default GetInspired;
+function VideoCard({ src, aspect = "landscape", onMeta, onBad }) {
+  const cardRef = useRef(null);
+  const videoRef = useRef(null);
+  const inView = useInView(cardRef, { amount: 0.15 });
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (!inView) v.pause();
+    else v.play().catch(() => {});
+  }, [inView]);
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="flex-shrink-0"
+    >
+      <div
+        className="
+          relative overflow-hidden rounded-none
+          border border-slate-200 bg-white/40 backdrop-blur-sm
+          shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+          transition-all duration-500
+          hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]
+        "
+        style={{
+          ...ratioStyle(aspect),
+          width:
+            aspect === "portrait"
+              ? "clamp(220px, 34vw, 280px)"
+              : aspect === "square"
+                ? "clamp(240px, 36vw, 300px)"
+                : "clamp(280px, 46vw, 360px)",
+        }}
+      >
+        {/* Subtle blur background */}
+        <video
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          onError={() => onBad?.(src)}
+          className="absolute inset-0 w-full h-full object-cover blur-xl scale-105 opacity-20"
+        />
+
+        {/* Main video */}
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          onError={() => onBad?.(src)}
+          onLoadedMetadata={(e) => {
+            const v = e.currentTarget;
+            onMeta?.(src, v.videoWidth, v.videoHeight);
+          }}
+          className="relative z-10 w-full h-full object-contain"
+        />
+
+        {/* Subtle overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(to top, rgba(0,0,0,0.05) 0%, transparent 50%)`,
+          }}
+        />
+
+        {/* Decorative corner accent */}
+        <div
+          className="absolute bottom-0 right-0 w-16 h-16 opacity-10 pointer-events-none"
+          style={{
+            background: `linear-gradient(135deg, transparent 0%, ${BRAND} 100%)`,
+          }}
+        />
+      </div>
+    </motion.div>
+  );
+}

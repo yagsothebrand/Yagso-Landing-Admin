@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Package, Zap, ArrowRight, Eye } from "lucide-react";
+import { ShoppingCart, Eye, Sparkles, Tag } from "lucide-react";
 import { useProducts } from "./auth/ProductsProvider";
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 const BRAND = "#948179";
+const WARM_CREAM = "#fbfaf8";
 const cx = (...c) => c.filter(Boolean).join(" ");
 
 export default function ProductCard({
@@ -25,8 +26,6 @@ export default function ProductCard({
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const hasVariants = variants.length > 0;
 
-  const materials = variants.map((v) => (v?.name || "").trim()).filter(Boolean);
-
   const basePrice = Number(product?.price || 0);
   const variantPrices = variants
     .map((v) => Number(v?.price || 0))
@@ -41,21 +40,26 @@ export default function ProductCard({
   const baseStock = Number(product?.stock || 0);
   const variantStockSum = variants.reduce(
     (sum, v) => sum + Number(v?.stock || 0),
-    0,
+    0
   );
   const displayStock = hasVariants ? variantStockSum : baseStock;
 
-  const isPopular = product?.popularity && product.popularity >= 80;
-
   const hasCustomFields = product?.customFields?.length > 0;
   const hasExtras = product?.extras?.length > 0;
-
   const hasRequiredCustomFields =
     product?.customFields?.some((f) => !!f.required) || false;
-
   const hasRequiredTextExtra =
-    product?.extras?.some((x) => x?.type === "text" && x?.requiredText) ||
-    false;
+    product?.extras?.some((x) => x?.type === "text" && x?.requiredText) || false;
+
+  const isLowStock = displayStock > 0 && displayStock <= 5;
+  const isPopular = product?.popularity && product.popularity >= 80;
+  const isFeatured = product?.isFeatured || false;
+  const isDiscounted = product?.isDiscounted && product?.discountPercentage > 0;
+  const discountPercent = product?.discountPercentage || 0;
+
+  const originalPrice = isDiscounted && discountPercent > 0
+    ? displayPrice / (1 - discountPercent / 100)
+    : null;
 
   const goToDetails = () => navigate(`/product/${product.id}`);
 
@@ -63,13 +67,11 @@ export default function ProductCard({
     e?.stopPropagation?.();
     if (displayStock === 0) return;
 
-    // If anything needs user input, go to details
     if (hasRequiredCustomFields || hasRequiredTextExtra) {
       goToDetails();
       return;
     }
 
-    // If multiple materials exist, force user to pick material on details page
     if (hasVariants && variants.length > 1) {
       goToDetails();
       return;
@@ -89,211 +91,244 @@ export default function ProductCard({
     addToCart(product, 1, selectedVariant, {}, []);
   };
 
-  const subtitle = useMemo(() => {
-    if (displayStock === 0) return "Sold out";
-    if (hasVariants && variants.length > 1) return "Choose material";
-    if (hasCustomFields || hasExtras) return "Personalize available";
-    if (displayStock > 0 && displayStock <= 10)
-      return `Only ${displayStock} left`;
-    return "Ready to ship";
-  }, [displayStock, hasVariants, variants.length, hasCustomFields, hasExtras]);
-
   return (
-    <motion.div
-      className="h-full"
+    <motion.article
+      className="h-full group relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 260, damping: 22 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.05,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
     >
-      <button
-        type="button"
-        onClick={goToDetails}
-        className={cx(
-          "group w-full h-full text-left bg-white border overflow-hidden",
-          "transition-shadow hover:shadow-[0_18px_42px_rgba(0,0,0,0.08)]",
-        )}
-        style={{ borderColor: `${BRAND}1f` }}
-      >
-        {/* ===== Image area (Lorvae-ish: lots of white space + centered product) ===== */}
-        <div className="relative">
-          <div
-            className="relative aspect-[4/5] bg-white"
+      {/* Glow Effect */}
+      <motion.div
+        className="absolute -inset-3 rounded-xl opacity-0 blur-xl transition-opacity duration-700"
+        style={{
+          background: `radial-gradient(circle at center, ${BRAND}12, transparent 70%)`,
+        }}
+        animate={{ opacity: hovered ? 1 : 0 }}
+      />
+
+      <div className="relative h-full flex flex-col bg-white rounded-md overflow-hidden transition-all duration-500 border border-slate-100/50 hover:border-slate-200 hover:shadow-lg">
+        {/* Image Container */}
+        <div
+          onClick={goToDetails}
+          className="relative aspect-[4/5] overflow-hidden cursor-pointer"
+          style={{ backgroundColor: WARM_CREAM }}
+        >
+          {/* Image with Ken Burns Effect */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={hovered ? hoverImage : mainImage}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <motion.img
+                src={hovered ? hoverImage : mainImage}
+                alt={product?.name || "Product"}
+                className="w-full h-full object-cover"
+                animate={{
+                  scale: hovered ? 1.05 : 1,
+                }}
+                transition={{
+                  duration: 0.6,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                loading="lazy"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Gradient Overlay */}
+          <motion.div
+            className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(148,129,121,0.03) 100%)",
+                "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.04) 100%)",
             }}
-          >
-            {/* centered inner padding so image doesn't touch edges */}
-            <div className="absolute inset-0 p-8 md:p-10">
-              <div className="w-full h-full flex items-center justify-center">
-                {/* Main/hover image swap */}
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={hovered ? hoverImage : mainImage}
-                    src={hovered ? hoverImage : mainImage}
-                    alt={product?.name || "Product"}
-                    className="w-full h-full object-contain"
-                    initial={{ opacity: 0.6, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: hovered ? 1.03 : 1 }}
-                    exit={{ opacity: 0.3, scale: 0.98 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
-                    loading="lazy"
-                  />
-                </AnimatePresence>
-              </div>
-            </div>
+            animate={{ opacity: hovered ? 1 : 0.6 }}
+            transition={{ duration: 0.3 }}
+          />
 
-            {/* Top badges */}
-            <div className="absolute top-3 left-3 flex items-center gap-2">
-              {isPopular && (
-                <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-white"
-                  style={{ backgroundColor: BRAND }}
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  Trending
-                </span>
-              )}
-
-              {displayStock === 0 && (
-                <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold bg-white border"
-                  style={{ borderColor: `${BRAND}26`, color: BRAND }}
-                >
-                  <Package className="w-3.5 h-3.5" />
-                  Sold out
-                </span>
-              )}
-            </div>
-
-            {/* Quick actions (appear on hover, stay easy) */}
-            <div className="absolute inset-x-3 bottom-3">
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.22 }}
-                  className="flex gap-2"
-                >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      goToDetails();
-                    }}
-                    className="flex-1 h-11 border bg-white/90 backdrop-blur font-semibold text-sm inline-flex items-center justify-center gap-2"
-                    style={{ borderColor: `${BRAND}26`, color: "#0f172a" }}
-                  >
-                    <Eye className="w-4 h-4" style={{ color: BRAND }} />
-                    View
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleQuickAdd}
-                    disabled={displayStock === 0}
-                    className={cx(
-                      "h-11 px-4 border font-semibold text-sm inline-flex items-center justify-center gap-2",
-                      "disabled:opacity-50 disabled:cursor-not-allowed",
-                    )}
-                    style={{
-                      borderColor: `${BRAND}26`,
-                      background: BRAND,
-                      color: "white",
-                    }}
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                    {hasVariants && variants.length > 1 ? "Choose" : "Add"}
-                  </button>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-
-        {/* ===== Bottom info (clean, spaced, Lorvae style) ===== */}
-        <div className="px-4 pt-4 pb-5 md:px-5">
-          {/* category + sku row */}
-          <div className="flex items-center justify-between gap-3">
-            {product?.category ? (
-              <span className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
-                {product.category}
-              </span>
-            ) : (
-              <span />
+          {/* Badges */}
+          <div className="absolute top-2 left-2 flex flex-col gap-1">
+            {isFeatured && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-1 px-2 py-0.5 text-[8px] md:text-[9px] font-bold tracking-wide text-white rounded-full backdrop-blur-md shadow-md"
+                style={{ background: BRAND }}
+              >
+                <Sparkles className="w-2 h-2" />
+                FEATURED
+              </motion.span>
             )}
 
-            {product?.sku != null && String(product.sku).trim() !== "" && (
-              <span className="text-[11px] text-slate-400 font-semibold">
+            {isDiscounted && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-1 px-2 py-0.5 text-[8px] md:text-[9px] font-bold tracking-wide text-white bg-red-600 rounded-full backdrop-blur-md shadow-md"
+              >
+                <Tag className="w-2 h-2" />
+                {discountPercent}% OFF
+              </motion.span>
+            )}
+
+            {isLowStock && displayStock > 0 && !isDiscounted && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center px-2 py-0.5 text-[8px] md:text-[9px] font-semibold tracking-wide text-amber-900 bg-white/95 backdrop-blur-md rounded-full shadow-sm"
+              >
+                {displayStock} left
+              </motion.span>
+            )}
+
+            {displayStock === 0 && (
+              <span className="inline-flex items-center px-2 py-0.5 text-[8px] md:text-[9px] font-semibold tracking-wide text-slate-600 bg-white/95 backdrop-blur-md rounded-full shadow-sm">
+                SOLD OUT
+              </span>
+            )}
+          </div>
+
+          {/* Quick Actions - Desktop */}
+          <motion.div
+            className="hidden md:block absolute inset-x-0 bottom-0 p-3"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 15 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToDetails();
+                }}
+                className="flex-1 h-9 rounded-md bg-white/95 backdrop-blur-xl text-[10px] font-bold tracking-wide inline-flex items-center justify-center gap-1.5 hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg border border-slate-200/50"
+                style={{ color: "#0f172a" }}
+              >
+                <Eye className="w-3.5 h-3.5" style={{ color: BRAND }} />
+                VIEW
+              </button>
+
+              <button
+                type="button"
+                onClick={handleQuickAdd}
+                disabled={displayStock === 0}
+                className={cx(
+                  "flex-1 h-9 rounded-md text-[10px] font-bold tracking-wide inline-flex items-center justify-center gap-1.5 transition-all duration-300 shadow-md hover:shadow-lg",
+                  "disabled:opacity-40 disabled:cursor-not-allowed",
+                  "hover:scale-[1.02] active:scale-[0.98]"
+                )}
+                style={{
+                  background: displayStock === 0 ? "#cbd5e1" : BRAND,
+                  color: "white",
+                }}
+              >
+                <ShoppingCart className="w-3.5 h-3.5" />
+                ADD
+              </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Product Info */}
+        <div className="p-2 md:p-2.5 flex-1 flex flex-col">
+          {/* Category & SKU */}
+          <div className="flex items-center justify-between gap-2 mb-1">
+            {product?.category && (
+              <span
+                className="text-[8px] md:text-[9px] uppercase tracking-[0.15em] font-bold opacity-70"
+                style={{ color: BRAND }}
+              >
+                {product.category}
+              </span>
+            )}
+            {product?.sku && (
+              <span className="text-[8px] text-slate-400 font-semibold">
                 #{product.sku}
               </span>
             )}
           </div>
 
-          {/* name */}
-          <h3 className="mt-2 text-[15px] md:text-[16px] font-semibold text-slate-900 leading-snug line-clamp-2">
+          {/* Name */}
+          <h3
+            onClick={goToDetails}
+            className="text-[11px] md:text-xs font-semibold text-slate-900 leading-tight line-clamp-2 cursor-pointer transition-colors duration-300 mb-1 group-hover:text-slate-700"
+          >
             {product?.name || "Product Name"}
           </h3>
 
-          {/* subtle meta line */}
-          <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
-
-          {/* Materials: show only 2 (cleaner) */}
-          {materials.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {materials.slice(0, 2).map((m) => (
+          {/* Variants */}
+          {hasVariants && variants.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-1.5">
+              {variants.slice(0, 3).map((variant) => (
                 <span
-                  key={m}
-                  className="text-[11px] px-2 py-1 border bg-white"
+                  key={variant.id}
+                  className="text-[8px] px-1.5 py-0.5 border rounded-sm"
                   style={{ borderColor: `${BRAND}26`, color: BRAND }}
                 >
-                  {m}
+                  {variant.name}
                 </span>
               ))}
-              {materials.length > 2 && (
+              {variants.length > 3 && (
                 <span
-                  className="text-[11px] px-2 py-1 border bg-white text-slate-500"
+                  className="text-[8px] px-1.5 py-0.5 border rounded-sm text-slate-500"
                   style={{ borderColor: `${BRAND}26` }}
                 >
-                  +{materials.length - 2}
+                  +{variants.length - 3}
                 </span>
               )}
             </div>
           )}
 
-          {/* price row */}
-          <div className="mt-4 flex items-end justify-between gap-3">
-            <p className="text-base md:text-lg font-bold text-slate-900">
-              {showFrom
-                ? `From ${formatPrice(displayPrice)}`
-                : formatPrice(displayPrice)}
-            </p>
+          {/* Spacer */}
+          <div className="flex-1" />
 
-            {/* small hint button for touch devices (hover isn’t reliable) */}
-            <span
-              className="text-[11px] font-semibold"
-              style={{ color: `${BRAND}` }}
-            >
-              {displayStock === 0 ? "Unavailable" : "Quick actions ↑"}
-            </span>
+          {/* Price */}
+          <div className="mb-1.5">
+            <div className="flex items-baseline gap-1.5">
+              {showFrom && (
+                <span className="text-[8px] font-medium text-slate-400 tracking-wide">
+                  FROM
+                </span>
+              )}
+              <div className="flex items-baseline gap-1.5">
+                {isDiscounted && originalPrice && (
+                  <p className="text-[10px] font-medium text-slate-400 line-through">
+                    {formatPrice(originalPrice)}
+                  </p>
+                )}
+                <p className={cx(
+                  "font-bold text-slate-900",
+                  isDiscounted ? "text-sm md:text-base" : "text-xs md:text-sm"
+                )}>
+                  {formatPrice(displayPrice)}
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* On mobile, show a simple add row (because hover doesn’t exist) */}
-          <div className="mt-3 flex gap-2 md:hidden">
+          {/* Mobile Actions */}
+          <div className="flex gap-1 md:hidden pt-1.5 border-t border-slate-100">
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                goToDetails();
-              }}
-              className="flex-1 h-11 border bg-white font-semibold text-sm inline-flex items-center justify-center gap-2"
-              style={{ borderColor: `${BRAND}26` }}
+              onClick={goToDetails}
+              className="flex-1 h-7 rounded-md border border-slate-200 text-[9px] font-semibold tracking-wide inline-flex items-center justify-center gap-1 hover:border-slate-300 hover:bg-slate-50 transition-all duration-300"
+              style={{ color: "#0f172a" }}
             >
-              View
-              <ArrowRight className="w-4 h-4 text-slate-400" />
+              <Eye className="w-2.5 h-2.5" style={{ color: BRAND }} />
+              VIEW
             </button>
 
             <button
@@ -301,21 +336,21 @@ export default function ProductCard({
               onClick={handleQuickAdd}
               disabled={displayStock === 0}
               className={cx(
-                "h-11 px-4 border font-semibold text-sm inline-flex items-center justify-center gap-2",
-                "disabled:opacity-50 disabled:cursor-not-allowed",
+                "flex-1 h-7 rounded-md text-[9px] font-bold tracking-wide inline-flex items-center justify-center gap-1 transition-all duration-300",
+                "disabled:opacity-40 disabled:cursor-not-allowed",
+                "active:scale-95"
               )}
               style={{
-                borderColor: `${BRAND}26`,
-                background: BRAND,
+                background: displayStock === 0 ? "#cbd5e1" : BRAND,
                 color: "white",
               }}
             >
-              <ShoppingCart className="w-4 h-4" />
-              {hasVariants && variants.length > 1 ? "Choose" : "Add"}
+              <ShoppingCart className="w-2.5 h-2.5" />
+              ADD
             </button>
           </div>
         </div>
-      </button>
-    </motion.div>
+      </div>
+    </motion.article>
   );
 }

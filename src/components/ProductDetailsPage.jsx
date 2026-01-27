@@ -368,7 +368,7 @@ export default function ProductDetailsPage() {
     return (
       <div className="min-h-screen bg-[#fbfaf8] px-4 pt-24">
         <div className="max-w-3xl mx-auto">
-          <Card className="rounded-none border-slate-200">
+          <Card className="rounded-sm border-slate-200">
             <CardHeader>
               <CardTitle className="text-slate-900">
                 Product not found
@@ -415,7 +415,7 @@ export default function ProductDetailsPage() {
           <div className="hidden md:flex items-center gap-2">
             <Badge
               variant="secondary"
-              className="rounded-none font-bold"
+              className="rounded-sm font-bold"
               style={{ background: `${BRAND}10`, color: BRAND }}
             >
               {formatPrice(total)}
@@ -423,7 +423,7 @@ export default function ProductDetailsPage() {
             <Button
               onClick={handleAddToCart}
               disabled={isOutOfStock || !isFormValid()}
-              className="rounded-none font-bold"
+              className="rounded-sm font-bold"
               style={{
                 background: BRAND,
                 opacity: isOutOfStock || !isFormValid() ? 0.6 : 1,
@@ -452,7 +452,7 @@ export default function ProductDetailsPage() {
                         key={img + idx}
                         type="button"
                         onClick={() => setCurrentImageIndex(idx)}
-                        className="w-[72px] h-[72px] border bg-white overflow-hidden rounded-none"
+                        className="w-[72px] h-[72px] border bg-white overflow-hidden rounded-sm"
                         style={{
                           borderColor: active ? BRAND : "#e2e8f0",
                           boxShadow: active ? `0 0 0 1px ${BRAND}20` : "none",
@@ -472,7 +472,7 @@ export default function ProductDetailsPage() {
               )}
 
               {/* Main image */}
-              <Card className="rounded-none border-slate-200 bg-white overflow-hidden">
+              <Card className="rounded-sm border-slate-200 bg-white overflow-hidden">
                 <CardContent className="p-0">
                   <motion.div
                     key={product.images?.[currentImageIndex] || "no-image"}
@@ -508,7 +508,7 @@ export default function ProductDetailsPage() {
                       key={img + idx}
                       type="button"
                       onClick={() => setCurrentImageIndex(idx)}
-                      className="w-16 h-16 border bg-white overflow-hidden rounded-none flex-shrink-0"
+                      className="w-16 h-16 border bg-white overflow-hidden rounded-sm flex-shrink-0"
                       style={{ borderColor: active ? BRAND : "#e2e8f0" }}
                     >
                       <img
@@ -525,12 +525,12 @@ export default function ProductDetailsPage() {
 
           {/* ===== Right: Info / Buy box ===== */}
           <div className="space-y-4">
-            <Card className="rounded-none border-slate-200 bg-white">
+            <Card className="rounded-sm border-slate-200 bg-white">
               <CardHeader className="space-y-2">
                 <div className="flex items-center justify-between gap-3">
                   {product.category && product.category !== "All" ? (
                     <span
-                      className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-none bg-gradient-to-r ${getCategoryGradient(
+                      className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-sm bg-gradient-to-r ${getCategoryGradient(
                         product.category,
                       )} text-white`}
                     >
@@ -597,7 +597,7 @@ export default function ProductDetailsPage() {
                     type="button"
                     onClick={() => setTryOnOpen(true)}
                     variant="outline"
-                    className="rounded-none border-slate-200 font-bold"
+                    className="rounded-sm border-slate-200 font-bold"
                   >
                     Try On
                   </Button>
@@ -605,7 +605,7 @@ export default function ProductDetailsPage() {
                   <Button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock || !isFormValid()}
-                    className="rounded-none font-extrabold"
+                    className="rounded-sm font-extrabold"
                     style={{
                       background: addedToCart
                         ? "linear-gradient(to right,#22c55e,#10b981)"
@@ -667,7 +667,7 @@ export default function ProductDetailsPage() {
                             type="button"
                             disabled={out}
                             onClick={() => !out && setSelectedVariant(v)}
-                            className="px-3 py-2 rounded-none border text-sm font-bold transition"
+                            className="px-3 py-2 rounded-sm border text-sm font-bold transition"
                             style={{
                               borderColor: active ? BRAND : "#e2e8f0",
                               background: active ? `${BRAND}10` : "white",
@@ -709,7 +709,7 @@ export default function ProductDetailsPage() {
                   </Label>
 
                   <div className="flex items-center justify-between gap-3">
-                    <div className="inline-flex items-center border border-slate-200 bg-white rounded-none">
+                    <div className="inline-flex items-center border border-slate-200 bg-white rounded-sm">
                       <button
                         type="button"
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -786,7 +786,7 @@ export default function ProductDetailsPage() {
                                       `Enter ${field.label.toLowerCase()}...`
                                     }
                                     rows={3}
-                                    className="rounded-none border-slate-200 text-sm"
+                                    className="rounded-sm border-slate-200 text-sm"
                                     style={{ outlineColor: BRAND }}
                                   />
                                 ) : (
@@ -803,7 +803,7 @@ export default function ProductDetailsPage() {
                                       field.placeholder ||
                                       `Enter ${field.label.toLowerCase()}...`
                                     }
-                                    className="rounded-none border-slate-200 h-11 text-sm"
+                                    className="rounded-sm border-slate-200 h-11 text-sm"
                                     style={{ outlineColor: BRAND }}
                                   />
                                 )}
@@ -842,7 +842,7 @@ export default function ProductDetailsPage() {
                               return (
                                 <div
                                   key={extra.id}
-                                  className="border border-slate-200 rounded-none p-3 bg-white"
+                                  className="border border-slate-200 rounded-sm p-3 bg-white"
                                   style={{
                                     borderColor: selected ? BRAND : "#e2e8f0",
                                     background: selected
@@ -861,7 +861,7 @@ export default function ProductDetailsPage() {
                                           picked?.requiredText) && (
                                           <Badge
                                             variant="secondary"
-                                            className="rounded-none text-[10px] font-extrabold"
+                                            className="rounded-sm text-[10px] font-extrabold"
                                             style={{
                                               background: `${BRAND}14`,
                                               color: BRAND,
@@ -874,7 +874,7 @@ export default function ProductDetailsPage() {
                                         {!hasStock && (
                                           <Badge
                                             variant="secondary"
-                                            className="rounded-none text-[10px] font-extrabold"
+                                            className="rounded-sm text-[10px] font-extrabold"
                                           >
                                             Out of stock
                                           </Badge>
@@ -901,7 +901,7 @@ export default function ProductDetailsPage() {
                                       type="button"
                                       onClick={() => toggleExtra(extra)}
                                       disabled={!hasStock}
-                                      className="h-9 px-4 rounded-none text-xs font-extrabold"
+                                      className="h-9 px-4 rounded-sm text-xs font-extrabold"
                                       style={{
                                         background: selected
                                           ? "#ffffff"
@@ -940,7 +940,7 @@ export default function ProductDetailsPage() {
                                                     v,
                                                   )
                                                 }
-                                                className="px-3 py-2 rounded-none border text-xs font-extrabold transition"
+                                                className="px-3 py-2 rounded-sm border text-xs font-extrabold transition"
                                                 style={{
                                                   borderColor: active
                                                     ? BRAND
@@ -973,7 +973,7 @@ export default function ProductDetailsPage() {
 
                                   {selected && (
                                     <div className="mt-3 flex items-center justify-between gap-2">
-                                      <div className="inline-flex items-center border border-slate-200 bg-white rounded-none">
+                                      <div className="inline-flex items-center border border-slate-200 bg-white rounded-sm">
                                         <button
                                           type="button"
                                           onClick={() =>
@@ -1046,7 +1046,7 @@ export default function ProductDetailsPage() {
                                           extra.promptPlaceholder ||
                                           "Type here..."
                                         }
-                                        className="h-11 rounded-none border-slate-200 text-sm"
+                                        className="h-11 rounded-sm border-slate-200 text-sm"
                                         style={{ outlineColor: BRAND }}
                                       />
 
@@ -1075,7 +1075,7 @@ export default function ProductDetailsPage() {
 
             {/* Related */}
             {relatedProducts.length > 0 && (
-              <Card className="rounded-none border-slate-200 bg-white">
+              <Card className="rounded-sm border-slate-200 bg-white">
                 <CardHeader>
                   <CardTitle className="text-base text-slate-900">
                     You Might Also Like
@@ -1117,7 +1117,7 @@ export default function ProductDetailsPage() {
                         >
                           <Link
                             to={`/product/${rp.id}`}
-                            className="group block border border-slate-200 bg-white rounded-none overflow-hidden hover:border-slate-300 transition"
+                            className="group block border border-slate-200 bg-white rounded-sm overflow-hidden hover:border-slate-300 transition"
                           >
                             <div className="relative aspect-square bg-[#f6f3ef] overflow-hidden">
                               <img
@@ -1132,7 +1132,7 @@ export default function ProductDetailsPage() {
                                   type="button"
                                   onClick={handleQuickAdd}
                                   disabled={!canQuickAdd}
-                                  className="w-full h-10 rounded-none text-xs font-extrabold"
+                                  className="w-full h-10 rounded-sm text-xs font-extrabold"
                                   style={{
                                     background: canQuickAdd ? BRAND : "#e2e8f0",
                                     color: canQuickAdd ? "white" : "#64748b",
@@ -1152,7 +1152,7 @@ export default function ProductDetailsPage() {
                                 <div className="absolute top-2 left-2">
                                   <Badge
                                     variant="secondary"
-                                    className="rounded-none text-[10px] font-extrabold"
+                                    className="rounded-sm text-[10px] font-extrabold"
                                   >
                                     OUT
                                   </Badge>
@@ -1197,7 +1197,7 @@ export default function ProductDetailsPage() {
                                         type="button"
                                         onClick={pick}
                                         disabled={vOut}
-                                        className="px-2 py-1 rounded-none border text-[10px] font-extrabold transition"
+                                        className="px-2 py-1 rounded-sm border text-[10px] font-extrabold transition"
                                         style={{
                                           borderColor: active
                                             ? BRAND
@@ -1255,7 +1255,7 @@ export default function ProductDetailsPage() {
           <Button
             onClick={handleAddToCart}
             disabled={isOutOfStock || !isFormValid()}
-            className="rounded-none font-extrabold h-12 px-6"
+            className="rounded-sm font-extrabold h-12 px-6"
             style={{
               background: addedToCart
                 ? "linear-gradient(to right,#22c55e,#10b981)"

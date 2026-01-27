@@ -6,10 +6,9 @@ import { ArrowRight, Edit2, Plus, Trash2 } from "lucide-react";
 import BlogForm from "./BlogForm";
 import { useBlog } from "./auth/BlogProvider";
 import { useAuth } from "./auth/AuthProvider";
-import CTAFooter from "./CTAFooter";
 
 const BRAND = "#948179";
-
+const BRAND_LIGHT = "#f5f2ef";
 const BORDER = `${BRAND}26`;
 
 const sectionVariants = {
@@ -23,7 +22,7 @@ const sectionVariants = {
 function Skeleton({ className = "" }) {
   return (
     <div
-      className={`animate-pulse rounded-none bg-slate-200 ${className}`}
+      className={`animate-pulse rounded-sm bg-slate-200 ${className}`}
       aria-hidden="true"
     />
   );
@@ -31,36 +30,36 @@ function Skeleton({ className = "" }) {
 
 export function BlogGridSkeleton({ count = 6 }) {
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="h-full">
-          <div className="h-full overflow-hidden rounded-none border border-slate-200 bg-white/80 backdrop-blur flex flex-col">
+          <div className="h-full overflow-hidden rounded-sm border border-slate-200 bg-white/80 backdrop-blur flex flex-col">
             {/* Image skeleton */}
-            <div className="relative h-52 overflow-hidden">
+            <div className="relative h-44 overflow-hidden">
               <Skeleton className="absolute inset-0" />
-              <div className="absolute inset-x-0 top-0 p-4 flex items-center justify-between">
-                <Skeleton className="h-6 w-20 rounded-none bg-white/70" />
-                <Skeleton className="h-6 w-24 rounded-none bg-white/70" />
+              <div className="absolute inset-x-0 top-0 p-3 flex items-center justify-between">
+                <Skeleton className="h-5 w-16 rounded-sm bg-white/70" />
+                <Skeleton className="h-5 w-20 rounded-sm bg-white/70" />
               </div>
             </div>
 
             {/* Content skeleton */}
-            <div className="p-6 flex-1 flex flex-col">
+            <div className="p-4 flex-1 flex flex-col">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-5 w-2/3 mt-2" />
-              <div className="mt-4 space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-11/12" />
-                <Skeleton className="h-4 w-4/5" />
+              <div className="mt-3 space-y-2">
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-11/12" />
+                <Skeleton className="h-3 w-4/5" />
               </div>
-              <div className="mt-5 flex items-center justify-between">
-                <Skeleton className="h-3 w-24" />
+              <div className="mt-4 flex items-center justify-between">
                 <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-3 w-16" />
               </div>
-              <div className="mt-6 grid grid-cols-3 gap-2">
-                <Skeleton className="h-9 rounded-none" />
-                <Skeleton className="h-9 rounded-none" />
-                <Skeleton className="h-9 rounded-none" />
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <Skeleton className="h-8 rounded-sm" />
+                <Skeleton className="h-8 rounded-sm" />
+                <Skeleton className="h-8 rounded-sm" />
               </div>
             </div>
           </div>
@@ -110,7 +109,11 @@ export default function BlogSection() {
 
   return (
     <>
-      <section id="blog" className="relative py-16  bg-[#fbfaf8]">
+      <section
+        id="blog"
+        className="relative py-12 md:py-16"
+        style={{ backgroundColor: BRAND_LIGHT }}
+      >
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <motion.div
@@ -118,29 +121,39 @@ export default function BlogSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-12 md:mb-14"
+            className="text-center mb-8 md:mb-10"
           >
-            <p
-              className="text-[12px] tracking-[0.18em] uppercase"
-              style={{ color: BRAND }}
-            >
-              From the Journal
-            </p>
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div
+                className="h-[1px] w-8 bg-gradient-to-r from-transparent"
+                style={{ backgroundColor: BRAND }}
+              />
+              <p
+                className="text-[11px] tracking-[0.24em] uppercase font-semibold"
+                style={{ color: BRAND }}
+              >
+                From the Journal
+              </p>
+              <div
+                className="h-[1px] w-8 bg-gradient-to-l from-transparent"
+                style={{ backgroundColor: BRAND }}
+              />
+            </div>
 
-            <h3 className="mt-4 text-3xl md:text-5xl font-extrabold text-slate-900">
+            <h3 className="mt-3 text-2xl md:text-4xl font-serif font-light text-slate-900">
               Wellness Insights
             </h3>
 
-            <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+            <p className="mt-3 text-sm md:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
               Thoughtful articles on sexual wellness, aftercare, and informed
               choices — written to support you, discreetly.
             </p>
 
             {isAdmin && (
-              <div className="mt-7 flex items-center justify-center">
+              <div className="mt-6 flex items-center justify-center">
                 <Button
                   onClick={() => setIsCreating(true)}
-                  className="h-11 rounded-none text-white font-semibold tracking-wide hover:opacity-90"
+                  className="h-10 rounded-sm text-white font-semibold tracking-wide hover:opacity-90 transition-all"
                   style={{ backgroundColor: BRAND }}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -154,19 +167,25 @@ export default function BlogSection() {
           {loading ? (
             <BlogGridSkeleton count={6} />
           ) : blogs.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="max-w-lg mx-auto rounded-none border border-slate-200 bg-white/50 backdrop-blur p-10">
+            <div className="text-center py-16">
+              <div
+                className="max-w-md mx-auto rounded-sm border p-8"
+                style={{
+                  borderColor: BORDER,
+                  backgroundColor: "white",
+                }}
+              >
                 <p className="text-slate-900 font-semibold text-lg">
                   No blog posts yet
                 </p>
-                <p className="text-slate-600 mt-2">
+                <p className="text-slate-600 mt-2 text-sm">
                   Create your first post to start sharing helpful insights.
                 </p>
 
                 {isAdmin && (
                   <Button
                     onClick={() => setIsCreating(true)}
-                    className="mt-6 h-11 rounded-none text-white font-semibold tracking-wide hover:opacity-90"
+                    className="mt-5 h-10 rounded-sm text-white font-semibold tracking-wide hover:opacity-90"
                     style={{ backgroundColor: BRAND }}
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -181,48 +200,52 @@ export default function BlogSection() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.2 }}
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
             >
               {blogs.map((blog) => (
                 <motion.div key={blog.id} variants={itemVariants}>
                   <motion.div
-                    whileHover={{ y: -6 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                    whileHover={{ y: -4 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     className="h-full"
                   >
                     <a href={`/blog/${blog.id}`}>
                       <Card
-                        className="h-full overflow-hidden border bg-[#fffdfb] shadow-sm hover:shadow-xl transition flex flex-col group"
+                        className="h-full overflow-hidden border bg-white shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group rounded-sm"
                         style={{ borderColor: BORDER }}
                       >
                         {/* Image */}
-                        <div className="relative h-56 overflow-hidden">
+                        <div className="relative h-48 overflow-hidden">
                           {blog.image ? (
                             <img
                               src={blog.image}
                               alt={blog.title}
-                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.06] transition duration-700"
+                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
                               loading="lazy"
                             />
                           ) : (
-                            <div className="absolute inset-0 bg-[#f6f3ef] flex items-center justify-center">
-                              <p className="text-sm text-slate-500">
+                            <div
+                              className="absolute inset-0 flex items-center justify-center"
+                              style={{ backgroundColor: BRAND_LIGHT }}
+                            >
+                              <p className="text-sm" style={{ color: BRAND }}>
                                 No cover image
                               </p>
                             </div>
                           )}
 
-                          {/* subtle luxury gradient for readability */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+                          {/* Gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-                          {/* Top overlay */}
-                          <div className="absolute inset-x-0 top-0 p-4 flex items-center justify-between gap-3">
+                          {/* Top badges */}
+                          <div className="absolute inset-x-0 top-0 p-3 flex items-center justify-between gap-2">
                             {blog.category ? (
                               <span
-                                className="text-[11px] tracking-[0.18em] uppercase font-semibold px-3 py-1 border bg-white/75 backdrop-blur"
+                                className="text-[10px] tracking-[0.18em] uppercase font-bold px-2.5 py-1 border backdrop-blur-sm rounded-sm"
                                 style={{
-                                  borderColor: BORDER,
-                                  color: "#0f172a",
+                                  borderColor: "rgba(255,255,255,0.3)",
+                                  backgroundColor: BRAND,
+                                  color: "white",
                                 }}
                               >
                                 {blog.category}
@@ -232,44 +255,51 @@ export default function BlogSection() {
                             )}
 
                             <span
-                              className="text-[11px] px-3 py-1 border bg-white/75 backdrop-blur"
-                              style={{ borderColor: BORDER, color: "#334155" }}
+                              className="text-[10px] px-2.5 py-1 border backdrop-blur-md rounded-sm"
+                              style={{
+                                borderColor: "rgba(255,255,255,0.3)",
+                                backgroundColor: "rgba(255,255,255,0.9)",
+                                color: "#334155",
+                              }}
                             >
                               {blog.date}
                             </span>
                           </div>
 
-                          {/* bottom accent line */}
+                          {/* Bottom accent */}
                           <div
                             className="absolute bottom-0 left-0 right-0 h-[2px]"
-                            style={{
-                              background:
-                                "linear-gradient(90deg, rgba(148,129,121,0), rgba(148,129,121,0.95), rgba(148,129,121,0))",
-                            }}
+                            style={{ backgroundColor: BRAND }}
                           />
                         </div>
 
                         {/* Content */}
-                        <div className="p-6 flex-1 flex flex-col">
-                          <h3 className="text-xl font-semibold text-slate-900 leading-snug line-clamp-2 group-hover:opacity-90 transition">
+                        <div className="p-4 flex-1 flex flex-col">
+                          <h3 className="text-lg font-semibold text-slate-900 leading-snug line-clamp-2 group-hover:opacity-80 transition">
                             {blog.title}
                           </h3>
 
-                          <p className="text-slate-600 text-sm mt-3 leading-relaxed line-clamp-3">
+                          <p className="text-slate-600 text-sm mt-2 leading-relaxed line-clamp-2">
                             {blog.description}
                           </p>
 
-                          <div className="mt-5 flex items-center justify-between text-xs text-slate-500">
-                            <span className="font-semibold text-slate-800">
+                          <div className="mt-4 flex items-center justify-between text-xs">
+                            <span
+                              className="font-semibold"
+                              style={{ color: BRAND }}
+                            >
                               {blog.author || "Anonymous"}
                             </span>
 
-                            <span className="inline-flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5">
                               <span
-                                className="h-1.5 w-1.5 rounded-full"
+                                className="h-1 w-1 rounded-full"
                                 style={{ backgroundColor: BRAND }}
                               />
-                              <span className="tracking-[0.14em] uppercase text-[11px]">
+                              <span
+                                className="tracking-[0.16em] uppercase text-[10px] font-semibold"
+                                style={{ color: BRAND }}
+                              >
                                 YAGSO
                               </span>
                             </span>
@@ -277,30 +307,39 @@ export default function BlogSection() {
 
                           {/* Actions */}
                           <div
-                            className={`mt-6 grid gap-2 ${isAdmin ? "grid-cols-3" : "grid-cols-1"}`}
+                            className={`mt-4 grid gap-2 ${isAdmin ? "grid-cols-3" : "grid-cols-1"}`}
                           >
                             {isAdmin && (
                               <>
                                 <Button
-                                  onClick={() => setEditingBlog(blog)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setEditingBlog(blog);
+                                  }}
                                   variant="outline"
-                                  className="text-xs h-10 bg-white hover:bg-[#f6f3ef]"
-                                  style={{ borderColor: BORDER }}
+                                  className="text-xs h-9 bg-white hover:bg-opacity-80 rounded-sm"
+                                  style={{
+                                    borderColor: BORDER,
+                                    color: BRAND,
+                                  }}
                                 >
-                                  <Edit2 className="w-3.5 h-3.5 mr-1" />
+                                  <Edit2 className="w-3 h-3 mr-1" />
                                   Edit
                                 </Button>
 
                                 <Button
-                                  onClick={() => handleDelete(blog.id)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDelete(blog.id);
+                                  }}
                                   variant="outline"
-                                  className="text-xs h-10 bg-white hover:bg-red-50"
+                                  className="text-xs h-9 bg-white hover:bg-red-50 rounded-sm"
                                   style={{
                                     borderColor: BORDER,
                                     color: "#b91c1c",
                                   }}
                                 >
-                                  <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                  <Trash2 className="w-3 h-3 mr-1" />
                                   Delete
                                 </Button>
                               </>
@@ -308,14 +347,14 @@ export default function BlogSection() {
 
                             <a
                               href={`/blog/${blog.id}`}
-                              className="inline-flex items-center justify-center border bg-white text-xs font-semibold text-slate-800 hover:bg-[#f6f3ef] transition px-3 h-10"
-                              style={{ borderColor: BORDER }}
+                              className="inline-flex items-center justify-center border text-xs font-semibold text-white hover:opacity-90 transition px-3 h-9 rounded-sm"
+                              style={{
+                                backgroundColor: BRAND,
+                                borderColor: BRAND,
+                              }}
                             >
-                              Read Article
-                              <ArrowRight
-                                className="w-3.5 h-3.5 ml-1"
-                                style={{ color: BRAND }}
-                              />
+                              Read
+                              <ArrowRight className="w-3 h-3 ml-1" />
                             </a>
                           </div>
                         </div>
@@ -327,7 +366,6 @@ export default function BlogSection() {
             </motion.div>
           )}
         </div>
-        <CTAFooter />
       </section>
     </>
   );

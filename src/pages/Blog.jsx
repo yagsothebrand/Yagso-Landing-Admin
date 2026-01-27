@@ -3,6 +3,7 @@ import Header from "../layout/Header";
 import BlogSection from "../components/BlogSection";
 import Footer from "../layout/Footer";
 import Cart from "../components/Cart";
+import CTAFooter from "@/components/CTAFooter";
 
 export default function Blog() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function Blog() {
       )}
 
       <BlogSection />
+      <CTAFooter />
       <Footer />
     </main>
   );

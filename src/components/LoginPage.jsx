@@ -55,17 +55,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#fbfaf8]">
       {/* Top navigation bar */}
-      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-900"
-          >
-            <ArrowLeft className="w-4 h-4" style={{ color: BRAND }} />
-            Back
-          </button>
-        </div>
-      </div>
+     
 
       {/* Main content */}
       <div className="max-w-md mx-auto px-4 py-12">
@@ -200,18 +190,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Footer */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-2 text-xs tracking-wider px-4 py-2 border border-slate-200 bg-white rounded-none">
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ backgroundColor: BRAND }}
-            />
-            <span className="text-slate-500 font-medium">
-              © 2025 YAGSO • Timeless luxury
-            </span>
-          </div>
-        </div>
+       
       </div>
     </div>
   );

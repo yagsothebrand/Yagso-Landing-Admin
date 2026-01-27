@@ -21,7 +21,7 @@ export default function Shop() {
   };
 
   return (
-    <main className="bg-white/10">
+    <main className=" pt-10 md:pt-24">
       <Header />
       {/* <Banner /> */}
 

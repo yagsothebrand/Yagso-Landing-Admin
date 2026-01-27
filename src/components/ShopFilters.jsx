@@ -40,8 +40,7 @@ export default function ShopFilters({
     <motion.div
       initial={{ opacity: 0, x: -14 }}
       animate={{ opacity: 1, x: 0 }}
-      className="bg-white border rounded-sm p-4 space-y-5"
-      style={{ borderColor: `${BRAND}26` }}
+      className="space-y-5"
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-3">

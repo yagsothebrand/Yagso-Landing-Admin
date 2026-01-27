@@ -1,111 +1,156 @@
-"use client";
+import React from "react";
 
-import React, { useRef, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
-import gsap from "gsap";
-import EarringCarousel from "./EarringCarousel";
+const CREAM = "#fbfaf8";
 
-const Carousel = () => {
-  const ref = useRef(null);
-  const textRef = useRef(null);
-  const descRef = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-
-  useEffect(() => {
-    const titleText = textRef.current.textContent;
-    const descText = descRef.current.textContent || "";
-    const tl = gsap.timeline();
-
-    // Clear both texts
-    textRef.current.textContent = "";
-    descRef.current.textContent = "";
-
-    // Title typing animation
-    tl.to(
-      {},
-      {
-        duration: titleText.length * 0.08,
-        onUpdate: function () {
-          const progress = this.progress();
-          const charsToShow = Math.floor(progress * titleText.length);
-          textRef.current.textContent = titleText.substring(0, charsToShow);
-        },
-      },
-    );
-
-    // Description typing animation (starts after title)
-    tl.to(
-      {},
-      {
-        duration: descText.length * 0.03,
-        onUpdate: function () {
-          const progress = this.progress();
-          const charsToShow = Math.floor(progress * descText.length);
-          descRef.current.textContent = descText.substring(0, charsToShow);
-        },
-      },
-      "+=0.2",
-    );
-
-    // Title glow effect (repeating)
-    tl.to(
-      textRef.current,
-      {
-        textShadow: "0px 0px 20px rgba(222, 191, 173, 0.9)",
-        duration: 1.2,
-        repeat: -1,
-        repeatDelay: 0.8,
-        yoyo: true,
-      },
-      "0.2",
-    );
-  }, [inView]);
-
+export default function YagsoVideoSection() {
   return (
-    <div
-      id="about-section"
-      className="w-full lg:max-w-[1200px] mx-auto px-4 md:px-8 lg:px-[4rem] py-[1rem] grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center"
-    >
-      <motion.div
-        ref={ref}
-        initial={{ x: -80, opacity: 0 }}
-        animate={inView ? { x: 0, opacity: 1 } : {}}
-        transition={{ duration: 0.9, ease: "easeOut" }}
+    <section className="relative  w-full overflow-hidden flex items-center justify-center">
+      {/* Background Video */}
+      <video
+        src="shop.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
       >
-        <h6
-          ref={textRef}
-          className="text-[28px] sm:text-[36px] lg:text-[52px] uppercase bg-gradient-to-r from-[#0e4132] via-[#fff4ec] to-[#0e4132] bg-clip-text text-transparent font-bold tracking-wide leading-tight"
+        {/* <source
+          src="shop.mp4"
+          type="video/mp4"
+        /> */}
+      </video>
+
+      {/* Backdrop Blur Overlay with Brand Color */}
+      <div className="absolute inset-0 bg-[#948179]/10 backdrop-blur-sm bg-opacity-40"></div>
+
+      {/* Content Container */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
+        {/* Brand Name */}
+        <div className="mb-6 overflow-hidden">
+          <h1 
+            className="text-5xl md:text-6xl font-light tracking-[0.3em] uppercase"
+            style={{ 
+              color: CREAM,
+              fontFamily: "'Cormorant Garamond', serif",
+              textShadow: '0 2px 20px rgba(0,0,0,0.3)',
+              animation: 'fadeInUp 1.2s ease-out'
+            }}
+          >
+            Yagso
+          </h1>
+        </div>
+
+        {/* Decorative Line */}
+        <div className="flex items-center justify-center mb-6">
+          <div
+            className="h-px w-20 opacity-60"
+            style={{
+              backgroundColor: CREAM,
+              animation: "expandWidth 1s ease-out 0.5s both",
+            }}
+          ></div>
+          <div
+            className="w-1.5 h-1.5 mx-4 rotate-45 opacity-80"
+            style={{
+              backgroundColor: CREAM,
+              animation: "fadeIn 1s ease-out 0.8s both",
+            }}
+          ></div>
+          <div
+            className="h-px w-20 opacity-60"
+            style={{
+              backgroundColor: CREAM,
+              animation: "expandWidth 1s ease-out 0.5s both",
+            }}
+          ></div>
+        </div>
+
+        {/* Main Copy */}
+        <div
+          className="space-y-4 mb-8"
+          style={{ animation: "fadeIn 1.5s ease-out 0.8s both" }}
+        >
+          <p
+            className="text-base md:text-lg leading-relaxed tracking-wide"
+            style={{
+              color: CREAM,
+              fontFamily: "'Crimson Text', serif",
+              textShadow: "0 1px 10px rgba(0,0,0,0.4)",
+            }}
+          >
+            At Yagso, every piece is shaped with meticulous detail and passion.
+          </p>
+          <p
+            className="text-base md:text-lg leading-relaxed tracking-wide"
+            style={{
+              color: CREAM,
+              fontFamily: "'Crimson Text', serif",
+              textShadow: "0 1px 10px rgba(0,0,0,0.4)",
+            }}
+          >
+            Our designs reflect more than just adornment—they are crafted to
+            <br className="hidden md:block" />
+            illuminate the story and confidence of every woman who wears them.
+          </p>
+        </div>
+
+        {/* Call to Action */}
+        <button
+          className="group relative px-8 py-3 overflow-hidden transition-all duration-500 hover:scale-105"
           style={{
-            display: "inline-block",
+            backgroundColor: "#ffffff",
+            border: `1px solid ${CREAM}`,
+            color: CREAM,
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "1rem",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            animation: "fadeIn 1.8s ease-out 1.2s both",
           }}
-        ></h6>
-
-        <p
-          ref={descRef}
-          className="text-[14px] sm:text-[16px] text-[#0e4132] mt-6 leading-relaxed max-w-[500px] min-h-[120px]"
         >
-          At Yagso, every piece is shaped with meticulous detail and passion.
-          Our designs reflect more than just adornment—they are crafted to
-          illuminate the story and confidence of every woman who wears them.
-        </p>
-
-        <motion.button
-          whileHover={{
-            scale: 1.05,
-            boxShadow: "0 15px 30px rgba(222, 191, 173, 0.25)",
-          }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-8 border-2 rounded-full py-3 px-[3.5rem] border-[#0e4132] text-[#0e4132] font-semibold hover:bg-[#debfad] hover:text-[#1a1a1a] transition-all duration-300 shadow-md"
-        >
-          Shop Now
-        </motion.button>
-      </motion.div>
-
-      <div>
-        <EarringCarousel />
+          <span className="relative z-10 transition-colors duration-500 text-[#948179]">
+            Explore Collection
+          </span>
+          <div
+            className="absolute inset-0 transform translate-y-full transition-transform duration-500 group-hover:translate-y-0"
+            style={{ backgroundColor: CREAM }}
+          ></div>
+        </button>
       </div>
-    </div>
-  );
-};
 
-export default Carousel;
+      {/* CSS Animations */}
+      <style jsx>{`
+        @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Crimson+Text:wght@400;600&display=swap");
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes expandWidth {
+          from {
+            width: 0;
+          }
+          to {
+            width: 5rem;
+          }
+        }
+      `}</style>
+    </section>
+  );
+}

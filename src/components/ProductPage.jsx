@@ -17,7 +17,7 @@ export default function ProductPage() {
   };
 
   return (
-    <main>
+  <main className="bg-white/50  pt-10 md:pt-28">
       <Header />
 
       {cartOpen && (
