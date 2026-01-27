@@ -63,12 +63,12 @@ export default function CartSidebar() {
             className={cx(
               "relative h-10 px-3",
               "rounded-sm",
-              "bg-white text-[#2b2b2b]",
+              "text-white bg-[#948179]",
               "border border-[#948179]/25 hover:border-[#948179]/45",
               "shadow-none",
             )}
           >
-            <ShoppingCart className="w-5 h-5 text-[#948179]" />
+            <ShoppingCart className="w-5 h-5 bg-[#948179] " />
 
             <AnimatePresence>
               {cartCount > 0 && (
