@@ -184,16 +184,13 @@ export default function HeaderDesign() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="p-2 border rounded-sm transition relative"
-                  style={{ borderColor: `${BRAND}33` }}
+                  className="p-2 border rounded-sm transition relative border-[#948179]/20 hover:bg-[#948179] hover:border-[#948179]/40"
                   aria-label="Account"
                 >
-                  <User className="w-5 h-5" style={{ color: BRAND }} />
+                  <User className="w-5 h-5 text-[#948179] hover:text-[#ffffff]" />
+
                   {user && (
-                    <span
-                      className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border"
-                      style={{ backgroundColor: BRAND, borderColor: "white" }}
-                    />
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border border-white bg-[#948179]" />
                   )}
                 </button>
               </DropdownMenuTrigger>

@@ -61,14 +61,14 @@ export default function CartSidebar() {
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Button
             className={cx(
-              "relative h-10 px-3",
-              "rounded-sm",
-              "text-white bg-[#948179]",
+              "relative h-10 px-3 rounded-sm",
+              "bg-[#948179] hover:bg-white",
               "border border-[#948179]/25 hover:border-[#948179]/45",
               "shadow-none",
+              "group", // Add group class for child hover styles
             )}
           >
-            <ShoppingCart className="w-5 h-5 bg-[#948179] " />
+            <ShoppingCart className="w-5 h-5 text-white group-hover:text-[#948179]" />
 
             <AnimatePresence>
               {cartCount > 0 && (
