@@ -103,7 +103,7 @@ export default function ContactSection({formOpen, setFormOpen}) {
                             {o.label}
                           </p>
 
-                          <p className="mt-0.5 text-sm font-extrabold text-slate-900 truncate">
+                          <p className="mt-0.5 text-[8px]  font-light text-slate-900 truncate">
                             <a
                               href={o.href}
                               onClick={(e) => e.stopPropagation()}

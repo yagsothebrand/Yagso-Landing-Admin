@@ -7,7 +7,7 @@ export default function YagsoVideoSection() {
     <section className="relative  w-full overflow-hidden flex items-center justify-center">
       {/* Background Video */}
       <video
-        src="shop.mp4"
+        src="ultra.mp4"
         autoPlay
         loop
         muted
@@ -27,17 +27,17 @@ export default function YagsoVideoSection() {
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
         {/* Brand Name */}
         <div className="mb-6 overflow-hidden">
-          <h1 
-            className="text-5xl md:text-6xl font-light tracking-[0.3em] uppercase"
-            style={{ 
+          <h3
+            className="text-5xl font-light tracking-[0.3em] uppercase"
+            style={{
               color: CREAM,
               fontFamily: "'Cormorant Garamond', serif",
-              textShadow: '0 2px 20px rgba(0,0,0,0.3)',
-              animation: 'fadeInUp 1.2s ease-out'
+              textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+              animation: "fadeInUp 1.2s ease-out",
             }}
           >
-            Yagso
-          </h1>
+            Discover Your Signature Piece
+          </h3>
         </div>
 
         {/* Decorative Line */}
