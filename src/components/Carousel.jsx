@@ -28,7 +28,7 @@ export default function YagsoVideoSection() {
         {/* Brand Name */}
         <div className="mb-6 overflow-hidden">
           <h3
-            className="text-5xl font-light tracking-[0.3em] uppercase"
+            className="text-xl md:text-4xl font-light tracking-[0.3em] uppercase"
             style={{
               color: CREAM,
               fontFamily: "'Cormorant Garamond', serif",
