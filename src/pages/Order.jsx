@@ -19,7 +19,7 @@ export default function Order() {
   };
 
   return (
-    <main className="bg-white/10">
+    <main className="bg-white/10  pt-5 md:pt-20">
       <Header />
       {/* <Banner /> */}
 
