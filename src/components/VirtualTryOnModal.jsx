@@ -25,7 +25,7 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
   const draggingRef = useRef(false);
   const offsetRef = useRef({ x: 0, y: 0 });
 
-  // ✅ lock page scroll + allow modal scroll
+  // lock page scroll + allow modal scroll
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -92,6 +92,9 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
     canvas.height = v.videoHeight || 1280;
 
     const ctx = canvas.getContext("2d");
+    // Mirror the captured photo to match the mirror view
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
 
     setPhotoUrl(canvas.toDataURL("image/png"));
@@ -123,10 +126,12 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
 
   return (
     <div className="fixed inset-0 z-[100] pt-32 bg-black/60">
-      {/* ✅ Scroll container */}
-      <div className="h-[100dvh] w-full overflow-y-auto overscroll-contain p-3 md:p-4"
-           style={{ WebkitOverflowScrolling: "touch" }}>
-        {/* ✅ Modal */}
+      {/* Scroll container */}
+      <div
+        className="h-[100dvh] w-full overflow-y-auto overscroll-contain p-3 md:p-4"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
+        {/* Modal */}
         <div className="w-full md:max-w-4xl mx-auto bg-white border border-slate-200 rounded-none overflow-hidden flex flex-col min-h-[calc(100dvh-24px)] md:min-h-0">
           {/* Header */}
           <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-3 md:px-4 py-2.5 border-b border-slate-200">
@@ -140,7 +145,7 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
             </button>
           </div>
 
-          {/* ✅ Body */}
+          {/* Body */}
           <div className="flex-1 min-h-0 md:grid md:grid-cols-[1fr_320px]">
             {/* Stage */}
             <div
@@ -153,7 +158,6 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
               }}
               onTouchEnd={endDrag}
             >
-              {/* ✅ mobile height, but still lets modal scroll */}
               <div
                 ref={stageRef}
                 className="relative w-full overflow-hidden"
@@ -163,6 +167,7 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
                   <video
                     ref={videoRef}
                     className="absolute inset-0 w-full h-full object-cover"
+                    style={{ transform: "scaleX(-1)" }}
                     playsInline
                     muted
                   />
@@ -178,7 +183,7 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
                   </div>
                 )}
 
-                {/* ✅ overlay always visible if we have image */}
+                {/* overlay always visible if we have image */}
                 {!!overlaySrc && (
                   <img
                     src={overlaySrc}
@@ -234,9 +239,11 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
               </div>
             </div>
 
-            {/* ✅ Controls (scrollable area) */}
-            <div className="min-h-0 p-3 md:p-4 space-y-3 bg-white overflow-y-auto"
-                 style={{ WebkitOverflowScrolling: "touch" }}>
+            {/* Controls (scrollable area) */}
+            <div
+              className="min-h-0 p-3 md:p-4 space-y-3 bg-white overflow-y-auto"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -283,8 +290,10 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
                 {images.length === 0 ? (
                   <div className="text-xs text-slate-500 mt-2">No product images found.</div>
                 ) : (
-                  <div className="mt-2 flex gap-2 overflow-x-auto pb-1"
-                       style={{ WebkitOverflowScrolling: "touch" }}>
+                  <div
+                    className="mt-2 flex gap-2 overflow-x-auto pb-1"
+                    style={{ WebkitOverflowScrolling: "touch" }}
+                  >
                     {images.map((src, idx) => (
                       <button
                         key={`${src}_${idx}`}
@@ -303,11 +312,6 @@ export default function VirtualTryOnModal({ open, onClose, product }) {
                     ))}
                   </div>
                 )}
-              </div>
-
-              <div className="text-xs text-slate-500">
-                If you still can’t scroll on iPhone: make sure the modal sits inside the
-                <b> overflow-y-auto </b> container (this code already does).
               </div>
             </div>
           </div>
